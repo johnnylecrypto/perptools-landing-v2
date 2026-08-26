@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens — PERPTools (dark-first).
+   Raw values live here; Tailwind utilities are generated from @theme below.
+   --------------------------------------------------------------------------- */
+@theme {
+  /* Surfaces, darkest → lightest */
+  --color-bg-0: #030507;
+  --color-bg-1: #060a0e;
+  --color-bg-2: #080c11;
+  --color-bg-3: #0b1015;
+
+  /* Text, strongest → faintest */
+  --color-fg: #edeff2;
+  --color-fg-muted: #b6bec9;
+  --color-fg-subtle: #6b7785;
+  --color-fg-faint: #4a5462;
+
+  /* Accent (cyan) */
+  --color-accent-light: #83d4fb;
+  --color-accent: #2bb9f3;
+  --color-accent-dark: #1b8fcc;
+
+  /* Hairlines */
+  --color-line: rgb(255 255 255 / 0.05);
+  --color-line-strong: rgb(255 255 255 / 0.08);
+  --color-line-accent: rgb(131 212 251 / 0.15);
+
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", Menlo, monospace;
+  /* Header/UI face from the v2 design file. */
+  --font-dm: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-inter: var(--font-inter-sans), ui-sans-serif, system-ui, sans-serif;
+
+  /* Layout rhythm. One gutter for the whole page — a fixed 61.5px at every
+     width, with the content inside fluid rather than capped. Phones drop to
+     24px, where a 123px gutter would leave almost no room for copy. */
+  --spacing-side: 61.5px;
+  --spacing-section: clamp(60px, 8vh, 120px);
+
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+:root {
+  --gradient-accent: linear-gradient(180deg, #2bb9f3 7%, #83d4fb 87%);
+  --gradient-accent-hover: linear-gradient(180deg, #4dc4f5 7%, #a6e1fc 87%);
+  --shadow-accent: 0 8px 32px -8px rgb(43 185 243 / 0.45), 0 0 0 1px rgb(131 212 251 / 0.25);
+  --shadow-accent-hover: 0 12px 36px -8px rgb(43 185 243 / 0.55), 0 0 0 1px rgb(131 212 251 / 0.4);
+  --shadow-card: 0 24px 48px -24px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.05);
+
+  color-scheme: dark;
+}
+
+@layer base {
+  @media (width < 640px) {
+    :root {
+      --spacing-side: 24px;
+    }
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Keep anchored sections clear of the fixed header. */
+    scroll-padding-top: 112px;
+  }
+
+  body {
+    background-color: var(--color-bg-0);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: rgb(43 185 243 / 0.3);
+    color: var(--color-fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@utility text-gradient-accent {
+  background-image: var(--gradient-accent);
+  background-clip: text;
+  color: transparent;
+}
