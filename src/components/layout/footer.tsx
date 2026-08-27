@@ -4,6 +4,7 @@ import { footerGroups, type NavItem } from "@/content/navigation";
 import { site } from "@/lib/site";
 import { Wordmark } from "@/components/layout/wordmark";
 import { TelegramIcon, XIcon } from "@/components/layout/social-icons";
+import { CurrentYear } from "@/components/ui/current-year";
 
 export function Footer() {
   return (
@@ -77,7 +78,9 @@ export function Footer() {
 
             <div className="flex flex-col justify-between gap-2 text-[14px] leading-[20.8px] font-medium tracking-[0.78px] text-[rgb(237_238_240/0.28)] sm:flex-row sm:items-center sm:gap-6">
               <p>{site.name} Protocol. All Rights Reserved.</p>
-              <p>© {new Date().getFullYear()}</p>
+              <p>
+                © <CurrentYear buildYear={new Date().getFullYear()} />
+              </p>
             </div>
           </div>
         </div>

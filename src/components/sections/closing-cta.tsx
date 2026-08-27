@@ -6,11 +6,7 @@ import { Ellipse } from "@/components/ui/ellipse";
 
 export function ClosingCta() {
   return (
-    <section
-      id="get-started"
-      aria-labelledby="get-started-heading"
-      className="py-section frame"
-    >
+    <section id="get-started" aria-labelledby="get-started-heading" className="py-section frame">
       <div className="mx-auto w-full">
         <div className="relative isolate overflow-hidden rounded-[20px] border border-white/8 bg-[linear-gradient(105deg,#05090C_0%,#071119_55%,#0A1A26_100%)]">
           <Ellipse
