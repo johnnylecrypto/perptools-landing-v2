@@ -17,9 +17,28 @@ export const primaryNav: readonly NavItem[] = [
   { label: "MCP Doc", href: site.links.mcpDocs, external: true },
 ];
 
-export const footerNav: readonly NavItem[] = [
-  { label: "Platform", href: "/#platform" },
-  { label: "Arena", href: "/#arena" },
-  { label: "Security", href: "/#security" },
-  { label: "MCP Doc", href: site.links.mcpDocs, external: true },
+export type NavGroup = {
+  title: string;
+  items: readonly NavItem[];
+};
+
+export const footerGroups: readonly NavGroup[] = [
+  {
+    title: "Trade",
+    items: [
+      { label: "Spot", href: site.links.spot, external: true },
+      { label: "Perpetuals", href: site.links.terminal, external: true },
+    ],
+  },
+  {
+    title: "Earn & play",
+    items: [
+      { label: "Points Program", href: site.links.points, external: true },
+      { label: "Tap Predictions", href: site.links.tapPredictions, external: true },
+    ],
+  },
+  {
+    title: "Build",
+    items: [{ label: "MCP Doc", href: site.links.mcpDocs, external: true }],
+  },
 ];

@@ -11,12 +11,14 @@ export function Hero() {
     <section
       id="hero"
       aria-labelledby="hero-heading"
-      className="bg-bg-0 relative isolate flex min-h-[810px] flex-col overflow-hidden"
+      className="bg-bg-0 relative isolate flex min-h-[640px] flex-col overflow-hidden lg:min-h-[810px]"
     >
       <HeroBackdrop />
 
-      {/* Copy block starts at y=289 with a 15px rhythm, per the design file. */}
-      <div className="px-side relative flex flex-1 flex-col items-center gap-[15px] pt-[289px] text-center">
+      {/* Copy block starts at y=289 with a 15px rhythm, per the design file. Below
+          lg the offset scales down so the headline is not pushed off a phone
+          screen, and `pb-32` reserves the marquee's strip at the bottom. */}
+      <div className="px-side relative flex flex-1 flex-col items-center gap-[15px] pt-[160px] pb-32 text-center sm:pt-[220px] lg:pt-[289px]">
         <h1
           id="hero-heading"
           className="max-w-[792px] text-[clamp(38px,4.6vw,66px)] leading-none font-semibold text-balance text-white mix-blend-lighten"
@@ -50,7 +52,7 @@ export function Hero() {
         </div>
       </div>
 
-      <PartnerMarquee className="absolute inset-x-0 top-[717px]" />
+      <PartnerMarquee className="absolute inset-x-0 bottom-0" />
     </section>
   );
 }
@@ -91,7 +93,7 @@ function HeroBackdrop() {
           height={786}
           priority
           sizes="(max-width: 768px) 100vw, 64vw"
-          className="absolute top-[76px] left-[279px] w-[917px] opacity-60 select-none"
+          className="absolute top-[76px] left-1/2 w-[917px] max-w-none -translate-x-1/2 opacity-60 select-none lg:left-[279px] lg:translate-x-0"
         />
 
         {/* Vignette so the headline keeps contrast over the logo art. */}

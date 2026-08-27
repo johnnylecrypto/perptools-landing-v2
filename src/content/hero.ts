@@ -8,7 +8,7 @@ export const hero = {
 } as const;
 
 export const closingCta = {
-  eyebrow: "The Platform",
-  heading: ["Built for traders.", "By traders."] as const,
-  lede: "PERPTools redefines perpetual trading with AI-powered automation, transparent execution, and a frictionless on-chain experience — all in one platform.",
+  heading: "The market is moving.",
+  lede: "Trade perpetuals, earn Points from every fill, then put them to work on the prediction board.",
+  cta: { label: "Launch App", href: site.links.app },
 } as const;

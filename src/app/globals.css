@@ -44,6 +44,47 @@
   --spacing-section: clamp(60px, 8vh, 120px);
 
   --animate-marquee: marquee 40s linear infinite;
+  /* Win feedback on the prediction board, timed from the live TradeCanvas:
+     WIN_PUNCH_DURATION_MS and the score badge's 1800ms rise. */
+  --animate-cell-punch: cell-punch 380ms ease-out 1;
+  --animate-score-rise: score-rise 1800ms ease-out 1 forwards;
+
+  /* The product's punch keyframes: 1 -> 1.38 -> 0.91 -> 1.06 -> 1. */
+  @keyframes cell-punch {
+    0% {
+      transform: scale(1);
+    }
+    25% {
+      transform: scale(1.38);
+    }
+    50% {
+      transform: scale(0.91);
+    }
+    75% {
+      transform: scale(1.06);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes score-rise {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, 0) scale(0.6);
+    }
+    12% {
+      opacity: 1;
+      transform: translate(-50%, -10px) scale(1);
+    }
+    60% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -80px) scale(1);
+    }
+  }
 
   @keyframes marquee {
     from {

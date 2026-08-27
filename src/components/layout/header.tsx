@@ -47,9 +47,10 @@ export function Header() {
     >
       {/* 80px tall: 20px vertical padding around a 40px lockup. The page gutter
           (61.5px) plus the header's own 38.5px inset puts the lockup at x=100,
-          matching the design file. */}
+          matching the design file. The inset is dropped below lg, where it would
+          eat into the phone gutter instead of adding to it. */}
       <nav aria-label="Main" className="px-side">
-        <div className="flex h-20 items-center justify-between px-[38.5px]">
+        <div className="flex h-20 items-center justify-between lg:px-[38.5px]">
           <Logo onClick={() => setOpen(false)} />
 
           <ul className="hidden items-center gap-9 lg:flex">

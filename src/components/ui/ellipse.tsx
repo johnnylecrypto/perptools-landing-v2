@@ -7,7 +7,10 @@ type Length = number | string;
 export type EllipseBlend = "screen" | "soft-light" | "overlay" | "lighten" | "normal";
 
 export type EllipseProps = {
-  /** Fill colour, e.g. `#094E6A`. */
+  /**
+   * Fill: any CSS background value — a solid colour (`#094E6A`) or a gradient
+   * (`linear-gradient(180deg, …)`).
+   */
   color: string;
   width: Length;
   height: Length;

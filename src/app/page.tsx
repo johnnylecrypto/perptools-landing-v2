@@ -1,9 +1,7 @@
 import { Hero } from "@/components/sections/hero";
+import { Live } from "@/components/sections/live";
 import { Platform } from "@/components/sections/platform";
-import { HowItWorks } from "@/components/sections/how-it-works";
-import { Stats } from "@/components/sections/stats";
-import { Arena } from "@/components/sections/arena";
-import { Security } from "@/components/sections/security";
+import { Points } from "@/components/sections/points";
 import { ClosingCta } from "@/components/sections/closing-cta";
 import { site } from "@/lib/site";
 
@@ -11,11 +9,9 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <Live />
       <Platform />
-      <HowItWorks />
-      <Stats />
-      <Arena />
-      <Security />
+      <Points />
       <ClosingCta />
       <script
         type="application/ld+json"

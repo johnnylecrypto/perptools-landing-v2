@@ -16,8 +16,8 @@ export function PartnerMarquee({ className }: { className?: string }) {
       </div>
 
       {/* Edge fades so items dissolve instead of clipping. */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-60 bg-[linear-gradient(270deg,transparent_0%,rgb(3_5_7/0.85)_55%,#030507_100%)]" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-60 bg-[linear-gradient(90deg,transparent_0%,rgb(3_5_7/0.85)_55%,#030507_100%)]" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-[linear-gradient(270deg,transparent_0%,rgb(3_5_7/0.85)_55%,#030507_100%)] sm:w-40 lg:w-60" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-[linear-gradient(90deg,transparent_0%,rgb(3_5_7/0.85)_55%,#030507_100%)] sm:w-40 lg:w-60" />
     </div>
   );
 }

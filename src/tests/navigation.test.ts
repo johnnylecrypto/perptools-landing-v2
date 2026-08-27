@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { primaryNav, footerNav } from "@/content/navigation";
+import { primaryNav, footerGroups } from "@/content/navigation";
 
 /**
  * Every in-page nav link must resolve to a section rendered on the home page,
@@ -21,10 +21,12 @@ const sectionIds = [
 describe("navigation", () => {
   it("home page renders every known section component", () => {
     expect(homePageSource).toContain("<Hero />");
-    expect(homePageSource).toContain("<Arena />");
+    expect(homePageSource).toContain("<Points />");
   });
 
-  it.each([...primaryNav, ...footerNav])("$label points somewhere real", (item) => {
+  const allLinks = [...primaryNav, ...footerGroups.flatMap((group) => group.items)];
+
+  it.each(allLinks)("$label points somewhere real", (item) => {
     if (item.external) {
       expect(item.href).toMatch(/^https?:\/\//);
       return;
