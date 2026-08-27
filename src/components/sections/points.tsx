@@ -25,9 +25,8 @@ export function Points() {
         className="top-1/2 left-1/2 -z-10 -translate-x-1/2 -translate-y-1/2"
       />
 
-      <div className="px-side w-full lg:px-[85px]">
-        {/* 85px section gutter + 96.5px inner padding = the design's 1080 content frame. */}
-        <div className="flex w-full flex-col items-center gap-16 lg:px-[96.5px]">
+      <div className="frame w-full">
+        <div className="flex w-full flex-col items-center gap-16">
           <header className="flex flex-col items-center gap-[18.89px] text-center">
             <h2
               id="points-heading"

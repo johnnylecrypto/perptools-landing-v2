@@ -16,6 +16,33 @@ function screenX(worldColumn: number, subtick: number, progress: number) {
   return rebased - sheetOffset(subtick, SUB, WORLD, progress);
 }
 
+/** Where the line's tip sits on screen, as a fraction of the sheet's width. */
+function tipScreenX(subtick: number, progress: number) {
+  const column = Math.floor(subtick / SUB);
+  const col0 = column - (geometries.desktop.nowColumn - 1);
+  const world = ((subtick + progress) / SUB - col0) / WORLD;
+  return world - sheetOffset(subtick, SUB, WORLD, progress);
+}
+
+describe("price line tip", () => {
+  it("stays pinned to the NOW line at every point in a tick", () => {
+    // This is what stopped the line trailing the marker and snapping back to
+    // it: the tip is placed at `subtick + progress`, and the sheet's own scroll
+    // cancels the progress term exactly, leaving it stationary on screen.
+    const expected = (geometries.desktop.nowColumn - 1) / WORLD;
+
+    for (let subtick = 0; subtick < SUB * 3; subtick += 1) {
+      for (const progress of [0, 0.17, 0.5, 0.83, 1]) {
+        expect(tipScreenX(subtick, progress)).toBeCloseTo(expected, 12);
+      }
+    }
+  });
+
+  it("does not jump as one tick hands over to the next", () => {
+    expect(tipScreenX(SUB - 1, 1)).toBeCloseTo(tipScreenX(SUB, 0), 12);
+  });
+});
+
 describe("sheetOffset", () => {
   it("slides exactly one column over one column of sub-ticks", () => {
     expect(sheetOffset(0, SUB, WORLD, 0)).toBe(0);

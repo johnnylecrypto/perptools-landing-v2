@@ -30,6 +30,11 @@
   --radius-md: 12px;
   --radius-lg: 18px;
   --radius-xl: 24px;
+  /* Every button shares this. Taken from the header's Launch App pill in the
+     design file, and named so it cannot quietly drift from surface radii —
+     note `--radius-lg` is 18px here, not Tailwind's 8px, which is how the
+     hero's Launch App ended up more than twice as round as the header's. */
+  --radius-button: 7px;
 
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", Menlo, monospace;
@@ -37,10 +42,12 @@
   --font-dm: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
   --font-inter: var(--font-inter-sans), ui-sans-serif, system-ui, sans-serif;
 
-  /* Layout rhythm. One gutter for the whole page — a fixed 61.5px at every
-     width, with the content inside fluid rather than capped. Phones drop to
-     24px, where a 123px gutter would leave almost no room for copy. */
-  --spacing-side: 61.5px;
+  /* Page gutter. Fluid rather than two fixed steps: a hard switch at a
+     breakpoint made the content *narrower* as the viewport grew, which is the
+     one thing a responsive layout must never do. Reaches the design's 61.5px
+     by ~1025px and never drops below 24px, where a wide gutter would leave a
+     phone almost no room for copy. */
+  --spacing-side: clamp(24px, 6vw, 61.5px);
   --spacing-section: clamp(60px, 8vh, 120px);
 
   --animate-marquee: marquee 40s linear infinite;
@@ -107,16 +114,20 @@
 }
 
 @layer base {
-  @media (width < 640px) {
-    :root {
-      --spacing-side: 24px;
-    }
-  }
-
   html {
     scroll-behavior: smooth;
     /* Keep anchored sections clear of the fixed header. */
     scroll-padding-top: 112px;
+
+    /* Hide the page scrollbar. Scrolling itself is untouched — wheel, touch,
+       keyboard and the scrollbar's own drag area all still work; only the bar
+       is not painted. Chromium 121+ and Firefox honour `scrollbar-width`;
+       Safari and older Chromium need the pseudo-element below. */
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar {
+    display: none;
   }
 
   body {
@@ -149,6 +160,388 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Terminal "rise": the Live section's screen tilts up out of the page as it
+   scrolls into view, then settles and catches the light.
+
+   Every stage hangs off `--rise`, so the whole sequence retimes from one value.
+   --------------------------------------------------------------------------- */
+@layer components {
+  .rise-scene {
+    --rise: 2200ms;
+    --rise-tilt: 34deg;
+    --rise-ease: cubic-bezier(0.42, 0.1, 0.18, 1);
+
+    perspective: 2000px;
+    /* Below centre, so the vanishing point sits behind the screen's base and
+       the tilt reads as the panel standing up rather than the camera moving. */
+    perspective-origin: 50% 78%;
+  }
+
+  /* Hinged along its bottom edge — this is what makes it stand up. */
+  .rise-card {
+    transform-origin: 50% 100%;
+    transform: rotateX(var(--rise-tilt)) scale(0.955) translateY(16px);
+    filter: blur(9px) brightness(0.42) saturate(0.7);
+    opacity: 0;
+    transition:
+      transform var(--rise) var(--rise-ease),
+      filter calc(var(--rise) * 0.82) cubic-bezier(0.22, 0.7, 0.2, 1),
+      opacity 620ms ease;
+    will-change: transform, filter;
+  }
+  .rise-scene.is-in .rise-card {
+    transform: none;
+    filter: none;
+    opacity: 1;
+  }
+
+  /* Contact shadow: the screen has to look like it is standing on something. */
+  .rise-floor {
+    transform: translateX(-50%) scaleX(0.7);
+    opacity: 0;
+    transition:
+      transform var(--rise) var(--rise-ease),
+      opacity 900ms ease;
+  }
+  .rise-scene.is-in .rise-floor {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 1;
+  }
+
+  /* Backlight arrives late, as the panel reaches vertical. */
+  .rise-glow {
+    opacity: 0;
+  }
+  .rise-scene.is-in .rise-glow {
+    animation: rise-lightup 1500ms calc(var(--rise) - 500ms) ease-out forwards;
+  }
+  .rise-scene.is-in .rise-breathe {
+    animation: rise-breathe 7s calc(var(--rise) + 1000ms) ease-in-out infinite;
+  }
+
+  /* One pass of glass, once it is standing. */
+  .rise-sheen {
+    left: -46%;
+    opacity: 0;
+    transform: skewX(-15deg);
+  }
+  .rise-scene.is-in .rise-sheen {
+    animation: rise-sweep 1900ms calc(var(--rise) - 350ms) cubic-bezier(0.36, 0, 0.24, 1) forwards;
+  }
+
+  /* Top bezel catches the light on arrival. */
+  .rise-edge {
+    opacity: 0;
+    transition: opacity 900ms ease calc(var(--rise) - 600ms);
+  }
+  .rise-scene.is-in .rise-edge {
+    opacity: 1;
+  }
+
+  /* The screen "powers on" partway through the tilt. */
+  .rise-screen {
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 1100ms ease calc(var(--rise) * 0.42),
+      transform 1300ms var(--rise-ease) calc(var(--rise) * 0.42);
+  }
+  .rise-scene.is-in .rise-screen {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (width < 640px) {
+    .rise-scene {
+      --rise: 1900ms;
+      --rise-tilt: 26deg;
+    }
+  }
+
+  /* Nothing tilts, blurs or sweeps; the screen is simply there and lit. */
+  @media (prefers-reduced-motion: reduce) {
+    .rise-card,
+    .rise-floor,
+    .rise-screen {
+      transform: none;
+      filter: none;
+      opacity: 1;
+      transition: none;
+    }
+    .rise-glow {
+      opacity: 0.34;
+    }
+    .rise-breathe,
+    .rise-sheen {
+      display: none;
+    }
+    .rise-edge {
+      opacity: 1;
+      transition: none;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Points "ledger": the section reads as a total being settled. Cards rise in
+   reading order, figures wind up, bars fill, the feed lands line by line.
+
+   Every stage is a transition keyed off `.is-in`, so one class toggle plays the
+   whole thing and nothing has to be sequenced in JavaScript.
+   --------------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------------
+   Section frame.
+   
+   Padding that grows toward a target content width and then stops, instead of
+   jumping at a breakpoint. Three terms, outermost first:
+
+     floor   never tighter than this, so narrow screens keep their room
+     track   closes on `--frame-width` as the viewport grows
+     cap     stops growing, so very wide screens let the content grow instead
+
+   Percentages resolve against the containing block — the viewport, for a
+   full-width section — which keeps this correct if a scrollbar ever appears.
+   --------------------------------------------------------------------------- */
+@layer components {
+  .frame {
+    --frame-width: 1080px;
+    --frame-max: 181.5px;
+
+    padding-inline: clamp(
+      clamp(24px, 6%, 85px),
+      calc((100% - var(--frame-width)) / 2),
+      var(--frame-max)
+    );
+  }
+
+  .ledger {
+    --ledger-ease: cubic-bezier(0.2, 0.82, 0.24, 1);
+  }
+
+  .ledger .led-head > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 0.8s ease,
+      transform 1s var(--ledger-ease);
+  }
+  .ledger .led-head > * + * {
+    transition-delay: 0.12s;
+  }
+  .ledger.is-in .led-head > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Cards cascade in reading order; each carries its own `--d`. */
+  .ledger .led-card {
+    opacity: 0;
+    transform: translateY(26px) scale(0.988);
+    transition:
+      opacity 0.8s ease var(--d, 0ms),
+      transform 1s var(--ledger-ease) var(--d, 0ms);
+  }
+  .ledger.is-in .led-card {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Secondary detail inside a card, once the card itself has landed. */
+  .ledger .led-late {
+    opacity: 0;
+    transition: opacity 0.7s ease 0.55s;
+  }
+  .ledger.is-in .led-late {
+    opacity: 1;
+  }
+
+  /* Rank badge, with a touch of overshoot. */
+  .ledger .led-badge {
+    opacity: 0;
+    transform: scale(0.86);
+    transition:
+      opacity 0.7s ease 0.34s,
+      transform 0.9s cubic-bezier(0.18, 0.9, 0.3, 1.03) 0.34s;
+  }
+  .ledger.is-in .led-badge {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Tier pips wipe on left to right. */
+  .ledger .led-pip {
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity 0.4s ease,
+      transform 0.5s var(--ledger-ease);
+  }
+  .ledger.is-in .led-pip {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.6s + var(--i, 0) * 0.06s);
+  }
+
+  /* Badge tiles pop in. */
+  .ledger .led-tile {
+    opacity: 0;
+    transform: scale(0.7);
+    transition:
+      opacity 0.5s ease,
+      transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.12);
+  }
+  .ledger.is-in .led-tile {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.46s + var(--i, 0) * 0.08s);
+  }
+
+  /* Task rows: text fades, the tick snaps, the bar fills. */
+  .ledger .led-task-text {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .ledger.is-in .led-task-text {
+    opacity: 1;
+    transition-delay: calc(0.56s + var(--i, 0) * 0.1s);
+  }
+
+  .ledger .led-tick {
+    transform: scale(0);
+    transform-origin: center;
+    transition: transform 0.34s cubic-bezier(0.2, 0.9, 0.3, 1.4);
+  }
+  .ledger.is-in .led-tick {
+    transform: none;
+    transition-delay: calc(0.62s + var(--i, 0) * 0.1s);
+  }
+
+  .ledger .led-fill {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1.15s var(--ledger-ease);
+  }
+  .ledger.is-in .led-fill {
+    transform: none;
+    transition-delay: calc(0.62s + var(--i, 0) * 0.1s);
+  }
+
+  /* The feed arrives from the right, line by line. */
+  .ledger .led-row {
+    opacity: 0;
+    transform: translateX(14px);
+    transition:
+      opacity 0.55s ease,
+      transform 0.7s var(--ledger-ease);
+  }
+  .ledger.is-in .led-row {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.7s + var(--i, 0) * 0.09s);
+  }
+  /* Each amount flares once as it lands — "there they are". */
+  .ledger.is-in .led-flash {
+    animation: led-flash 0.9s ease-out backwards;
+    animation-delay: calc(0.92s + var(--i, 0) * 0.09s);
+  }
+
+  /*
+   * The sparkline draws itself left to right.
+   *
+   * A wipe rather than `stroke-dasharray`, for two reasons: the line carries
+   * `vector-effect: non-scaling-stroke`, which makes browsers compute dash
+   * lengths in screen space and defeats `pathLength` normalisation; and the
+   * minifier rewrites a unitless `stroke-dashoffset: 1` to `1px`, which against
+   * a normalised path is no offset at all. Clipping depends on neither, and it
+   * reveals the fill along with the line, as redrawing a canvas would.
+   */
+  .ledger .led-spark svg {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 1.6s var(--ledger-ease) 0.42s;
+  }
+  .ledger.is-in .led-spark svg {
+    clip-path: inset(0 0 0 0);
+  }
+  .ledger .led-spark > span {
+    opacity: 0;
+    transition: opacity 0.5s ease 1.5s;
+  }
+  .ledger.is-in .led-spark > span {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ledger .led-head > *,
+    .ledger .led-card,
+    .ledger .led-late,
+    .ledger .led-badge,
+    .ledger .led-pip,
+    .ledger .led-tile,
+    .ledger .led-task-text,
+    .ledger .led-row,
+    .ledger .led-spark > span {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .ledger .led-tick,
+    .ledger .led-fill {
+      transform: none;
+      transition: none;
+    }
+    .ledger .led-spark svg {
+      clip-path: none;
+      transition: none;
+    }
+    .ledger .led-flash {
+      animation: none;
+    }
+  }
+}
+
+@keyframes led-flash {
+  from {
+    color: #fff;
+    text-shadow: 0 0 14px rgb(63 208 139 / 0.85);
+  }
+  to {
+    text-shadow: none;
+  }
+}
+
+@keyframes rise-lightup {
+  to {
+    opacity: 0.4;
+  }
+}
+
+@keyframes rise-breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes rise-sweep {
+  from {
+    left: -46%;
+    opacity: 1;
+  }
+  /* Out by 95%, so this only matters if the clip ever fails to bite: the bar
+     is held at its end state by `forwards` and must not be left visible. */
+  95% {
+    opacity: 1;
+  }
+  to {
+    left: 120%;
+    opacity: 0;
   }
 }
 

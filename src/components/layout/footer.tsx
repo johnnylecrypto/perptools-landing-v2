@@ -14,11 +14,8 @@ export function Footer() {
         className="pointer-events-none absolute inset-x-0 top-[-34px] h-[146px] rounded-full bg-[linear-gradient(180deg,rgb(0_173_239/0.12)_55%,rgb(157_179_198/0.12)_100%)] blur-[96.49px]"
       />
 
-      <div className="px-side relative">
-        {/* 100px horizontal padding (61.5 page gutter + 38.5 inset) and 64px vertical,
-            per the design file. The 38.5 inset is desktop-only: stacked on top of
-            the phone gutter it would leave the columns almost no room. */}
-        <div className="flex flex-col gap-16 py-16 lg:px-[38.5px]">
+      <div className="frame relative [--frame-max:100px] [--frame-width:1240px]">
+        <div className="flex flex-col gap-16 py-16">
           <div className="flex flex-col gap-16 xl:flex-row xl:gap-[156px]">
             <div className="flex w-full max-w-[455px] flex-col gap-6">
               <div className="flex flex-col gap-3">

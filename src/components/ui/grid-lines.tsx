@@ -1,4 +1,19 @@
 /**
+ * Vertical fade over the whole grid.
+ *
+ * Separate from the SVG's radial fade, and deliberately so: that one pulls the
+ * grid back evenly on all four sides, which still leaves it meeting the hero's
+ * bottom edge at full strength. This one dissolves it downward so it is gone
+ * before the dark gradient and the partner strip at the foot of the section.
+ *
+ * A CSS mask on the wrapper rather than a second SVG gradient — stacking two
+ * rects inside an SVG `<mask>` paints one over the other instead of multiplying
+ * them, so the radial fade would simply be replaced.
+ */
+const FADE =
+  "linear-gradient(to bottom, #000 0%, #000 46%, rgb(0 0 0 / 0.35) 76%, transparent 96%)";
+
+/**
  * The hero grid from the design file: 29.95x32.13px cells, 1.31px stroke,
  * fading from white at the centre to 20% at the edges.
  *
@@ -9,7 +24,7 @@
  */
 export function GridLines({ className }: { className?: string }) {
   return (
-    <div aria-hidden className={className}>
+    <div aria-hidden className={className} style={{ maskImage: FADE, WebkitMaskImage: FADE }}>
       <svg className="size-full" preserveAspectRatio="none">
         <defs>
           <pattern id="pt-grid" width="29.9487" height="32.1316" patternUnits="userSpaceOnUse">

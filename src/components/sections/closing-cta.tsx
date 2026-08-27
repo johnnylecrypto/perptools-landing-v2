@@ -4,16 +4,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/ui/arrow-icon";
 import { Ellipse } from "@/components/ui/ellipse";
 
-/**
- * Wide CTA card closing the page: copy on the left, button on the right, with
- * the halftone mark bleeding out of the right edge behind it.
- */
 export function ClosingCta() {
   return (
     <section
       id="get-started"
       aria-labelledby="get-started-heading"
-      className="py-section px-side lg:px-[180px]"
+      className="py-section frame"
     >
       <div className="mx-auto w-full">
         <div className="relative isolate overflow-hidden rounded-[20px] border border-white/8 bg-[linear-gradient(105deg,#05090C_0%,#071119_55%,#0A1A26_100%)]">
@@ -35,11 +31,11 @@ export function ClosingCta() {
             height={243}
             sizes="381px"
             aria-hidden
-            className="pointer-events-none absolute top-1/2 right-0 -z-10 hidden w-[381px] max-w-none -translate-y-1/2 select-none sm:block"
+            className="pointer-events-none absolute top-1/2 -right-14 -z-10 hidden w-[381px] max-w-none -translate-y-1/2 select-none sm:block"
           />
 
-          <div className="flex flex-col gap-10 px-6 py-14 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-[70px]">
-            <div className="w-full max-w-full shrink-0 lg:w-[625px]">
+          <div className="flex flex-col gap-10 px-6 py-14 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-[clamp(32px,5vw,70px)]">
+            <div className="w-full max-w-full lg:w-[625px]">
               <h2
                 id="get-started-heading"
                 className="text-[clamp(28px,3vw,44px)] leading-[1.1] font-medium tracking-[-0.02em] text-balance text-white"

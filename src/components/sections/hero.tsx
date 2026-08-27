@@ -37,7 +37,7 @@ export function Hero() {
         <div className="flex w-full flex-col items-center justify-center gap-3 pt-6 sm:w-auto sm:flex-row">
           <Button
             href={hero.primaryCta.href}
-            className="h-13 w-full rounded-lg text-base font-bold text-[#080C12] sm:w-[179px]"
+            className="h-13 w-full text-base font-bold text-[#080C12] sm:w-[179px]"
           >
             {hero.primaryCta.label}
             <ArrowIcon className="size-3.5" />
@@ -45,7 +45,7 @@ export function Hero() {
           <Button
             href={hero.secondaryCta.href}
             variant="ghost"
-            className="h-13 w-full rounded-[10px] border-white/15 bg-white/5 text-base font-bold text-[#EDEEF0] backdrop-blur-[2.65px] sm:w-[184px]"
+            className="h-13 w-full border-white/15 bg-white/5 text-base font-bold text-[#EDEEF0] backdrop-blur-[2.65px] sm:w-[184px]"
           >
             {hero.secondaryCta.label}
           </Button>

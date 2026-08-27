@@ -1,4 +1,4 @@
-import { render, screen, within, act } from "@testing-library/react";
+import { render, screen, within, act, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PredictionBoard } from "@/components/sections/prediction-board";
@@ -36,10 +36,12 @@ beforeEach(() => {
     },
   );
 
+  observers.length = 0;
   vi.stubGlobal(
     "IntersectionObserver",
     class {
       constructor(private callback: IntersectionObserverCallback) {
+        observers.push(this.callback);
         this.callback([{ isIntersecting: true }] as IntersectionObserverEntry[], this as never);
       }
       observe() {}
@@ -58,6 +60,17 @@ afterEach(() => {
 function balance() {
   const text = screen.getByText(/PTS$/, { selector: "span.font-bold" }).textContent ?? "";
   return Number(text.replace(/,/g, "").replace(/[^0-9.]/g, ""));
+}
+
+/** Observer callbacks, so a test can scroll the board in and out of view. */
+const observers: IntersectionObserverCallback[] = [];
+
+function setOnScreen(visible: boolean) {
+  act(() => {
+    for (const cb of observers) {
+      cb([{ isIntersecting: visible }] as IntersectionObserverEntry[], null as never);
+    }
+  });
 }
 
 /**
@@ -159,15 +172,19 @@ describe("PredictionBoard", () => {
     const cell = safeCell();
     const stake = STAKE_STEPS[2];
 
-    await user.click(cell);
+    // `fireEvent` rather than `userEvent` for the cells: it dispatches
+    // synchronously, so nothing can re-render between locating a node and
+    // clicking it, and it does not await internals that a live clock disturbs.
+    fireEvent.click(cell);
     const staked = playableCells();
+
     // Tapping the same coordinates again: the cell is now a bet cell, so find
     // it by position rather than by the button that used to be there.
     const grid = screen.getByLabelText(/Prediction grid/);
     const betCell = within(grid)
       .getByText(/^\d+\.\d{2}$/)
-      .closest("div")!;
-    await user.click(betCell);
+      .closest("[data-cell]")!;
+    fireEvent.click(betCell);
 
     // Balance moved twice and no extra playable cell was consumed.
     expect(balance()).toBe(before - stake * 2);
@@ -225,6 +242,69 @@ describe("PredictionBoard", () => {
     expect(twoThirds).toBeGreaterThan(third);
     expect(twoThirds - third).toBeCloseTo(((third - start) * 4) / 3, 4);
     expect(playableCells()[0]).toBe(cellBefore);
+  });
+
+  it("keeps the price line's tip on the marker between ticks", () => {
+    // The bug this guards: React redrew the line once a tick while the loop
+    // moved the marker every frame, so the line trailed the marker and snapped
+    // back to it. Both now come from the same interpolated value.
+    vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
+    const frames = frameHarness();
+    const { container } = render(<PredictionBoard />);
+
+    // Let some history accumulate; with none, there is no line to draw.
+    act(() => {
+      vi.advanceTimersByTime(SUBTICK_MS * SUBTICKS_PER_COLUMN * 2);
+    });
+
+    const line = container.querySelector<SVGPathElement>('path[stroke="#2BB9F3"]')!;
+    // Found by reading the attribute rather than by selector: in an HTML
+    // document, attribute names in a selector are lowercased, so `[viewBox=…]`
+    // never matches an SVG element that spells it in camel case.
+    const marker = [...container.querySelectorAll("svg")].find(
+      (svg) => svg.getAttribute("viewBox") === "0 0 20 16",
+    )!.parentElement!;
+    expect(line).toBeTruthy();
+
+    /** Y of the final point of the path, in the SVG's 0-100 space. */
+    const tipY = () => Number(line.getAttribute("d")!.match(/L ([\d.-]+),([\d.-]+)$/)![2]);
+    const markerY = () => Number(marker.style.top.replace("%", ""));
+
+    for (const progress of [0, 0.25, 0.6, 0.95]) {
+      frames.run(performance.now() + SUBTICK_MS * progress);
+      expect(tipY()).toBeCloseTo(markerY(), 6);
+    }
+  });
+
+  it("halts when scrolled out of view and picks up again on the way back", () => {
+    vi.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
+    frameHarness();
+    const { container } = render(<PredictionBoard />);
+
+    const grid = screen.getByLabelText(/Prediction grid/);
+    const world = grid.parentElement!.parentElement!;
+    const advance = () =>
+      act(() => {
+        vi.advanceTimersByTime(SUBTICK_MS * 3);
+      });
+
+    advance();
+    const running = world.style.transform;
+    advance();
+    expect(world.style.transform).not.toBe(running);
+
+    // Off screen: the clock stops, and the board holds exactly where it was.
+    setOnScreen(false);
+    const parked = world.style.transform;
+    advance();
+    advance();
+    expect(world.style.transform).toBe(parked);
+
+    // Back in view: it carries on rather than starting over.
+    setOnScreen(true);
+    advance();
+    expect(world.style.transform).not.toBe(parked);
+    void container;
   });
 
   it("stops the animation loop when paused", async () => {

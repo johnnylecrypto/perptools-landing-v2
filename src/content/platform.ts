@@ -25,7 +25,9 @@ export const platform = {
 
   points: {
     label: "Your points",
+    /** Formatted for the server render; `balanceValue` is what counts up to it. */
     balance: "32,500",
+    balanceValue: 32_500,
     unit: "PTS",
     delta: "+240 this week",
     rank: "Rank 341",
@@ -70,6 +72,7 @@ export const platform = {
   rewardPool: {
     label: "Reward pool",
     amount: "1,000,000",
+    amountValue: 1_000_000,
     unit: "PTS",
     /** design: 150.99 of 216px */
     progress: 150.99 / 216,

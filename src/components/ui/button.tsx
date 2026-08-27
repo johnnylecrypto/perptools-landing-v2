@@ -5,7 +5,7 @@ export type ButtonVariant = "primary" | "ghost";
 export type ButtonSize = "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-lg font-semibold " +
+  "inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-button font-semibold " +
   "tracking-[-0.01em] transition-[transform,box-shadow,background-color,border-color] duration-250 " +
   "ease-[cubic-bezier(0.16,1,0.3,1)] disabled:pointer-events-none disabled:opacity-50";
 

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { PointMarker } from "@/components/ui/point-marker";
 import { usePredictionGame } from "@/lib/use-prediction-game";
 import type { FeedStatus } from "@/lib/price-feed";
-import { useWorldScroll } from "@/lib/use-world-scroll";
+import { pricePaths, useWorldScroll, type ChartFrame, type Point } from "@/lib/use-world-scroll";
 import {
   SUBTICKS_PER_COLUMN,
   TIME_STRIP_HEIGHT,
@@ -72,11 +72,13 @@ export function PredictionBoard() {
 
   // Motion runs on an animation frame rather than on React renders; these refs
   // are what it writes to.
-  const { worldRef, markerRef } = useWorldScroll({
+  const chart = useMemo(() => buildChartFrame(state, ladder, geometry), [state, ladder, geometry]);
+  const { worldRef, markerRef, lineRef, areaRef } = useWorldScroll({
     subtick: state.subtick,
     subticksPerColumn: SUBTICKS_PER_COLUMN,
     worldColumns: geometry.columns + 1,
     priceFraction,
+    chart,
     running,
   });
 
@@ -129,7 +131,7 @@ export function PredictionBoard() {
               disabled={broke}
               onBet={actions.bet}
             />
-            <PriceLine state={state} ladder={ladder} geometry={geometry} />
+            <PriceLine frame={chart} lineRef={lineRef} areaRef={areaRef} />
           </div>
         </div>
 
@@ -581,41 +583,50 @@ function nowFraction(geometry: Geometry) {
 }
 
 /**
- * Settled price action, drawn in world coordinates so it scrolls with the grid.
+ * Samples for the visible window, in the SVG's 0-100 coordinate space.
  *
- * Follows the product: a quadratic-smoothed path rather than raw segments, a 2px
- * translucent cyan stroke, and an area wash fading out at the bottom. The tip
- * marker is not drawn here — it belongs to the fixed NOW overlay, so it stays
- * rock steady while the sheet slides underneath it.
+ * Everything settled goes into `points`; the newest sample becomes the tip,
+ * which the animation loop re-places every frame.
  */
-function PriceLine({
-  state,
-  ladder,
-  geometry,
-}: {
-  state: GameState;
-  ladder: Ladder;
-  geometry: Geometry;
-}) {
+function buildChartFrame(state: GameState, ladder: Ladder, geometry: Geometry): ChartFrame | null {
   const col0 = firstVisibleColumn(state, geometry);
-  const from = Math.max(0, col0 * SUBTICKS_PER_COLUMN);
+  const oldest = Math.max(0, col0 * SUBTICKS_PER_COLUMN);
   const worldColumns = geometry.columns + 1;
+  const at = (index: number, price: number): Point => ({
+    x: ((index / SUBTICKS_PER_COLUMN - col0) / worldColumns) * 100,
+    y: (1 - priceToFraction(price, ladder, geometry.rows)) * 100,
+  });
 
-  const pts: { x: number; y: number }[] = [];
-  for (let i = from; i <= state.subtick; i += 1) {
+  const points: Point[] = [];
+  for (let i = oldest; i < state.subtick; i += 1) {
     const price = state.prices[i];
-    if (price === undefined) continue;
-    // World position in columns, mapped across the world's width.
-    const worldColumn = i / SUBTICKS_PER_COLUMN - col0;
-    pts.push({
-      x: (worldColumn / worldColumns) * 100,
-      y: (1 - priceToFraction(price, ladder, geometry.rows)) * 100,
-    });
+    if (price !== undefined) points.push(at(i, price));
   }
 
-  if (pts.length < 2) return null;
-  const path = smoothPath(pts);
-  const tail = pts[pts.length - 1].x;
+  const newest = state.prices[state.subtick];
+  if (points.length < 1 || newest === undefined) return null;
+  return { points, tip: at(state.subtick, newest), subtick: state.subtick, col0 };
+}
+
+/**
+ * Settled price action, drawn in world coordinates so it scrolls with the grid.
+ *
+ * React draws only the resting frame — the server's, and whatever is on screen
+ * before the loop takes over. The tip, the segment reaching the NOW line, is
+ * redrawn by `useWorldScroll` every animation frame from the same interpolated
+ * price the marker uses, so the two cannot drift apart.
+ */
+function PriceLine({
+  frame,
+  lineRef,
+  areaRef,
+}: {
+  frame: ChartFrame | null;
+  lineRef: React.Ref<SVGPathElement>;
+  areaRef: React.Ref<SVGPathElement>;
+}) {
+  if (!frame) return null;
+  const { line, area } = pricePaths([...frame.points, frame.tip]);
 
   return (
     <svg
@@ -630,9 +641,10 @@ function PriceLine({
           <stop offset="100%" stopColor="#2BB9F3" stopOpacity="0" />
         </linearGradient>
       </defs>
-      <path d={`${path} L ${tail},100 L ${pts[0].x},100 Z`} fill="url(#pt-price-fill)" />
+      <path ref={areaRef} d={area} fill="url(#pt-price-fill)" />
       <path
-        d={path}
+        ref={lineRef}
+        d={line}
         fill="none"
         stroke="#2BB9F3"
         strokeOpacity="0.65"
@@ -643,21 +655,6 @@ function PriceLine({
       />
     </svg>
   );
-}
-
-/** Midpoint-quadratic smoothing, the same curve the product's `smoothPath` draws. */
-function smoothPath(pts: { x: number; y: number }[]) {
-  if (pts.length < 2) return "";
-  if (pts.length === 2) return `M ${pts[0].x},${pts[0].y} L ${pts[1].x},${pts[1].y}`;
-
-  let d = `M ${pts[0].x},${pts[0].y}`;
-  for (let i = 1; i < pts.length - 1; i += 1) {
-    const midX = (pts[i].x + pts[i + 1].x) / 2;
-    const midY = (pts[i].y + pts[i + 1].y) / 2;
-    d += ` Q ${pts[i].x},${pts[i].y} ${midX},${midY}`;
-  }
-  const last = pts[pts.length - 1];
-  return `${d} L ${last.x},${last.y}`;
 }
 
 /**

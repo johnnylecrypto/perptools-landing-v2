@@ -49,8 +49,8 @@ export function Header() {
           (61.5px) plus the header's own 38.5px inset puts the lockup at x=100,
           matching the design file. The inset is dropped below lg, where it would
           eat into the phone gutter instead of adding to it. */}
-      <nav aria-label="Main" className="px-side">
-        <div className="flex h-20 items-center justify-between lg:px-[38.5px]">
+      <nav aria-label="Main" className="frame [--frame-max:100px] [--frame-width:1240px]">
+        <div className="flex h-20 items-center justify-between">
           <Logo onClick={() => setOpen(false)} />
 
           <ul className="hidden items-center gap-9 lg:flex">
@@ -118,7 +118,7 @@ function LaunchAppButton({ className, onClick }: { className?: string; onClick?:
       rel="noopener noreferrer"
       onClick={onClick}
       className={cn(
-        "inline-flex h-10 min-w-[147px] items-center justify-center rounded-[7px] px-3",
+        "rounded-button inline-flex h-10 min-w-[147px] items-center justify-center px-3",
         "font-dm bg-[image:var(--gradient-accent)] text-[15px] font-semibold text-[#000510]",
         "transition-[background-image,box-shadow,transform] duration-250",
         "ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[image:var(--gradient-accent-hover)]",
