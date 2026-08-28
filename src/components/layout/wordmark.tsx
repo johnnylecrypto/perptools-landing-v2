@@ -10,7 +10,7 @@ import Image from "next/image";
 export function Wordmark({ className }: { className?: string }) {
   return (
     <Image
-      src="/PERPTools.webp"
+      src="/brand/perptools.webp"
       alt=""
       width={1240}
       height={187}

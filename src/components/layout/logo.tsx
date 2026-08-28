@@ -15,7 +15,7 @@ export function Logo({ className, onClick }: { className?: string; onClick?: () 
       className={cn("flex h-8 items-center gap-1 lg:h-10 lg:gap-1.5", className)}
     >
       <Image
-        src="/logo-mark.webp"
+        src="/brand/logo-mark.webp"
         alt=""
         width={40}
         height={40}

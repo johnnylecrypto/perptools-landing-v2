@@ -37,7 +37,7 @@ export const platform = {
   rank: {
     label: "Rank",
     /** Rendered at the design's 138x127; source art is 207x196. */
-    badge: "/tier-3d-wolf.png",
+    badge: "/tiers/3d-wolf.png",
     tier: "WOLF",
     tierPosition: "Tier 2 of 7",
     nextTier: "SHARK",
@@ -65,7 +65,12 @@ export const platform = {
     earned: 2,
     total: 12,
     /** In unlock order — the first `earned` entries render lit, the rest dimmed. */
-    items: ["/tier-rekt-v1.png", "/tier-green-closer.png", "/tier-panic.png", "/tier-discord.png"],
+    items: [
+      "/tiers/rekt-v1.png",
+      "/tiers/green-closer.png",
+      "/tiers/panic.png",
+      "/tiers/discord.png",
+    ],
     latest: "Green Closer unlocked",
   },
 

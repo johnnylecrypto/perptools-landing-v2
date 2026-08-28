@@ -1,20 +1,8 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { RevealContext } from "@/components/ui/reveal-context";
 import { cn } from "@/lib/utils";
-
-/**
- * Whether the reveal this element sits inside has been triggered.
- *
- * Lets counters and other JS-driven pieces start on the same beat as the CSS
- * cascade, instead of each watching the viewport for itself and drifting apart
- * on a tall section.
- */
-const RevealContext = createContext(false);
-
-export function useRevealed() {
-  return useContext(RevealContext);
-}
 
 /**
  * Plays a section's entrance once, when it scrolls into view.
