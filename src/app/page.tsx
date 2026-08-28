@@ -8,11 +8,16 @@ import { site } from "@/lib/site";
 export default function HomePage() {
   return (
     <>
-      <Hero />
-      <Live />
-      <Platform />
-      <Points />
-      <ClosingCta />
+      {/* Phones space sections from here rather than from each section's own
+          padding: one 64px gap between neighbours, instead of two paddings
+          stacking into 128px. Wider layouts keep `py-section`. */}
+      <div className="flex flex-col max-sm:gap-16 max-sm:pb-16">
+        <Hero />
+        <Live />
+        <Platform />
+        <Points />
+        <ClosingCta />
+      </div>
       <script
         type="application/ld+json"
         // Structured data for rich results; content is fully static.

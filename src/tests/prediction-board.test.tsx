@@ -55,9 +55,15 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-/** The board's balance readout, e.g. "99.5 PTS". Points carry two decimals. */
+/**
+ * The board's balance readout, e.g. "99.5 PTS". Points carry two decimals.
+ *
+ * Scoped to the desktop market bar: the phone layout renders its own balance
+ * pill, and jsdom has no viewport to hide one of them.
+ */
 function balance() {
-  const text = screen.getByText(/PTS$/, { selector: "span.font-bold" }).textContent ?? "";
+  const label = screen.getByText("Prediction Balance:");
+  const text = label.parentElement?.querySelector("span.font-bold")?.textContent ?? "";
   return Number(text.replace(/,/g, "").replace(/[^0-9.]/g, ""));
 }
 

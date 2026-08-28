@@ -3,6 +3,7 @@ import { platform, pointsSeries } from "@/content/platform";
 import { Sparkline } from "@/components/ui/sparkline";
 import { Reveal } from "@/components/ui/reveal";
 import { CountUp } from "@/components/ui/count-up";
+import { PointsReceipt } from "@/components/sections/points-receipt";
 import { cn } from "@/lib/utils";
 
 /**
@@ -15,23 +16,27 @@ export function Platform() {
       {/* `Reveal` only carries the scroll trigger; everything inside it stays
           server-rendered. The staging is CSS, keyed off the class it adds. */}
       <Reveal className="ledger frame w-full">
-        <div className="flex w-full flex-col items-center gap-16">
-          <header className="led-head flex flex-col items-center gap-[18.89px] text-center">
+        <div className="flex w-full flex-col items-center gap-16 max-sm:gap-8">
+          <header className="led-head flex flex-col items-center gap-[18.89px] text-center max-sm:gap-5">
             <h2
               id="platform-heading"
-              className="max-w-[874.88px] text-[clamp(30px,5vw,48px)] leading-[1.05] font-medium text-balance text-white mix-blend-lighten"
+              className="max-w-[874.88px] text-[clamp(30px,5vw,48px)] leading-[1.05] font-medium text-balance text-white mix-blend-lighten max-sm:text-[32px] max-sm:leading-[38.4px]"
             >
               {platform.heading}
             </h2>
-            <p className="max-w-[636.28px] text-[16px] leading-[23.86px] text-pretty text-[#7A8494]">
+            <p className="max-w-[636.28px] text-[16px] leading-[23.86px] text-pretty text-[#7A8494] max-sm:text-[14px]">
               {platform.lede}
             </p>
           </header>
 
+          {/* Phones get the printed receipt instead: the cards below need
+              columns a phone does not have. */}
+          <PointsReceipt className="sm:hidden" />
+
           {/* Cards share the row by design ratio rather than fixed px: the
               section fills its padded width now, and fixed widths would leave
               the rows short of the right edge past a 1080px frame. */}
-          <div className="flex w-full flex-col gap-4">
+          <div className="flex w-full flex-col gap-4 max-sm:hidden">
             <div className="flex flex-col gap-4 lg:h-[372px] lg:flex-row">
               <PointsCard />
               <RankCard />

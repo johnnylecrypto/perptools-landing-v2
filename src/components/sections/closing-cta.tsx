@@ -3,6 +3,7 @@ import { closingCta } from "@/content/hero";
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/ui/arrow-icon";
 import { Ellipse } from "@/components/ui/ellipse";
+import { CtaDotField } from "./cta-dot-field";
 
 export function ClosingCta() {
   return (
@@ -19,7 +20,7 @@ export function ClosingCta() {
             blend="normal"
             className="-z-10"
           />
-
+          <CtaDotField className="sm:hidden" />
           <Image
             src="/market-banner.webp"
             alt=""
@@ -30,20 +31,31 @@ export function ClosingCta() {
             className="pointer-events-none absolute top-1/2 -right-14 -z-10 hidden w-[381px] max-w-none -translate-y-1/2 select-none sm:block"
           />
 
-          <div className="flex flex-col gap-10 px-6 py-14 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-[clamp(32px,5vw,70px)]">
+          <div className="flex flex-col gap-4 p-4 sm:gap-10 sm:px-8 sm:py-14 lg:flex-row lg:items-center lg:justify-between lg:px-[clamp(32px,5vw,70px)]">
+            {/* box the dot-field logo is drawn into — resize it to resize the mark */}
+            <span
+              data-dot-mark
+              aria-hidden
+              className="block h-[105px] w-[120px] self-center sm:hidden"
+            />
+
             <div className="w-full max-w-full lg:w-[625px]">
               <h2
                 id="get-started-heading"
-                className="text-[clamp(28px,3vw,44px)] leading-[1.1] font-medium tracking-[-0.02em] text-balance text-white"
+                className="text-[26px] leading-[1.1] font-medium tracking-[-0.02em] whitespace-nowrap text-white sm:text-[clamp(28px,3vw,44px)] sm:text-balance"
               >
                 {closingCta.heading}
               </h2>
-              <p className="mt-4 max-w-[440px] text-[16px] leading-[22px] text-pretty text-[#7A8494]">
+              <p className="mt-[12.5px] max-w-[440px] text-[14px] leading-[22px] text-pretty text-[#7A8494] sm:mt-4 sm:text-[16px]">
                 {closingCta.lede}
               </p>
             </div>
 
-            <Button href={closingCta.cta.href} className="shrink-0 sm:min-w-[200px]">
+            <Button
+              data-dot-act
+              href={closingCta.cta.href}
+              className="mt-4 h-13 w-full shrink-0 text-base font-bold sm:mt-0 sm:h-14 sm:w-auto sm:min-w-[200px]"
+            >
               {closingCta.cta.label}
               <ArrowIcon className="size-3.5" />
             </Button>

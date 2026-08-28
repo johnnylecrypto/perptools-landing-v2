@@ -21,6 +21,10 @@ export const site = {
     tapPredictions: "https://app.perptools.ai/prediction",
     arena: "/ai-arena",
     mcpDocs: "https://docs.perptools.ai/mcp",
+    // TODO: confirm — the mobile menu design lists these two, but neither had a
+    // URL anywhere in the project; these follow the existing docs/handle pattern.
+    security: "https://docs.perptools.ai/security",
+    discord: "https://discord.gg/perptools",
     x: "https://x.com/perptools",
     telegram: "https://t.me/perptools",
     orderly: "https://orderly.network",

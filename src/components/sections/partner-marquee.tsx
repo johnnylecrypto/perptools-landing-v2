@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
  */
 export function PartnerMarquee({ className }: { className?: string }) {
   return (
-    <div className={cn("relative h-24 overflow-hidden", className)} aria-label="Backed by">
-      <div className="animate-marquee flex h-full w-max items-center gap-24 pl-0">
+    <div className={cn("relative h-20 overflow-hidden sm:h-24", className)} aria-label="Backed by">
+      <div className="animate-marquee flex h-full w-max items-center gap-4 pl-0 sm:gap-24">
         {[...partners, ...partners].map((partner, index) => (
           <PartnerLogo key={`${partner.name}-${index}`} partner={partner} />
         ))}
@@ -26,7 +26,7 @@ function PartnerLogo({ partner }: { partner: Partner }) {
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center gap-4",
+        "flex shrink-0 items-center gap-2.5 sm:gap-4",
         // drop-shadow hugs the mark and lettering; the design file's box-shadow
         // would draw a rectangular halo around the whole row.
         partner.featured
@@ -34,7 +34,7 @@ function PartnerLogo({ partner }: { partner: Partner }) {
           : "opacity-50",
       )}
     >
-      <span className="flex size-12 shrink-0 items-center justify-center opacity-80">
+      <span className="flex size-8 shrink-0 items-center justify-center opacity-80 sm:size-12">
         {partner.logo ? (
           // eslint-disable-next-line @next/next/no-img-element -- partner marks are pre-sized SVG/PNG
           <img
@@ -42,15 +42,15 @@ function PartnerLogo({ partner }: { partner: Partner }) {
             alt=""
             width={48}
             height={48}
-            className="size-12 object-contain"
+            className="size-8 object-contain sm:size-12"
           />
         ) : (
-          <span className="border-line-strong flex size-12 items-center justify-center rounded-lg border bg-white/5 font-semibold text-white">
+          <span className="border-line-strong flex size-8 items-center sm:size-12 justify-center rounded-lg border bg-white/5 font-semibold text-white">
             {partner.name.charAt(0)}
           </span>
         )}
       </span>
-      <span className="text-2xl font-semibold whitespace-nowrap text-white opacity-80">
+      <span className="text-base font-semibold whitespace-nowrap text-white opacity-80 sm:text-2xl">
         {partner.name}
       </span>
     </div>

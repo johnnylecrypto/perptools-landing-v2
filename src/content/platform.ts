@@ -91,6 +91,70 @@ export const platform = {
     ] satisfies Task[],
   },
 
+  /**
+   * Phone layout: the dashboard's six cards do not survive a 358px column, so
+   * the mobile design prints the same story as a points receipt instead.
+   */
+  receipt: {
+    title: "PERPTOOLS",
+    subtitle: "POINTS RECEIPT · SESSION 4",
+    lines: [
+      { label: "TRADING VOLUME $10K", points: "+600" },
+      { label: "PROFITABLE CLOSE", points: "+250" },
+      { label: "POSITION HELD 24H", points: "+300" },
+      { label: "WEEKLY QUEST ×2", points: "+300" },
+      { label: "PREDICTION WON ×4.8", points: "+1,900" },
+    ],
+    totalLabel: "TOTAL",
+    /** Rendered on the server; `totalValue` is what the count-up runs to. */
+    total: "3,350",
+    totalValue: 3_350,
+    unit: "PTS",
+    rankLabel: "RANK PROGRESS",
+    rank: "WOLF · TIER 3/7 ▲",
+    disclaimer: "EXAMPLE VALUES · NOT A GUARANTEE OF FUTURE VALUE",
+    stats: [
+      { value: "1M", label: "REWARD POOL", color: "#83D4FB" },
+      { value: "7", label: "RANK TIERS", color: "#FFFFFF" },
+      { value: "×9.6", label: "MAX MULTIPLIER", color: "#E9C87A" },
+    ],
+    cta: "Start Earning",
+    /**
+     * Barcode bars as `[left, width]` in a 122x32 box, straight from the design
+     * file — a real encoding would print something the numbers above do not say.
+     */
+    barcode: [
+      [0, 2],
+      [4, 1],
+      [8, 3],
+      [13, 1],
+      [17, 2],
+      [21, 2],
+      [26, 1],
+      [29, 3],
+      [35, 2],
+      [39, 1],
+      [43, 2],
+      [47, 3],
+      [53, 1],
+      [56, 2],
+      [61, 1],
+      [64, 3],
+      [70, 2],
+      [74, 1],
+      [78, 2],
+      [82, 2],
+      [87, 3],
+      [92, 1],
+      [96, 2],
+      [100, 1],
+      [104, 3],
+      [109, 2],
+      [114, 1],
+      [117, 2],
+    ],
+  },
+
   activity: {
     label: "Recent activity",
     liveLabel: "Live",

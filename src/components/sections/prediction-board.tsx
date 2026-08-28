@@ -9,8 +9,8 @@ import { usePredictionGame } from "@/lib/use-prediction-game";
 import type { FeedStatus } from "@/lib/price-feed";
 import { pricePaths, useWorldScroll, type ChartFrame, type Point } from "@/lib/use-world-scroll";
 import {
+  STAKE_STEPS,
   SUBTICKS_PER_COLUMN,
-  TIME_STRIP_HEIGHT,
   bandFor,
   currentColumn,
   firstPlayableColumn,
@@ -93,7 +93,7 @@ export function PredictionBoard() {
   return (
     <div
       ref={boardRef}
-      className="relative w-full overflow-hidden rounded-2xl bg-[#010101] p-3 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.15)]"
+      className="relative w-full overflow-hidden rounded-2xl bg-[#010101] p-3 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.15)] max-sm:px-0"
     >
       <MarketBar
         marketIndex={marketIndex}
@@ -102,7 +102,9 @@ export function PredictionBoard() {
         onSelect={actions.selectMarket}
       />
 
-      <div className="relative mt-[9px] overflow-hidden rounded-xl bg-[#010101] shadow-[inset_0_0_0_0.75px_#122B3A]">
+      {/* Phones run this panel edge to edge: no radius, no side rule, just the
+          top border the design draws above the time strip. */}
+      <div className="relative mt-[9px] overflow-hidden rounded-xl bg-[#010101] shadow-[inset_0_0_0_0.75px_#122B3A] max-sm:rounded-none max-sm:border-t max-sm:border-[#122B3A] max-sm:shadow-none">
         {/* The world: time axis and grid share one transform so they scroll as
             a single sheet, laid out one column wider than the panel so there is
             never a gap at the right edge. `useWorldScroll` drives the transform
@@ -172,7 +174,15 @@ export function PredictionBoard() {
         {help ? <HelpOverlay onClose={() => setHelp(false)} /> : null}
       </div>
 
-      <StakePanel stake={state.stake} balance={state.balance} onChange={actions.changeStake} />
+      {/* Phones get the design's two PTS pills; the stepper needs the width the
+          mobile card does not have. */}
+      <PointsBar balance={state.balance} stake={state.stake} onChange={actions.changeStake} />
+      <StakePanel
+        stake={state.stake}
+        balance={state.balance}
+        onChange={actions.changeStake}
+        className="hidden sm:block"
+      />
 
       {/* Settlements are visual; announce them for screen readers too. */}
       <p role="status" aria-live="polite" className="sr-only">
@@ -682,7 +692,7 @@ function NowLine({
     <div
       aria-hidden
       className="pointer-events-none absolute z-[1]"
-      style={{ left: `${nowFraction(geometry) * 100}%`, top: TIME_STRIP_HEIGHT, bottom: 0 }}
+      style={{ left: `${nowFraction(geometry) * 100}%`, top: geometry.strip, bottom: 0 }}
     >
       <span className="absolute inset-y-0 left-0 w-2 -translate-x-1/2 bg-[rgb(43_185_243/0.25)] blur-[6px]" />
       <span className="absolute inset-y-0 left-0 w-[2px] -translate-x-1/2 bg-[#2BB9F3]/65 shadow-[0_0_10px_#2BB9F3BF]" />
@@ -710,7 +720,7 @@ function NowLine({
 function TimeAxis({ geometry, font }: { geometry: Geometry; font: number }) {
   const total = geometry.columns + 1;
   return (
-    <div aria-hidden className="flex bg-[#010101]" style={{ height: TIME_STRIP_HEIGHT }}>
+    <div aria-hidden className="flex bg-[#010101]" style={{ height: geometry.strip }}>
       {Array.from({ length: total }, (_, column) => {
         const offset = column - (geometry.nowColumn - 1);
         const edge = column === 0 || column >= total - 7;
@@ -750,7 +760,7 @@ function PriceLadder({
     <div
       aria-hidden
       className="pointer-events-none absolute inset-x-0"
-      style={{ top: TIME_STRIP_HEIGHT, bottom: 0 }}
+      style={{ top: geometry.strip, bottom: 0 }}
     >
       {Array.from({ length: geometry.rows }, (_, row) => (
         <span
@@ -777,8 +787,14 @@ function MarketBar({
   onSelect: (index: number) => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 rounded-xl bg-[#010101] p-[9px] shadow-[inset_0_0_0_0.75px_#122B3A]">
-      <div className="flex items-center gap-1.5">
+    // On phones the bar is a bare row, per the design — the framed card only
+    // starts once the feed badge and balance join it.
+    <div className="flex items-center justify-between gap-3 rounded-xl max-sm:px-3 max-sm:py-0 sm:bg-[#010101] sm:p-[9px] sm:shadow-[inset_0_0_0_0.75px_#122B3A]">
+      {/* Phones get the design's dropdown; the pills need room the mobile card
+          does not have. */}
+      <MarketMenu marketIndex={marketIndex} onSelect={onSelect} />
+
+      <div className="hidden items-center gap-1.5 sm:flex">
         {points.markets.map((entry, index) => (
           <button
             key={entry.symbol}
@@ -808,7 +824,22 @@ function MarketBar({
         ))}
       </div>
 
-      <div className="flex items-center gap-3">
+      {/* The design's phone header: three inert tiles where the desktop bar
+          carries the feed badge and balance. Decorative, so they are not
+          buttons and are hidden from assistive tech. */}
+      <div aria-hidden className="flex items-center gap-3 sm:hidden">
+        <span className="flex size-[29px] items-center justify-center rounded-[7px] bg-[rgb(246_193_75/0.15)] shadow-[inset_0_0_0_0.75px_rgb(246_193_75/0.15)] backdrop-blur-[13.77px]">
+          <TrophyIcon />
+        </span>
+        <span className="flex size-[29px] items-center justify-center rounded-[7px] bg-[rgb(43_185_243/0.15)] shadow-[inset_0_0_0_0.75px_rgb(43_185_243/0.1)] backdrop-blur-[13.77px]">
+          <GearIcon />
+        </span>
+        <span className="flex size-[29px] items-center justify-center rounded-[7px] bg-[rgb(43_185_243/0.15)] shadow-[inset_0_0_0_0.75px_rgb(43_185_243/0.1)] backdrop-blur-[13.77px]">
+          <HistoryIcon />
+        </span>
+      </div>
+
+      <div className="hidden items-center gap-3 sm:flex">
         <FeedBadge status={feedStatus} />
         <p className="flex items-center gap-[3px] text-[10.5px] leading-[15px] whitespace-nowrap">
           <span className="hidden text-[#818689] sm:inline">Prediction Balance:</span>
@@ -826,6 +857,289 @@ function MarketBar({
         </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * Market picker for phones: a button that opens the list below it.
+ *
+ * Closes on select, on Escape, and when focus leaves the group — no document
+ * listener, so nothing outlives the component.
+ */
+function MarketMenu({
+  marketIndex,
+  onSelect,
+}: {
+  marketIndex: number;
+  onSelect: (index: number) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const current = points.markets[marketIndex];
+
+  return (
+    <div
+      className="relative sm:hidden"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") setOpen(false);
+      }}
+    >
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((value) => !value)}
+        className="flex h-[29px] cursor-pointer items-center gap-[4px] rounded-[7px] bg-[rgb(43_185_243/0.15)] px-[7px] shadow-[inset_0_0_0_0.75px_#2BB9F3]"
+      >
+        <Image src={current.logo} alt="" width={15} height={15} className="size-[15px]" />
+        <span className="sr-only">{current.symbol}</span>
+        <span className="text-[13px] leading-[18px] font-bold text-[#3FD08B]">
+          {current.change}
+        </span>
+        <CaretIcon open={open} />
+      </button>
+
+      {open ? (
+        <ul
+          role="listbox"
+          className="absolute top-[calc(100%+4px)] left-0 z-20 min-w-[104px] rounded-md bg-[#061928] p-1 shadow-[inset_0_0_0_0.75px_#122B3A,0_8px_24px_rgb(0_0_0/0.6)]"
+        >
+          {points.markets.map((entry, index) => (
+            <li key={entry.symbol}>
+              <button
+                type="button"
+                role="option"
+                aria-selected={index === marketIndex}
+                onClick={() => {
+                  onSelect(index);
+                  setOpen(false);
+                }}
+                className={cn(
+                  "flex w-full cursor-pointer items-center gap-[5px] rounded-[4px] px-1.5 py-1 text-left transition-colors",
+                  index === marketIndex ? "bg-[rgb(43_185_243/0.15)]" : "hover:bg-white/5",
+                )}
+              >
+                <Image src={entry.logo} alt="" width={12} height={12} className="size-3" />
+                <span
+                  className={cn(
+                    "text-[10.5px] leading-[15px] font-semibold",
+                    index === marketIndex ? "text-white" : "text-white/87",
+                  )}
+                >
+                  {entry.symbol}
+                </span>
+                <span className="ml-auto text-[9px] leading-3 font-medium text-[#3FD08B]">
+                  {entry.change}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
+
+function CaretIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 12 12"
+      className={cn("size-3 text-white/70 transition-transform", open && "rotate-180")}
+    >
+      <path
+        d="M3 4.75 6 7.75l3-3"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/**
+ * Phone footer: balance on the left, stake on the right, per the mobile design.
+ *
+ * The balance pill is a readout — top-ups are out of scope for the demo — while
+ * the stake pill opens the same steps the desktop stepper walks, so the board
+ * stays playable without the stepper's width.
+ */
+function PointsBar({
+  balance,
+  stake,
+  onChange,
+}: {
+  balance: number;
+  stake: number;
+  onChange: (direction: 1 | -1) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const index = STAKE_STEPS.indexOf(stake as (typeof STAKE_STEPS)[number]);
+
+  return (
+    <div className="mt-3 flex items-center justify-between px-3 sm:hidden">
+      <p className="flex h-[29px] items-center gap-[7px] rounded-[7px] bg-[rgb(43_185_243/0.15)] px-[7px] shadow-[inset_0_0_0_0.75px_rgb(43_185_243/0.15)] backdrop-blur-[13.77px]">
+        <span className="flex items-center gap-[4px]">
+          <WalletIcon />
+          <span className="text-[13px] leading-[18px] font-bold text-white tabular-nums">
+            {formatPoints(balance)} PTS
+          </span>
+        </span>
+        <PlusIcon />
+      </p>
+
+      <div
+        className="relative"
+        onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") setOpen(false);
+        }}
+      >
+        <button
+          type="button"
+          aria-haspopup="listbox"
+          aria-expanded={open}
+          onClick={() => setOpen((value) => !value)}
+          className="flex h-[29px] cursor-pointer items-center gap-[14px] rounded-[7px] bg-white/15 px-[7px] shadow-[inset_0_0_0_0.75px_rgb(255_255_255/0.15)] backdrop-blur-[13.77px]"
+        >
+          <span className="flex items-center gap-[4px]">
+            <Image
+              src="/logo-coin-pts.png"
+              alt=""
+              width={18}
+              height={18}
+              className="size-[18px] rounded-full"
+            />
+            <span className="text-[13px] leading-[18px] font-bold text-white tabular-nums">
+              {formatPoints(stake)} PTS
+            </span>
+          </span>
+          <span className="sr-only">Stake</span>
+          <CaretIcon open={open} />
+        </button>
+
+        {open ? (
+          <ul
+            role="listbox"
+            className="absolute right-0 bottom-[calc(100%+4px)] z-20 min-w-[96px] rounded-md bg-[#061928] p-1 shadow-[inset_0_0_0_0.75px_#122B3A,0_8px_24px_rgb(0_0_0/0.6)]"
+          >
+            {STAKE_STEPS.map((step, stepIndex) => (
+              <li key={step}>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={step === stake}
+                  onClick={() => {
+                    // The reducer walks the steps one at a time, so a jump is
+                    // that many single steps in the chosen direction.
+                    const delta = stepIndex - index;
+                    for (let i = 0; i < Math.abs(delta); i += 1) onChange(delta > 0 ? 1 : -1);
+                    setOpen(false);
+                  }}
+                  className={cn(
+                    "flex w-full cursor-pointer items-center justify-between gap-3 rounded-[4px] px-1.5 py-1 text-left transition-colors",
+                    step === stake ? "bg-[rgb(43_185_243/0.15)]" : "hover:bg-white/5",
+                  )}
+                >
+                  <span className="text-[10.5px] leading-[15px] font-semibold text-white tabular-nums">
+                    {formatPoints(step)}
+                  </span>
+                  <span className="text-[9px] leading-3 font-medium text-white/60">PTS</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function WalletIcon() {
+  return (
+    <svg aria-hidden viewBox="0 0 22 22" className="size-[22px] text-white">
+      <path
+        d="M3.5 6.5h13a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1Zm0 0V5a1 1 0 0 1 1-1h10"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="15" cy="12.5" r="1.15" fill="currentColor" />
+    </svg>
+  );
+}
+
+function PlusIcon() {
+  return (
+    <svg aria-hidden viewBox="0 0 15 15" className="size-[15px] text-white">
+      <path
+        d="M7.5 2.5v10M2.5 7.5h10"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function TrophyIcon() {
+  return (
+    <svg aria-hidden viewBox="0 0 18 18" className="size-[18px] text-[#F6C14B]">
+      <path
+        d="M5 3h8v4a4 4 0 0 1-8 0V3Zm0 1.5H3.2A2.8 2.8 0 0 0 6 8m7-3.5h1.8A2.8 2.8 0 0 1 12 8M9 11v3m-2.5 1.5h5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function GearIcon() {
+  return (
+    <svg aria-hidden viewBox="0 0 18 18" className="size-[18px] text-white/87">
+      <circle cx="9" cy="9" r="2.6" fill="none" stroke="currentColor" strokeWidth="1.3" />
+      <path
+        d="M9 1.8v1.9M9 14.3v1.9M1.8 9h1.9m10.6 0h1.9M3.9 3.9l1.3 1.3m7.6 7.6 1.3 1.3M14.1 3.9l-1.3 1.3m-7.6 7.6-1.3 1.3"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function HistoryIcon() {
+  return (
+    <svg aria-hidden viewBox="0 0 18 18" className="size-[18px] text-white/87">
+      <path
+        d="M3.2 6.4A6.2 6.2 0 1 1 2.8 9"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M2.4 2.9v3.6H6M9 5.6V9l2.4 1.6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
@@ -902,13 +1216,20 @@ function StakePanel({
   stake,
   balance,
   onChange,
+  className,
 }: {
   stake: number;
   balance: number;
   onChange: (direction: 1 | -1) => void;
+  className?: string;
 }) {
   return (
-    <div className="relative z-[3] mx-auto -mt-8 w-[282px] max-w-full overflow-hidden rounded-xl bg-[#030D14] p-[9px] shadow-[0_0.75px_4.35px_rgb(43_185_243/0.2),inset_0_0_0_0.75px_#122B3A]">
+    <div
+      className={cn(
+        "relative z-[3] mx-auto -mt-8 w-[282px] max-w-full overflow-hidden rounded-xl bg-[#030D14] p-[9px] shadow-[0_0.75px_4.35px_rgb(43_185_243/0.2),inset_0_0_0_0.75px_#122B3A]",
+        className,
+      )}
+    >
       <div
         aria-hidden
         className="absolute top-[-15px] left-[12.75px] h-[39px] w-[260.25px] rounded-full bg-[linear-gradient(180deg,rgb(0_173_239/0.12)_55%,rgb(157_179_198/0.12)_100%)] blur-[24.47px]"
