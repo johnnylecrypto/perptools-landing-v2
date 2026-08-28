@@ -1,5 +1,5 @@
-export /** Two-tone progress rail. */
-function Progress({ value, color }: { value: number; color: string }) {
+/** Two-tone progress rail. */
+export function Progress({ value, color }: { value: number; color: string }) {
   return (
     <div className="h-[3px] w-full rounded-[2px] bg-white/10">
       {/* Scaled rather than sized, so the fill animation runs on the compositor. */}

@@ -1,11 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export /**
- * Shared card shell: translucent ink, hairline ring, 20px padding.
- *
- * `delay` is the card's place in the entrance cascade, in milliseconds.
- */
-function PlatformCard({
+export function PlatformCard({
   className,
   delay = 0,
   children,

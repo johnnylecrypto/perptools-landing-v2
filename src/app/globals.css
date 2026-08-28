@@ -739,6 +739,29 @@
     animation: receipt-print 0.01s linear forwards;
   }
 
+  /* Both entrances start from a hidden state that only JavaScript clears, so
+     with scripting off the content would never appear. `useInView` cannot
+     cover this — it does not run — so the finished state is held here. */
+  @media (scripting: none) {
+    .lift-mock,
+    .lift-cast,
+    .lift-glow,
+    .lift-halo {
+      transform: none;
+      filter: none;
+      opacity: 1;
+    }
+    .lift-cast {
+      transform: translateX(-50%);
+    }
+    .receipt-paper {
+      transform: none;
+    }
+    .receipt-line {
+      opacity: 1;
+    }
+  }
+
   @keyframes receipt-feed {
     to {
       transform: translateY(0);

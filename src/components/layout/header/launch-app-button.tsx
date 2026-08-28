@@ -1,10 +1,13 @@
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-/** The header's primary CTA; also reused inside the mobile menu. */
-
-export /** 147×40 gradient pill from the design file. */
-function LaunchAppButton({ className, onClick }: { className?: string; onClick?: () => void }) {
+export function LaunchAppButton({
+  className,
+  onClick,
+}: {
+  className?: string;
+  onClick?: () => void;
+}) {
   return (
     <a
       href={site.links.app}

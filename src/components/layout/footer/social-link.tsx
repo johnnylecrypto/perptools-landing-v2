@@ -1,7 +1,6 @@
 /** One square social tile in the footer's row. */
 
-export /** 40px tall pill with a 1.18px hairline, per the design file. */
-function SocialLink({
+export function SocialLink({
   href,
   label,
   children,

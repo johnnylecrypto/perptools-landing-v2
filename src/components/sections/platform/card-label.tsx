@@ -1,7 +1,13 @@
 import { cn } from "@/lib/utils";
 
-export /** Small uppercase card label. */
-function CardLabel({ children, className }: { children: React.ReactNode; className?: string }) {
+/** Small uppercase card label. */
+export function CardLabel({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <p
       className={cn(
