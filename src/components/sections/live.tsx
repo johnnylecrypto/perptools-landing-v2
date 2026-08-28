@@ -18,7 +18,7 @@ export function Live() {
           <header className="flex flex-col items-center gap-5 text-center sm:gap-[18.89px]">
             <h2
               id="live-heading"
-              className="heading-sheen max-w-[874.88px] text-[32px] leading-[38.4px] font-medium text-balance sm:text-[clamp(30px,5vw,48px)] sm:leading-none"
+              className="heading-sheen max-w-[874.88px] text-[32px] leading-[1.25] font-medium text-balance sm:text-[clamp(30px,5vw,48px)] sm:leading-[1.25]"
             >
               {live.heading}
             </h2>

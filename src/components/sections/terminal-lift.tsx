@@ -60,6 +60,8 @@ export function TerminalLift({ className }: { className?: string }) {
             alt="PERPTools trading terminal running on a phone"
             width={358}
             height={515}
+            quality={100}
+            unoptimized
             sizes="(max-width: 640px) 94vw, 358px"
             className="relative z-[1] h-auto w-full select-none"
           />

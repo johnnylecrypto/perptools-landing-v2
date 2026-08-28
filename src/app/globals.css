@@ -549,6 +549,10 @@
     color: transparent;
     -webkit-text-fill-color: transparent;
     mix-blend-mode: lighten;
+    /* background-clip:text clips descenders on a tight line box */
+    display: inline-block;
+    padding-bottom: 0.2em;
+    margin-bottom: -0.2em;
   }
 
   /* ---------------------------------------------------------------------------
