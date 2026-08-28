@@ -27,6 +27,8 @@ export type Bet = {
   golden: boolean;
   /** Sub-tick the bet settled on, so the UI can time the fade-out. */
   resolvedAt: number | null;
+  /** Row index frozen at settlement so the card does not jump while it fades. */
+  resolvedRow: number | null;
 };
 
 /** Sub-ticks a settled bet stays on the board, mirroring the product's timings. */
@@ -38,6 +40,30 @@ export function rowOf(bet: Pick<Bet, "priceLow" | "priceHigh">, ladder: Ladder, 
   return rowForPrice((bet.priceLow + bet.priceHigh) / 2, ladder, rows);
 }
 
+/** Row to paint the bet on; settled bets keep the row they had at resolution. */
+export function displayRow(
+  bet: Pick<Bet, "priceLow" | "priceHigh" | "resolvedRow">,
+  ladder: Ladder,
+  rows: number,
+) {
+  return bet.resolvedRow ?? rowOf(bet, ladder, rows);
+}
+
+/** Win punch/score animations already fired for these bet ids (survives grid remounts). */
+const winPunchPlayed = new Set<number>();
+
+export function shouldPlayWinPunch(betId: number) {
+  return !winPunchPlayed.has(betId);
+}
+
+export function markWinPunchPlayed(betId: number) {
+  winPunchPlayed.add(betId);
+}
+
+export function clearWinPunchPlayed() {
+  winPunchPlayed.clear();
+}
+
 /**
  * Whether the price path crossed the band while `column` was open.
  *
@@ -45,9 +71,18 @@ export function rowOf(bet: Pick<Bet, "priceLow" | "priceHigh">, ladder: Ladder, 
  * themselves, so a fast move straight through a thin band still counts as a
  * touch — which is what "price touches the band" means on the real product.
  */
-export function didTouch(prices: readonly number[], column: number, low: number, high: number) {
+export function didTouch(
+  prices: readonly number[],
+  column: number,
+  low: number,
+  high: number,
+  /** Latest sub-tick to inspect; defaults to the end of the column window. */
+  upToSubtick?: number,
+) {
   const first = column * SUBTICKS_PER_COLUMN;
-  const last = first + SUBTICKS_PER_COLUMN - 1;
+  const columnLast = first + SUBTICKS_PER_COLUMN - 1;
+  const last = upToSubtick === undefined ? columnLast : Math.min(columnLast, upToSubtick);
+  if (last < first) return false;
 
   // Start one sample early so the segment entering the column is swept too.
   for (let i = Math.max(1, first); i <= last; i += 1) {

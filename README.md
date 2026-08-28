@@ -85,5 +85,18 @@ names under a `:root[data-theme="light"]` block — no component changes needed.
 ## Deployment
 
 Set `NEXT_PUBLIC_SITE_URL` to the production origin so canonical URLs, sitemap and OG tags are absolute.
-Security headers (`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy`)
-are configured in `next.config.ts`.
+
+Deploy via GitHub Actions: **Actions → Build and Deploy → Run workflow**, chọn `stage` hoặc `prod`.
+
+**Secrets cần set trong repo:**
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+
+**Vars (optional):**
+- `NEXT_PUBLIC_SITE_URL` — prod origin (default: `https://perptools.ai`)
+- `NEXT_PUBLIC_SITE_URL_STAGE` — stage origin nếu khác prod
+- `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST`
+
+**S3 buckets:** `perptools-web-stage` (stage), `perptools-web` (prod), region `us-east-1`.
+
+Build output là static export trong `./out`, sync lên S3. Security headers (trước đây trong `next.config.ts`) cần cấu hình ở CloudFront/CDN nếu cần.

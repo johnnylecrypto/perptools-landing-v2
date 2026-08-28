@@ -44,7 +44,7 @@ export const points = {
       "Every cell is a price band (row) inside a time window (column).",
       "Set your stake, then tap any cell right of the NOW line.",
       "Bands far from spot pay a bigger multiplier — and are far harder to touch.",
-      "When the playhead reaches your cell, you win if price touched that band.",
+      "When the playhead reaches your cell, you win as soon as price touches that band.",
     ],
   },
 } as const;

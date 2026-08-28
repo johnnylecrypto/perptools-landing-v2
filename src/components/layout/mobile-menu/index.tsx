@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { mobileNav } from "@/content/navigation";
 import { site } from "@/lib/site";
 import { captureLandingEvent } from "@/lib/analytics";
@@ -5,6 +6,7 @@ import { DiscordIcon } from "@/components/icons/discord";
 import { XIcon } from "@/components/icons/x";
 import { ArrowIcon } from "@/components/icons/arrow";
 import { ExternalLinkIcon } from "@/components/icons/external-link";
+import { Ellipse } from "@/components/ui/ellipse";
 import { cn } from "@/lib/utils";
 import { MenuLink } from "./menu-link";
 
@@ -13,6 +15,42 @@ const socialLinks = [
   { label: "twitter", href: site.links.x, Icon: XIcon },
   { label: "discord", href: site.links.discord, Icon: DiscordIcon },
 ] as const;
+
+/** Black base + hero art from the mobile MENU frame, beneath the frosted sheet. */
+function MenuBackdrop() {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden bg-black">
+      <div className="absolute inset-0 mx-auto w-full max-w-[1440px]">
+        <Ellipse
+          color="var(--color-accent-deep)"
+          width={212.74}
+          height={764.78}
+          left={101.38}
+          top={-322.79}
+          blur={52.07}
+        />
+        <Ellipse
+          color="var(--color-accent-soft)"
+          width={203.13}
+          height={777.48}
+          left={249.64}
+          top={-132.17}
+          blur={52.07}
+          blend="soft-light"
+        />
+        <Image
+          src="/media/bg-removal.webp"
+          alt=""
+          width={797}
+          height={684}
+          sizes="100vw"
+          className="absolute top-[75px] left-[-17px] w-[797px] max-w-none opacity-35 select-none"
+        />
+      </div>
+      <div className="absolute inset-0 bg-[url('/media/noise.webp')] bg-cover bg-center bg-no-repeat opacity-[0.54] mix-blend-soft-light" />
+    </div>
+  );
+}
 
 /**
  * Full-height navigation sheet for phones.
@@ -23,15 +61,17 @@ const socialLinks = [
  */
 export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   return (
-    <div
-      id="mobile-menu"
-      hidden={!open}
-      className={cn(
-        "fixed inset-x-0 top-16 bottom-0 z-40 flex flex-col justify-between gap-6 p-4 lg:hidden",
-        "border-b border-white/10 backdrop-blur-[20px]",
-        "bg-[linear-gradient(180deg,--alpha(var(--color-white)/1%)_0%,--alpha(var(--color-bg-0)/1%)_36%)]",
-      )}
-    >
+    <div id="mobile-menu" hidden={!open} className="fixed inset-0 z-40 lg:hidden">
+      <MenuBackdrop />
+
+      {/* Frosted sheet: Figma node 5352:1010800 — blur 20px, white/1% → #030405/1% @ 35.755%. */}
+      <div
+        className={cn(
+          "absolute inset-x-0 top-16 bottom-0 flex flex-col justify-between gap-6 p-4",
+          "border-b border-white/10 backdrop-blur-[20px]",
+          "bg-[linear-gradient(180deg,rgb(255_255_255/0.01)_0%,rgb(3_4_5/0.01)_35.755%)]",
+        )}
+      >
       <ul className="flex flex-col gap-3 overflow-y-auto">
         {mobileNav.map((item) => (
           <li key={item.label}>
@@ -78,6 +118,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
         Launch App
         <ArrowIcon className="size-3.5" />
       </a>
+      </div>
     </div>
   );
 }

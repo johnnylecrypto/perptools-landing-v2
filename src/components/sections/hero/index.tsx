@@ -9,50 +9,53 @@ export function Hero() {
     <section
       id="hero"
       aria-labelledby="hero-heading"
-      className="bg-bg-0 relative isolate flex min-h-[min(884px,100svh)] flex-col overflow-hidden sm:min-h-[640px] lg:min-h-[810px]"
+      className="bg-bg-0 relative isolate flex h-dvh flex-col overflow-hidden pb-[env(safe-area-inset-bottom)]"
     >
       <HeroBackdrop />
 
-      {/* Desktop: centred copy starting at y=289 with a 15px rhythm. Mobile: the
-          design left-aligns the block at y=194 with a 32px heading→lede gap, and
-          `pb-28` reserves the marquee strip at the bottom. */}
-      <div className="px-side relative flex flex-1 flex-col items-start gap-8 pt-[194px] pb-28 text-left sm:items-center sm:gap-[15px] sm:pt-[220px] sm:pb-32 sm:text-center lg:pt-[289px]">
-        <h1
-          id="hero-heading"
-          className="max-w-[792px] text-[clamp(44px,17vw,66px)] leading-none font-semibold text-balance text-white mix-blend-lighten sm:text-[clamp(38px,4.6vw,66px)]"
-        >
-          {hero.heading.map((line) => (
-            <span key={line} className="block">
-              {line}
-            </span>
-          ))}
-        </h1>
+      {/* Mobile (Figma Main @ 390×884): content from y=184, 32px h1→lede, 64px lede→CTAs;
+          marquee pinned to the foot. Desktop: centred block, marquee in-flow. */}
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col sm:justify-between">
+        <div className="px-side flex flex-col gap-16 pt-[clamp(5rem,47.2vw,11.5rem)] text-left max-sm:pb-[calc(5rem+2rem)] sm:min-h-0 sm:flex-1 sm:items-center sm:justify-center sm:gap-[15px] sm:pt-20 sm:pb-0 sm:text-center lg:pt-20">
+          <div className="flex flex-col items-start gap-8 sm:items-center sm:gap-[15px]">
+            <h1
+              id="hero-heading"
+              className="max-w-[792px] text-[clamp(44px,17vw,66px)] leading-none font-semibold text-balance text-white mix-blend-lighten sm:text-[clamp(38px,4.6vw,66px)]"
+            >
+              {hero.heading.map((line) => (
+                <span key={line} className="block">
+                  {line}
+                </span>
+              ))}
+            </h1>
 
-        <p className="font-inter text-fg max-w-[495px] text-[15px] leading-[19.5px] text-pretty">
-          {hero.lede}
-        </p>
+            <p className="font-inter text-fg max-w-[495px] text-[15px] leading-[19.5px] text-pretty">
+              {hero.lede}
+            </p>
+          </div>
 
-        <div className="flex w-full flex-col items-center justify-center gap-4 pt-8 sm:w-auto sm:flex-row sm:gap-3 sm:pt-6">
-          <Button
-            href={hero.primaryCta.href}
-            analyticsEvent="landing_hero_launch_app"
-            className="text-bg-2 h-13 w-full text-base font-bold sm:w-[179px]"
-          >
-            {hero.primaryCta.label}
-            <ArrowIcon className="size-3.5" />
-          </Button>
-          <Button
-            href={hero.secondaryCta.href}
-            analyticsEvent="landing_hero_explore_points"
-            variant="ghost"
-            className="text-fg h-13 w-full border-white/15 bg-white/5 text-base font-bold backdrop-blur-[2.65px] sm:w-[184px]"
-          >
-            {hero.secondaryCta.label}
-          </Button>
+          <div className="flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row sm:gap-3">
+            <Button
+              href={hero.primaryCta.href}
+              analyticsEvent="landing_hero_launch_app"
+              className="text-bg-2 h-13 w-full text-base font-bold sm:w-[179px]"
+            >
+              {hero.primaryCta.label}
+              <ArrowIcon className="size-3.5" />
+            </Button>
+            <Button
+              href={hero.secondaryCta.href}
+              analyticsEvent="landing_hero_explore_points"
+              variant="ghost"
+              className="text-fg h-13 w-full border-white/15 bg-white/5 text-base font-bold backdrop-blur-[2.65px] sm:w-[184px]"
+            >
+              {hero.secondaryCta.label}
+            </Button>
+          </div>
         </div>
-      </div>
 
-      <PartnerMarquee className="absolute inset-x-0 bottom-0" />
+        <PartnerMarquee className="max-sm:absolute max-sm:inset-x-0 max-sm:bottom-0 shrink-0" />
+      </div>
     </section>
   );
 }

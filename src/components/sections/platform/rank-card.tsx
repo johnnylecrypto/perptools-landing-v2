@@ -13,13 +13,15 @@ export function RankCard() {
       <div className="flex flex-col items-center gap-[17px]">
         <CardLabel className="self-stretch">{rank.label}</CardLabel>
         {rank.badge ? (
-          <Image
-            src={rank.badge}
-            alt=""
-            width={138}
-            height={127}
-            className="led-badge h-[127px] w-[138px] object-contain drop-shadow-[0_0_34px_--alpha(var(--color-success)/40%)]"
-          />
+          <div className="led-badge relative h-[127px] w-[138px]">
+            <Image
+              src={rank.badge}
+              alt=""
+              fill
+              sizes="138px"
+              className="object-contain drop-shadow-[0_0_34px_--alpha(var(--color-success)/40%)]"
+            />
+          </div>
         ) : (
           <span
             aria-hidden

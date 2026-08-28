@@ -51,11 +51,15 @@ export function Header() {
             : "lg:border-transparent lg:bg-transparent lg:backdrop-blur-none",
         )}
       >
-        {/* 80px tall: 20px vertical padding around a 40px lockup. The page gutter
-          (61.5px) plus the header's own 38.5px inset puts the lockup at x=100,
-          matching the design file. The inset is dropped below lg, where it would
-          eat into the phone gutter instead of adding to it. */}
-        <nav aria-label="Main" className="frame [--frame-max:100px] [--frame-width:1240px]">
+        {/* 80px tall: 20px vertical padding around a 40px lockup. Below lg the
+          bar uses the page gutter so the mark lines up with the hero copy
+          (the frame's 6% floor sat ~7px further in on a 390px phone). From lg,
+          the gutter (61.5px) plus the frame's 38.5px inset puts the lockup at
+          x=100, matching the design file. */}
+        <nav
+          aria-label="Main"
+          className="frame [--frame-max:100px] [--frame-width:1240px] max-lg:[padding-inline:var(--spacing-side)]"
+        >
           {/* 64px on phones (16px padding around a 32px lockup), 80px from lg. */}
           <div className="flex h-16 items-center justify-between lg:h-20">
             <Logo onClick={() => setOpen(false)} />

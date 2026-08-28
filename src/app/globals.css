@@ -124,24 +124,17 @@
   --spacing-side: clamp(16px, 4.1vw, 61.5px);
 
   --animate-marquee: marquee 40s linear infinite;
-  /* Win feedback on the prediction board, timed from the live TradeCanvas:
-     WIN_PUNCH_DURATION_MS and the score badge's 1800ms rise. */
-  --animate-cell-punch: cell-punch 380ms ease-out 1;
-  --animate-score-rise: score-rise 1800ms ease-out 1 forwards;
+  /* Win reaction on the prediction board: green state is instant (class swap);
+     this is only the short punch + score pop, ~280ms total. */
+  --animate-cell-punch: cell-punch 280ms cubic-bezier(0.22, 1, 0.36, 1) 1;
+  --animate-score-rise: score-rise 280ms ease-out 1 forwards;
 
-  /* The product's punch keyframes: 1 -> 1.38 -> 0.91 -> 1.06 -> 1. */
   @keyframes cell-punch {
     0% {
       transform: scale(1);
     }
-    25% {
-      transform: scale(1.38);
-    }
-    50% {
-      transform: scale(0.91);
-    }
-    75% {
-      transform: scale(1.06);
+    40% {
+      transform: scale(1.12);
     }
     100% {
       transform: scale(1);
@@ -151,18 +144,15 @@
   @keyframes score-rise {
     0% {
       opacity: 0;
-      transform: translate(-50%, 0) scale(0.6);
+      transform: translate(-50%, 0) scale(0.85);
     }
-    12% {
+    35% {
       opacity: 1;
-      transform: translate(-50%, -10px) scale(1);
-    }
-    60% {
-      opacity: 1;
+      transform: translate(-50%, -8px) scale(1);
     }
     100% {
       opacity: 0;
-      transform: translate(-50%, -80px) scale(1);
+      transform: translate(-50%, -16px) scale(1);
     }
   }
 
@@ -268,11 +258,11 @@
    Terminal "rise": the Live section's screen tilts up out of the page as it
    scrolls into view, then settles and catches the light.
 
-   Every stage hangs off `--rise`, so the whole sequence retimes from one value.
+   Glow and screenshot share `--rise` with no delay between them.
    --------------------------------------------------------------------------- */
 @layer components {
   .rise-scene {
-    --rise: 2200ms;
+    --rise: 400ms;
     --rise-tilt: 34deg;
     --rise-ease: cubic-bezier(0.42, 0.1, 0.18, 1);
 
@@ -290,8 +280,8 @@
     opacity: 0;
     transition:
       transform var(--rise) var(--rise-ease),
-      filter calc(var(--rise) * 0.82) cubic-bezier(0.22, 0.7, 0.2, 1),
-      opacity 620ms ease;
+      filter var(--rise) cubic-bezier(0.22, 0.7, 0.2, 1),
+      opacity var(--rise) ease-out;
     will-change: transform, filter;
   }
   .rise-scene.is-in .rise-card {
@@ -306,19 +296,20 @@
     opacity: 0;
     transition:
       transform var(--rise) var(--rise-ease),
-      opacity 900ms ease;
+      opacity var(--rise) ease-out;
   }
   .rise-scene.is-in .rise-floor {
     transform: translateX(-50%) scaleX(1);
     opacity: 1;
   }
 
-  /* Backlight arrives late, as the panel reaches vertical. */
+  /* Backlight and screenshot fade in together; no stagger. */
   .rise-glow {
     opacity: 0;
+    transition: opacity var(--rise) ease-out;
   }
   .rise-scene.is-in .rise-glow {
-    animation: rise-lightup 1500ms calc(var(--rise) - 500ms) ease-out forwards;
+    opacity: 0.4;
   }
   .rise-scene.is-in .rise-breathe {
     animation: rise-breathe 7s calc(var(--rise) + 1000ms) ease-in-out infinite;
@@ -337,28 +328,20 @@
   /* Top bezel catches the light on arrival. */
   .rise-edge {
     opacity: 0;
-    transition: opacity 900ms ease calc(var(--rise) - 600ms);
+    transition: opacity var(--rise) ease-out;
   }
   .rise-scene.is-in .rise-edge {
     opacity: 1;
   }
 
-  /* The screen "powers on" partway through the tilt. */
+  /* Screenshot rides the card fade so it does not lag the glow
+     (nested opacity would compound and read as a stagger). */
   .rise-screen {
-    opacity: 0;
-    transform: translateY(6px);
-    transition:
-      opacity 1100ms ease calc(var(--rise) * 0.42),
-      transform 1300ms var(--rise-ease) calc(var(--rise) * 0.42);
-  }
-  .rise-scene.is-in .rise-screen {
     opacity: 1;
-    transform: none;
   }
 
   @media (width < 640px) {
     .rise-scene {
-      --rise: 1900ms;
       --rise-tilt: 26deg;
     }
   }
@@ -375,6 +358,7 @@
     }
     .rise-glow {
       opacity: 0.34;
+      transition: none;
     }
     .rise-breathe,
     .rise-sheen {
@@ -399,7 +383,7 @@
    --------------------------------------------------------------------------- */
 @layer components {
   .lift-scene {
-    --lift: 1900ms;
+    --lift: 400ms;
     --lift-ease: cubic-bezier(0.34, 0.1, 0.2, 1);
     /* How far below its resting place the mockup starts, and the small
        counter-rotation that keeps it from reading as a lift shaft. */
@@ -419,9 +403,9 @@
     filter: blur(8px) brightness(0.48) saturate(0.72);
     opacity: 0;
     transition:
-      transform var(--lift) var(--lift-ease) 0.2s,
-      filter calc(var(--lift) * 0.8) cubic-bezier(0.22, 0.7, 0.2, 1) 0.2s,
-      opacity 560ms ease 0.2s;
+      transform var(--lift) var(--lift-ease),
+      filter var(--lift) cubic-bezier(0.22, 0.7, 0.2, 1),
+      opacity var(--lift) ease-out;
     will-change: transform, filter;
   }
   .lift-scene.is-in .lift-mock {
@@ -435,8 +419,8 @@
     transform: translateX(-50%) scaleX(0.72);
     opacity: 0;
     transition:
-      transform var(--lift) var(--lift-ease) 0.2s,
-      opacity 900ms ease 0.2s;
+      transform var(--lift) var(--lift-ease),
+      opacity var(--lift) ease-out;
   }
   .lift-scene.is-in .lift-cast {
     transform: translateX(-50%) scaleX(1);
@@ -446,16 +430,20 @@
   .lift-glow {
     opacity: 0;
     transform: scale(1.06);
+    transition:
+      opacity var(--lift) ease-out,
+      transform var(--lift) ease-out;
   }
   .lift-scene.is-in .lift-glow {
-    animation: lift-lightup 1500ms calc(var(--lift) - 380ms) ease-out forwards;
+    opacity: 0.5;
+    transform: none;
   }
 
   /* Ambient wash behind the whole mockup, distinct from `.lift-glow`, which is
      the light coming off the screen itself. Fades in as the mockup lands. */
   .lift-halo {
     opacity: 0;
-    transition: opacity 1400ms ease calc(var(--lift) - 700ms);
+    transition: opacity var(--lift) ease-out;
   }
   .lift-scene.is-in .lift-halo {
     opacity: 1;
@@ -484,7 +472,8 @@
     }
     .lift-glow {
       opacity: 0.4;
-      animation: none;
+      transform: none;
+      transition: none;
     }
     .lift-halo {
       opacity: 1;
@@ -493,12 +482,6 @@
     .lift-glass {
       display: none;
     }
-  }
-}
-
-@keyframes lift-lightup {
-  to {
-    opacity: 0.5;
   }
 }
 
@@ -979,12 +962,6 @@
   }
   to {
     text-shadow: none;
-  }
-}
-
-@keyframes rise-lightup {
-  to {
-    opacity: 0.4;
   }
 }
 

@@ -18,7 +18,7 @@ export function BadgesCard() {
           </p>
         </div>
 
-        <ul className="flex items-center gap-2">
+        <ul className="flex w-full items-center justify-between">
           {badges.items.map((badge, index) => (
             <li
               key={index}
@@ -31,8 +31,9 @@ export function BadgesCard() {
                   alt=""
                   width={48}
                   height={48}
+                  sizes="48px"
                   className={cn(
-                    "size-12",
+                    "size-12 object-cover",
                     // Locked badges stay visible but muted, matching "2 / 12".
                     index >= badges.earned && "opacity-35 grayscale",
                   )}

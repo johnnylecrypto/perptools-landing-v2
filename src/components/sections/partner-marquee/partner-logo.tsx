@@ -1,20 +1,10 @@
 import { type Partner } from "@/content/partners";
-import { cn } from "@/lib/utils";
 
-/** One mark plus wordmark in the strip; featured partners keep full opacity. */
+/** One mark plus wordmark in the strip. The marquee sets `data-active` on the nearest-to-center item. */
 
 export function PartnerLogo({ partner }: { partner: Partner }) {
   return (
-    <div
-      className={cn(
-        "flex shrink-0 items-center gap-2.5 sm:gap-4",
-        // drop-shadow hugs the mark and lettering; the design file's box-shadow
-        // would draw a rectangular halo around the whole row.
-        partner.featured
-          ? "opacity-100 [filter:drop-shadow(0_0_34px_--alpha(var(--color-accent)/55%))]"
-          : "opacity-50",
-      )}
-    >
+    <div className="flex shrink-0 items-center gap-2.5 opacity-50 data-active:opacity-100 data-active:[filter:drop-shadow(0_0_34px_--alpha(var(--color-accent)/55%))] sm:gap-4">
       <span className="flex size-8 shrink-0 items-center justify-center opacity-80 sm:size-12">
         {partner.logo ? (
           // eslint-disable-next-line @next/next/no-img-element -- partner marks are pre-sized SVG/PNG

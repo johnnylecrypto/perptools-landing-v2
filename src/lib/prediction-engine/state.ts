@@ -2,12 +2,13 @@ import { STAKE_STEPS, STARTING_BALANCE, SUBTICKS_PER_COLUMN } from "./constants"
 import { stepRng } from "./rng";
 import type { Geometry } from "./geometry";
 import type { Market } from "./market";
-import { bandFor, clampToLadder, ladderOf, nextPrice, recentre } from "./ladder";
+import { bandFor, clampToLadder, ladderOf, nextPrice, recentre, rowForPrice } from "./ladder";
 import { multiplierFor, sigmaOf } from "./payouts";
 import { applyGolden, isGoldenCell } from "./golden";
 import {
   LOST_VISIBLE_SUBTICKS,
   WIN_VISIBLE_SUBTICKS,
+  clearWinPunchPlayed,
   didTouch,
   rowOf,
   type Bet,
@@ -77,6 +78,7 @@ export function createGame(
   seed = 0x5eed,
   anchor = market.price,
 ): GameState {
+  clearWinPunchPlayed();
   return {
     prices: [anchor],
     subtick: 0,
@@ -166,7 +168,8 @@ function tick(
 
   const prices = [...state.prices, price];
   const subtick = state.subtick + 1;
-  const settledThrough = Math.floor(subtick / SUBTICKS_PER_COLUMN) - 1;
+  const currentCol = Math.floor(subtick / SUBTICKS_PER_COLUMN);
+  const settledThrough = currentCol - 1;
 
   let balance = state.balance;
   let streak = state.streak;
@@ -174,14 +177,9 @@ function tick(
   let result: Result | null = state.result;
   let settled = false;
 
-  const bets = state.bets.map((bet) => {
-    if (bet.status !== "pending" || bet.column > settledThrough) return bet;
-
+  const settle = (bet: Bet, won: boolean) => {
     settled = true;
-    const won = didTouch(prices, bet.column, bet.priceLow, bet.priceHigh);
     const payout = won ? roundPoints(bet.stake * bet.multiplier) : 0;
-    // The stake left the balance when the bet was placed, so only the gross
-    // return comes back; the net move is what the toast reports.
     balance = roundPoints(balance + payout);
     pnl = roundPoints(pnl + payout - bet.stake);
     streak = won ? streak + 1 : 0;
@@ -191,13 +189,28 @@ function tick(
       delta: payout - bet.stake,
       multiplier: bet.multiplier,
     };
-
     return {
       ...bet,
       status: won ? ("won" as const) : ("lost" as const),
       payout,
       resolvedAt: subtick,
+      resolvedRow: rowForPrice((bet.priceLow + bet.priceHigh) / 2, ladder, geometry.rows),
     };
+  };
+
+  const bets = state.bets.map((bet) => {
+    if (bet.status !== "pending") return bet;
+    // The window has not opened yet.
+    if (bet.column > currentCol) return bet;
+
+    if (didTouch(prices, bet.column, bet.priceLow, bet.priceHigh, subtick)) {
+      return settle(bet, true);
+    }
+
+    // Window closed with no touch.
+    if (bet.column <= settledThrough) return settle(bet, false);
+
+    return bet;
   });
 
   // A settled bet lingers on its own clock rather than until it scrolls off:
@@ -294,6 +307,7 @@ function placeBet(
           betCount: 1,
           golden,
           resolvedAt: null,
+          resolvedRow: null,
         },
       ];
 

@@ -4,7 +4,7 @@ import {
   formatMultiplier,
   isGoldenCell,
   multiplierFor,
-  rowOf,
+  displayRow,
   type Bet,
   type Geometry,
   type Ladder,
@@ -109,7 +109,7 @@ export const Grid = memo(function Grid({
   // Keyed by where each bet sits on the ladder *now*: the ladder shifts under
   // the price, so a bet's row is not the one it was placed on.
   const byCell = new Map(
-    bets.map((bet) => [`${rowOf(bet, ladder, geometry.rows)}-${bet.column}`, bet]),
+    bets.map((bet) => [`${displayRow(bet, ladder, geometry.rows)}-${bet.column}`, bet]),
   );
 
   return (

@@ -36,8 +36,8 @@ export const platform = {
 
   rank: {
     label: "Rank",
-    /** Rendered at the design's 138x127; source art is 207x196. */
-    badge: "/tiers/3d-wolf.png",
+    /** Rendered at the design's 138x127; source art is the Figma layer export at 3x. */
+    badge: "/tiers/3d-wolf.webp",
     tier: "WOLF",
     tierPosition: "Tier 2 of 7",
     nextTier: "SHARK",
@@ -66,10 +66,10 @@ export const platform = {
     total: 12,
     /** In unlock order — the first `earned` entries render lit, the rest dimmed. */
     items: [
-      "/tiers/rekt-v1.png",
-      "/tiers/green-closer.png",
-      "/tiers/panic.png",
-      "/tiers/discord.png",
+      "/tiers/rekt-v1.webp",
+      "/tiers/green-closer.webp",
+      "/tiers/panic.webp",
+      "/tiers/discord.webp",
     ],
     latest: "Green Closer unlocked",
   },

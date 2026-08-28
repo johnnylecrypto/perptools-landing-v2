@@ -10,7 +10,8 @@ import { cn } from "@/lib/utils";
  * into view.
  *
  * The tilt itself is CSS (see `.rise-*` in globals.css); this only decides
- * when it starts.
+ * when it starts: the first pixel of this preview, not the Live section box
+ * (that box overlaps the hero, so observing it would play on the first screen).
  */
 export function TerminalFrame({ className }: { className?: string }) {
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -32,7 +33,7 @@ export function TerminalFrame({ className }: { className?: string }) {
         scene.classList.add("is-in");
         observer.disconnect();
       },
-      { threshold: 0.28 },
+      { threshold: 0 },
     );
 
     observer.observe(scene);

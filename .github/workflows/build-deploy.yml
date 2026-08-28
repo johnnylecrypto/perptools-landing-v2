@@ -1,0 +1,107 @@
+name: Build and Deploy
+run-name: Build and Deploy, ref ${{ github.ref }} to ${{ inputs.environment }} environment
+
+# Requires secrets: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+# Optional vars: NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_POSTHOG_KEY, NEXT_PUBLIC_POSTHOG_HOST
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        required: true
+        type: choice
+        options:
+          - stage
+          - prod
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.environment }}
+  cancel-in-progress: false
+
+env:
+  AWS_DEFAULT_REGION: us-east-1
+  AWS_S3_BUCKET_STAGE: perptools-web-stage
+  AWS_S3_BUCKET_PROD: perptools-web
+  BUILD_DIR: ./out
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env file
+        run: |
+          if [ "${{ inputs.environment }}" = "prod" ]; then
+            echo "NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://perptools.ai' }}" >> .env
+          else
+            echo "NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL_STAGE || vars.NEXT_PUBLIC_SITE_URL || 'https://perptools.ai' }}" >> .env
+          fi
+          if [ -n "${{ vars.NEXT_PUBLIC_POSTHOG_KEY }}" ]; then
+            echo "NEXT_PUBLIC_POSTHOG_KEY=${{ vars.NEXT_PUBLIC_POSTHOG_KEY }}" >> .env
+          fi
+          if [ -n "${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}" ]; then
+            echo "NEXT_PUBLIC_POSTHOG_HOST=${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}" >> .env
+          fi
+
+      - name: Build static site
+        run: |
+          rm -rf "${{ env.BUILD_DIR }}"
+          npm run build
+
+      - name: Select target S3 bucket
+        id: target
+        run: |
+          if [ "${{ inputs.environment }}" = "prod" ]; then
+            echo "bucket=${{ env.AWS_S3_BUCKET_PROD }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "bucket=${{ env.AWS_S3_BUCKET_STAGE }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+
+      - name: Deploy to S3
+        run: |
+          BUCKET="s3://${{ steps.target.outputs.bucket }}"
+          STATIC_DIRS="media partners tokens tiers brand"
+          EXCLUDES=(--exclude "_next/*")
+          for dir in $STATIC_DIRS; do
+            EXCLUDES+=(--exclude "${dir}/*")
+          done
+          # HTML and other entry files: revalidate immediately after deploy
+          aws s3 sync "${{ env.BUILD_DIR }}" "$BUCKET" \
+            --delete \
+            "${EXCLUDES[@]}" \
+            --cache-control "public, max-age=0, must-revalidate"
+          # Hashed JS/CSS/fonts: long-lived immutable cache
+          aws s3 sync "${{ env.BUILD_DIR }}/_next" "$BUCKET/_next" \
+            --delete \
+            --cache-control "public, max-age=31536000, immutable"
+          # Public static assets: cache 30 days
+          for dir in $STATIC_DIRS; do
+            if [ -d "${{ env.BUILD_DIR }}/${dir}" ]; then
+              aws s3 sync "${{ env.BUILD_DIR }}/${dir}" "$BUCKET/${dir}" \
+                --delete \
+                --cache-control "public, max-age=2592000"
+            fi
+          done

@@ -186,8 +186,8 @@ describe("didTouch", () => {
 
   /** Build a price array where column 1's samples are `samples`. */
   function column1(samples: number[]) {
-    const prices = new Array(SUBTICKS_PER_COLUMN).fill(above);
-    return [...prices, ...samples];
+    const pad = Array.from({ length: SUBTICKS_PER_COLUMN - samples.length }, () => above);
+    return [...new Array(SUBTICKS_PER_COLUMN).fill(above), ...samples, ...pad];
   }
 
   it("detects a sample resting inside the band", () => {
@@ -199,6 +199,15 @@ describe("didTouch", () => {
     // No sample lands inside, but the segment crosses it end to end.
     const prices = column1([above, below, above, above]);
     expect(didTouch(prices, 1, low, high)).toBe(true);
+  });
+
+  it("only inspects samples up to the given sub-tick", () => {
+    const samples = Array.from({ length: SUBTICKS_PER_COLUMN }, () => above);
+    samples[6] = inside;
+    const prices = column1(samples);
+    const touchTick = SUBTICKS_PER_COLUMN + 6;
+    expect(didTouch(prices, 1, low, high, touchTick - 1)).toBe(false);
+    expect(didTouch(prices, 1, low, high, touchTick)).toBe(true);
   });
 
   it("returns false when the price stays clear of the band", () => {
@@ -320,6 +329,27 @@ describe("game lifecycle", () => {
     const column = firstPlayableColumn(start, geometry);
     const next = reducer(start, { type: "bet", row: 2, column, market, geometry });
     expect(next).toBe(start);
+  });
+
+  it("settles a win as soon as price touches the band, not after the window closes", () => {
+    const start = createGame(market, geometry);
+    const column = firstPlayableColumn(start, geometry);
+    const row = rowForPrice(market.price, ladder, rows);
+    const placed = reducer(start, { type: "bet", row, column, market, geometry });
+    const { low, high } = bandFor(row, ladder, rows);
+    const inBand = (low + high) / 2;
+
+    const columnStart = column * SUBTICKS_PER_COLUMN;
+    let state = placed;
+    while (state.subtick < columnStart) {
+      state = reducer(state, { type: "tick", market, geometry, quote: null });
+    }
+
+    state = reducer(state, { type: "tick", market, geometry, quote: inBand });
+
+    const bet = state.bets.find((entry) => entry.id === placed.bets[0].id);
+    expect(bet?.status).toBe("won");
+    expect(bet!.resolvedAt!).toBeLessThan((column + 1) * SUBTICKS_PER_COLUMN);
   });
 
   it("settles a bet once the playhead passes its column, exactly once", () => {
@@ -470,7 +500,7 @@ describe("settled bets", () => {
 
     const settled = runUntilSettled(placed, column);
     const bet = settled.bets.find((entry) => entry.id === placed.bets[0].id)!;
-    // It settles on the first sub-tick past its column, not at the end of it.
+    // Wins stamp as soon as touch lands; misses wait for the window to close.
     expect(bet.resolvedAt).not.toBeNull();
     expect(bet.resolvedAt!).toBeLessThanOrEqual(settled.subtick);
     expect(bet.resolvedAt!).toBeGreaterThan(placed.subtick);

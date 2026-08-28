@@ -14,10 +14,7 @@ import { cn } from "@/lib/utils";
  * for the timing; this only decides when the sequence starts.
  */
 export function TerminalLift({ className }: { className?: string }) {
-  // The reference starts at 28% of the stage; as a margin that is roughly the
-  // same moment, and `useInView` already handles the no-IntersectionObserver
-  // case by showing the finished state.
-  const { ref, inView } = useInView<HTMLDivElement>("-20% 0px");
+  const { ref, inView } = useInView<HTMLDivElement>("0px");
 
   return (
     <div

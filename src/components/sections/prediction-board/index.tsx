@@ -11,7 +11,6 @@ import {
   firstVisibleColumn,
   formatMultiplier,
   formatPoints,
-  goldenRowFor,
   ladderOf,
   priceToFraction,
   sigmaOf,
@@ -23,7 +22,6 @@ import { ResetIcon } from "@/components/icons/reset";
 import { buildChartFrame } from "./chart-frame";
 import { BrokeNotice } from "./broke-notice";
 import { ControlButton } from "./control-button";
-import { GoldenHint } from "./golden-hint";
 import { Grid } from "./grid";
 import { HelpOverlay } from "./help-overlay";
 import { Hud } from "./hud";
@@ -41,7 +39,8 @@ import { TimeAxis } from "./time-axis";
  *
  * The grid is price bands (rows) against time windows (columns). Tap a cell
  * right of the NOW line to stake on price touching that band while that window
- * is open; the playhead settles it a few seconds later.
+ * is open; wins settle the moment price touches the band, misses when the window
+ * closes.
  *
  * Presentation follows the live board (`perptools-site` TradeCanvas), which
  * draws to a canvas — the palette, cell treatment, axis placement and framing
@@ -83,14 +82,6 @@ export function PredictionBoard() {
     chart,
     running,
   });
-
-  // The live board teases the golden cube rather than pointing at it; the hint
-  // shows while one is somewhere in the playable range.
-  const lastVisible = col0 + geometry.columns - 1;
-  const goldenOnBoard = Array.from(
-    { length: Math.max(0, lastVisible - playFrom + 1) },
-    (_, i) => playFrom + i,
-  ).some((column) => goldenRowFor(column, geometry.rows) !== null);
 
   return (
     <div
@@ -170,7 +161,6 @@ export function PredictionBoard() {
           pressed={help}
         />
 
-        {goldenOnBoard ? <GoldenHint /> : null}
         {state.result ? <ResultToast result={state.result} /> : null}
         {broke ? <BrokeNotice onReset={actions.reset} /> : null}
         {help ? <HelpOverlay onClose={() => setHelp(false)} /> : null}

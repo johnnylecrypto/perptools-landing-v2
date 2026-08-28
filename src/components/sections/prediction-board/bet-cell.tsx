@@ -1,5 +1,12 @@
+import { useLayoutEffect } from "react";
 import { cn } from "@/lib/utils";
-import { formatMultiplier, formatPoints, type Bet } from "@/lib/prediction-engine";
+import {
+  formatMultiplier,
+  formatPoints,
+  markWinPunchPlayed,
+  shouldPlayWinPunch,
+  type Bet,
+} from "@/lib/prediction-engine";
 import { CELL_EDGE } from "./cell-edges";
 
 /**
@@ -12,7 +19,7 @@ import { CELL_EDGE } from "./cell-edges";
  * Three variants beyond the plain one, all from the live board:
  *  - stacked (`betCount >= 2`) burns brighter and flips to dark text;
  *  - golden pays the capped bonus and goes gold;
- *  - a win turns `var(--color-success-deep)`/`var(--color-success-bright)`, punches once, and throws a score badge.
+ *  - a win snaps to `var(--color-success-deep)`/`var(--color-success-bright)`, punches once (~280ms), and throws a score badge.
  */
 export function BetCell({
   bet,
@@ -29,9 +36,14 @@ export function BetCell({
 }) {
   const won = bet.status === "won";
   const lost = bet.status === "lost";
+  const playPunch = won && shouldPlayWinPunch(bet.id);
   const doubled = bet.betCount >= 2;
   const dark = !won && (bet.golden || doubled);
   const Tag = stackable ? "button" : "div";
+
+  useLayoutEffect(() => {
+    if (playPunch) markWinPunchPlayed(bet.id);
+  }, [playPunch, bet.id]);
 
   return (
     <Tag
@@ -49,7 +61,10 @@ export function BetCell({
         className={cn(
           "absolute inset-[1px] flex flex-col items-center justify-center overflow-hidden rounded-[7.5px] border-2",
           won &&
-            "animate-cell-punch border-success-bright bg-success-deep shadow-[0_0_24px_--alpha(var(--color-success-bright)/45%)]",
+            cn(
+              "border-success-bright bg-success-deep shadow-[0_0_24px_--alpha(var(--color-success-bright)/45%)]",
+              playPunch && "animate-cell-punch",
+            ),
           lost &&
             "border-danger/50 bg-[image:var(--gradient-bet-lost)] opacity-0 transition-opacity duration-[1600ms]",
           !won &&
@@ -93,7 +108,7 @@ export function BetCell({
       </div>
 
       {/* Payout badge rising out of the cell, as the live board throws it. */}
-      {won ? (
+      {won && playPunch ? (
         <span
           aria-hidden
           className="animate-score-rise text-success-light pointer-events-none absolute -top-2 left-1/2 z-[3] -translate-x-1/2 text-[15px] leading-none font-extrabold whitespace-nowrap [text-shadow:0_0_10px_--alpha(var(--color-success-bright)/60%)]"
