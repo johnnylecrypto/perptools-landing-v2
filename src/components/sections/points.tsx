@@ -17,7 +17,7 @@ export function Points() {
     >
       {/* atmos/screen-glow: 1621x987 radial wash centred on the section. */}
       <Ellipse
-        color="radial-gradient(closest-side, rgb(43 185 243 / 0.22) 0%, rgb(43 185 243 / 0.06) 55%, rgb(43 185 243 / 0) 100%)"
+        color="radial-gradient(closest-side, color-mix(in oklab, var(--color-accent) 22%, transparent) 0%, color-mix(in oklab, var(--color-accent) 6%, transparent) 55%, transparent 100%)"
         width={1621}
         height={987}
         blur={0}
@@ -34,7 +34,7 @@ export function Points() {
             >
               {points.heading}
             </h2>
-            <p className="max-w-[599px] text-[16px] leading-[26px] font-medium text-pretty text-[#7A8494]">
+            <p className="text-fg-subtle max-w-[599px] text-[16px] leading-[26px] font-medium text-pretty">
               {points.lede}
             </p>
           </header>
@@ -43,7 +43,7 @@ export function Points() {
               fits the viewport instead of scrolling sideways. */}
           <div className="flex w-full flex-col items-center gap-4">
             <PredictionBoard />
-            <p className="text-center text-[12px] leading-4 text-[#5C6674]">{points.disclaimer}</p>
+            <p className="text-fg-faint text-center text-[12px] leading-4">{points.disclaimer}</p>
           </div>
         </div>
       </div>

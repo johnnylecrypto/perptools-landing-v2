@@ -7,13 +7,13 @@ export type Partner = {
 };
 
 export const partners: readonly Partner[] = [
-  { name: "Animoca", logo: "/logo-animoca.svg" },
-  { name: "NEAR", logo: "/logo-near.svg" },
-  { name: "Shima Capital", logo: "/logo-shima.svg" },
+  { name: "Animoca", logo: "/partners/animoca.svg" },
+  { name: "NEAR", logo: "/partners/near.svg" },
+  { name: "Shima Capital", logo: "/partners/shima.svg" },
   { name: "Sfermion", featured: true },
-  { name: "DEXTools Ventures", logo: "/logo-dextools.svg" },
-  { name: "BigBrain Holdings", logo: "/logo-bigbrain.svg" },
-  { name: "Morningstar Ventures", logo: "/logo-morningstar.svg" },
-  { name: "Orderly Network", logo: "/logo-orderly.svg" },
-  { name: "DEXForce", logo: "/logo-dexforce.svg" },
+  { name: "DEXTools Ventures", logo: "/partners/dextools.svg" },
+  { name: "BigBrain Holdings", logo: "/partners/bigbrain.svg" },
+  { name: "Morningstar Ventures", logo: "/partners/morningstar.svg" },
+  { name: "Orderly Network", logo: "/partners/orderly.svg" },
+  { name: "DEXForce", logo: "/partners/dexforce.svg" },
 ];

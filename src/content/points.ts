@@ -14,7 +14,7 @@ export const points = {
     {
       symbol: "BTC-PERP",
       change: "+3.48%",
-      logo: "/logo-btc.png",
+      logo: "/tokens/btc.png",
       stream: "BTCUSDT",
       price: 81000,
       decimals: 1,
@@ -22,7 +22,7 @@ export const points = {
     {
       symbol: "ETH-PERP",
       change: "+2.90%",
-      logo: "/logo-eth.png",
+      logo: "/tokens/eth.png",
       stream: "ETHUSDT",
       price: 2300,
       decimals: 2,
@@ -30,7 +30,7 @@ export const points = {
     {
       symbol: "BNB-PERP",
       change: "+3.43%",
-      logo: "/logo-bnb.png",
+      logo: "/tokens/bnb.png",
       stream: "BNBUSDT",
       price: 650,
       decimals: 3,

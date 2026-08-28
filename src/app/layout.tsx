@@ -69,7 +69,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#030507",
+  themeColor: "var(--color-bg-0)",
   colorScheme: "dark",
 };
 
@@ -78,11 +78,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${manrope.variable} ${dmSans.variable} ${inter.variable} ${jetbrainsMono.variable} h-full`}
+      suppressHydrationWarning
     >
       <body className="bg-bg-0 text-fg flex min-h-full flex-col antialiased">
         <a
           href="#main"
-          className="focus:bg-accent sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-lg focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-[#000510]"
+          className="focus:bg-accent focus:text-fg-on-accent sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-lg focus:px-4 focus:py-2 focus:text-sm focus:font-semibold"
         >
           Skip to content
         </a>

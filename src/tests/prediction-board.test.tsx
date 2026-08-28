@@ -269,7 +269,7 @@ describe("PredictionBoard", () => {
       vi.advanceTimersByTime(SUBTICK_MS * SUBTICKS_PER_COLUMN * 2);
     });
 
-    const line = container.querySelector<SVGPathElement>('path[stroke="#2BB9F3"]')!;
+    const line = container.querySelector<SVGPathElement>('path[stroke="var(--color-accent)"]')!;
     // Found by reading the attribute rather than by selector: in an HTML
     // document, attribute names in a selector are lowercased, so `[viewBox=…]`
     // never matches an SVG element that spells it in camel case.

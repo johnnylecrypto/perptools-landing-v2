@@ -31,13 +31,13 @@ export function TerminalLift({ className }: { className?: string }) {
             the ellipse washes the heading too, not just the phone. */}
         <span
           aria-hidden
-          className="lift-halo pointer-events-none absolute top-[33%] left-1/2 z-0 h-[533.29px] w-[675.158px] -translate-x-1/2 -translate-y-1/2 -rotate-[87.71deg] bg-[radial-gradient(ellipse_50%_50%_at_50%_50%,rgb(43_185_243/0.22)_0%,rgb(43_185_243/0.06)_55%,rgb(43_185_243/0)_100%)]"
+          className="lift-halo pointer-events-none absolute top-[33%] left-1/2 z-0 h-[533.29px] w-[675.158px] -translate-x-1/2 -translate-y-1/2 -rotate-[87.71deg] bg-[radial-gradient(ellipse_50%_50%_at_50%_50%,--alpha(var(--color-accent)/22%)_0%,--alpha(var(--color-accent)/6%)_55%,--alpha(var(--color-accent)/0%)_100%)]"
         />
 
         {/* Contact shadow under the hand. */}
         <span
           aria-hidden
-          className="lift-cast pointer-events-none absolute bottom-[2%] left-1/2 z-0 h-[60px] w-[62%] bg-[radial-gradient(closest-side,rgb(0_0_0/0.85),transparent_74%)] blur-[26px]"
+          className="lift-cast pointer-events-none absolute bottom-[2%] left-1/2 z-0 h-[60px] w-[62%] bg-[radial-gradient(closest-side,--alpha(var(--color-black)/85%),transparent_74%)] blur-[26px]"
         />
 
         {/* 358px is the full content width at the design's 390px frame, so this
@@ -46,7 +46,7 @@ export function TerminalLift({ className }: { className?: string }) {
           {/* Screen backlight, sized to the artwork's screen window. */}
           <span
             aria-hidden
-            className="lift-glow pointer-events-none absolute z-0 bg-[radial-gradient(closest-side,rgb(43_185_243/0.42),transparent_74%)] blur-[46px]"
+            className="lift-glow pointer-events-none absolute z-0 bg-[radial-gradient(closest-side,--alpha(var(--color-accent)/42%),transparent_74%)] blur-[46px]"
             style={{
               left: "var(--lift-screen-x)",
               top: "var(--lift-screen-y)",
@@ -76,7 +76,7 @@ export function TerminalLift({ className }: { className?: string }) {
               height: "var(--lift-screen-h)",
             }}
           >
-            <span className="lift-sheen absolute top-[-30%] bottom-[-30%] block w-[46%] bg-[linear-gradient(104deg,transparent,rgb(200_238_255/0.2),transparent)]" />
+            <span className="lift-sheen absolute top-[-30%] bottom-[-30%] block w-[46%] bg-[linear-gradient(104deg,transparent,--alpha(var(--color-accent-light)/20%),transparent)]" />
           </span>
         </div>
 
@@ -84,7 +84,7 @@ export function TerminalLift({ className }: { className?: string }) {
             a cut edge. 318px of the 515px artwork, per the design file. */}
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[4] h-[318px] bg-[linear-gradient(0deg,#040607_0%,rgb(4_6_7/0)_100%)]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[4] h-[318px] bg-[linear-gradient(0deg,var(--color-bg-0)_0%,--alpha(var(--color-bg-0)/0%)_100%)]"
         />
       </div>
     </div>

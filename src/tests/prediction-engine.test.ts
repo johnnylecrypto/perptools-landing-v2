@@ -35,7 +35,7 @@ import {
 const market: Market = {
   symbol: "TEST-PERP",
   change: "+0.00%",
-  logo: "/logo-btc.png",
+  logo: "/tokens/btc.png",
   stream: "BTCUSDT",
   price: 81000,
   decimals: 1,

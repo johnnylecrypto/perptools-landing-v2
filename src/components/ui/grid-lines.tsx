@@ -11,7 +11,7 @@
  * them, so the radial fade would simply be replaced.
  */
 const FADE =
-  "linear-gradient(to bottom, #000 0%, #000 46%, rgb(0 0 0 / 0.35) 76%, transparent 96%)";
+  "linear-gradient(to bottom, black 0%, black 46%, color-mix(in srgb, black 35%, transparent) 76%, transparent 96%)";
 
 /**
  * The hero grid from the design file: 29.95x32.13px cells, 1.31px stroke,

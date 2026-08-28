@@ -73,27 +73,27 @@ export function TerminalFrame({ className }: { className?: string }) {
       {/* Backlight behind the panel, and a slow breath once it is lit. */}
       <span
         aria-hidden
-        className="rise-glow pointer-events-none absolute top-[56%] left-1/2 z-0 h-[72%] w-[82%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(closest-side,rgb(43_185_243/0.3),transparent_74%)] blur-[64px]"
+        className="rise-glow pointer-events-none absolute top-[56%] left-1/2 z-0 h-[72%] w-[82%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(closest-side,--alpha(var(--color-accent)/30%),transparent_74%)] blur-[64px]"
       />
       <span
         aria-hidden
-        className="rise-breathe pointer-events-none absolute top-[60%] left-1/2 z-0 h-[56%] w-[64%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(closest-side,rgb(131_212_251/0.16),transparent_70%)] opacity-0 blur-[72px]"
+        className="rise-breathe pointer-events-none absolute top-[60%] left-1/2 z-0 h-[56%] w-[64%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(closest-side,--alpha(var(--color-accent-light)/16%),transparent_70%)] opacity-0 blur-[72px]"
       />
       {/* Contact shadow under the bottom edge. */}
       <span
         aria-hidden
-        className="rise-floor pointer-events-none absolute bottom-[14px] left-1/2 z-0 h-[26px] w-[70%] bg-[radial-gradient(closest-side,rgb(0_0_0/0.85),transparent_76%)] blur-[20px]"
+        className="rise-floor pointer-events-none absolute bottom-[14px] left-1/2 z-0 h-[26px] w-[70%] bg-[radial-gradient(closest-side,--alpha(var(--color-black)/85%),transparent_76%)] blur-[20px]"
       />
 
       {/* The design's 1.8px inset outline: Chrome rounds `outline-width` to whole
           pixels, so an inset box-shadow is what actually renders 1.8px. */}
       <div
         ref={cardRef}
-        className="rise-card relative z-[2] flex flex-col rounded-[18px] bg-white/10 p-[9px] shadow-[inset_0_0_0_1.8px_#fff]"
+        className="rise-card relative z-[2] flex flex-col rounded-[18px] bg-white/10 p-[9px] shadow-[inset_0_0_0_1.8px_var(--color-white)]"
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute top-[9.26px] left-[5.6%] h-[319px] w-[85%] bg-[linear-gradient(178deg,#3DBCE7_0%,rgb(13_136_187/0.53)_100%)] blur-[112.49px]"
+          className="pointer-events-none absolute top-[9.26px] left-[5.6%] h-[319px] w-[85%] bg-[image:var(--gradient-terminal-beam)] blur-[112.49px]"
         />
 
         {/* One pass of glass across the panel as it lands.
@@ -105,12 +105,12 @@ export function TerminalFrame({ className }: { className?: string }) {
           aria-hidden
           className="pointer-events-none absolute inset-0 z-[6] overflow-hidden rounded-[18px]"
         >
-          <span className="rise-sheen absolute top-[-40%] bottom-[-40%] block w-[30%] bg-[linear-gradient(104deg,transparent,rgb(190_232_255/0.1),transparent)]" />
+          <span className="rise-sheen absolute top-[-40%] bottom-[-40%] block w-[30%] bg-[linear-gradient(104deg,transparent,--alpha(var(--color-accent-light)/10%),transparent)]" />
         </span>
         {/* Top bezel highlight, on once the panel reaches vertical. */}
         <span
           aria-hidden
-          className="rise-edge pointer-events-none absolute inset-0 z-[7] rounded-[18px] shadow-[inset_0_1px_0_rgb(190_232_255/0.22)]"
+          className="rise-edge pointer-events-none absolute inset-0 z-[7] rounded-[18px] shadow-[inset_0_1px_0_--alpha(var(--color-accent-light)/22%)]"
         />
 
         <div className="rise-screen relative w-full overflow-hidden rounded-[10.12px]">
@@ -126,7 +126,7 @@ export function TerminalFrame({ className }: { className?: string }) {
 
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[79px] rounded-b-[18px] bg-[linear-gradient(359deg,#05080B_0%,rgb(5_8_11/0)_100%)]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-[79px] rounded-b-[18px] bg-[linear-gradient(359deg,var(--color-bg-1)_0%,--alpha(var(--color-bg-1)/0%)_100%)]"
         />
       </div>
     </div>

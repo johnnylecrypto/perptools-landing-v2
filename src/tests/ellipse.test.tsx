@@ -5,14 +5,16 @@ import { Ellipse } from "@/components/ui/ellipse";
 describe("Ellipse", () => {
   it("treats numbers as px and passes strings through", () => {
     const { container } = render(
-      <Ellipse color="#094E6A" width={785.5} height="86.5%" left={-40} />,
+      <Ellipse color="var(--color-accent-deep)" width={785.5} height="86.5%" left={-40} />,
     );
     const el = container.firstElementChild as HTMLElement;
 
     expect(el.style.width).toBe("785.5px");
     expect(el.style.height).toBe("86.5%");
     expect(el.style.left).toBe("-40px");
-    expect(el.style.background).toBe("rgb(9, 78, 106)");
+    /* A token, not a literal: jsdom does not resolve custom properties, so this
+       also pins that the colour reaches `background` untouched. */
+    expect(el.style.background).toBe("var(--color-accent-deep)");
   });
 
   it("defaults to the design blur and screen blend", () => {
