@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { closingCta } from "@/content/hero";
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/ui/arrow-icon";
@@ -7,7 +6,7 @@ import { CtaDotField } from "./cta-dot-field";
 
 export function ClosingCta() {
   return (
-    <section id="get-started" aria-labelledby="get-started-heading" className="py-section frame">
+    <section id="get-started" aria-labelledby="get-started-heading" className="frame">
       <div className="mx-auto w-full">
         <div className="relative isolate overflow-hidden rounded-[20px] border border-white/8 bg-[linear-gradient(105deg,#05090C_0%,#071119_55%,#0A1A26_100%)]">
           <Ellipse
@@ -20,16 +19,11 @@ export function ClosingCta() {
             blend="normal"
             className="-z-10"
           />
+          {/* Same field either way: on phones it draws the mark in the banner's
+              old box, and from `sm` it bleeds across the card with the light
+              coming out from under Launch App. */}
           <CtaDotField className="sm:hidden" />
-          <Image
-            src="/market-banner.webp"
-            alt=""
-            width={381}
-            height={243}
-            sizes="381px"
-            aria-hidden
-            className="pointer-events-none absolute top-1/2 -right-14 -z-10 hidden w-[381px] max-w-none -translate-y-1/2 select-none sm:block"
-          />
+          <CtaDotField variant="bleed" className="hidden sm:block" />
 
           <div className="flex flex-col gap-4 p-4 sm:gap-10 sm:px-8 sm:py-14 lg:flex-row lg:items-center lg:justify-between lg:px-[clamp(32px,5vw,70px)]">
             {/* box the dot-field logo is drawn into — resize it to resize the mark */}

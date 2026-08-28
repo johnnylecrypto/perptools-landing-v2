@@ -8,10 +8,10 @@ import { site } from "@/lib/site";
 export default function HomePage() {
   return (
     <>
-      {/* Phones space sections from here rather than from each section's own
-          padding: one 64px gap between neighbours, instead of two paddings
-          stacking into 128px. Wider layouts keep `py-section`. */}
-      <div className="flex flex-col max-sm:gap-16 max-sm:pb-16">
+      {/* Sections are spaced from here rather than from their own padding, so
+          the number in the design is the number between two sections — two
+          paddings would stack to twice it. 64px on phones, 128px from `sm`. */}
+      <div className="flex flex-col gap-16 pb-16 sm:gap-32 sm:pb-32">
         <Hero />
         <Live />
         <Platform />

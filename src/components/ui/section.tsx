@@ -13,7 +13,7 @@ export function Section({ id, className, children, contained = true, ...props }:
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className={cn("py-section relative", className)}
+      className={cn("relative", className)}
       {...props}
     >
       {contained ? <Container>{children}</Container> : children}

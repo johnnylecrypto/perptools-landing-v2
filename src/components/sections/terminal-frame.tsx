@@ -69,7 +69,7 @@ export function TerminalFrame({ className }: { className?: string }) {
   }, []);
 
   return (
-    <div ref={sceneRef} className={cn("rise-scene relative isolate w-full pb-[90px]", className)}>
+    <div ref={sceneRef} className={cn("rise-scene relative isolate w-full", className)}>
       {/* Backlight behind the panel, and a slow breath once it is lit. */}
       <span
         aria-hidden

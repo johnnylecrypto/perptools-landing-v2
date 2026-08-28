@@ -5,13 +5,20 @@ import { TerminalLift } from "@/components/sections/terminal-lift";
 
 export function Live() {
   return (
-    <Section id="live" contained={false} className="overflow-hidden">
+    // The page spaces sections with a gap; this one carries its own top padding
+    // instead, so the section's own box — and the light it casts — starts right
+    // where the hero ends. The negative margin cancels the page gap above it.
+    <Section
+      id="live"
+      contained={false}
+      className="-mt-16 overflow-hidden pt-16 sm:-mt-32 sm:pt-32"
+    >
       <div className="frame w-full">
         <div className="flex w-full flex-col items-center gap-8 sm:gap-16">
           <header className="flex flex-col items-center gap-5 text-center sm:gap-[18.89px]">
             <h2
               id="live-heading"
-              className="max-w-[874.88px] text-[32px] leading-[38.4px] font-medium text-balance text-white mix-blend-lighten sm:text-[clamp(30px,5vw,48px)] sm:leading-[1.05]"
+              className="heading-sheen max-w-[874.88px] text-[32px] leading-[38.4px] font-medium text-balance sm:text-[clamp(30px,5vw,48px)] sm:leading-none"
             >
               {live.heading}
             </h2>

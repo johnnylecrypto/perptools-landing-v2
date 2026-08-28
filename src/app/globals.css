@@ -48,8 +48,6 @@
      by ~1025px and holds the mobile design's 16px at 390px, where a wide
      gutter would leave a phone almost no room for copy. */
   --spacing-side: clamp(16px, 4.1vw, 61.5px);
-  /* Phones drop this to 0 and space sections by gap instead; see below. */
-  --spacing-section: clamp(60px, 8vh, 120px);
 
   --animate-marquee: marquee 40s linear infinite;
   /* Win feedback on the prediction board, timed from the live TradeCanvas:
@@ -115,15 +113,6 @@
 }
 
 @layer base {
-  /* The mobile design spaces sections at a flat 64px between neighbours, so on
-     phones the rhythm comes from the page's own gap (see `page.tsx`) and the
-     per-section padding stands down — two paddings would stack to 128px. */
-  @media (width < 40rem) {
-    :root {
-      --spacing-section: 0px;
-    }
-  }
-
   html {
     scroll-behavior: smooth;
     /* Keep anchored sections clear of the fixed header. */
@@ -443,6 +432,72 @@
    full-width section — which keeps this correct if a scrollbar ever appears.
    --------------------------------------------------------------------------- */
 @layer components {
+  /* Section headings: white falling off toward the top-right, so the line reads
+     lit from the left. `mix-blend-mode: lighten` keeps it from dulling the
+     glows behind it. The fill has to be transparent for the clip to show
+     through, and WebKit needs its own property to agree. */
+  .heading-sheen {
+    background: linear-gradient(266deg, #fff 29.57%, rgb(236 236 236 / 0.23) 114.98%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    mix-blend-mode: lighten;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Footer wordmark belt (phones).
+
+     The lettering runs as an endless belt with a light passing over it; the
+     transform, the gradient offset and `--g` are written per frame by
+     `WordmarkMarquee`, which owns the timing.
+     --------------------------------------------------------------------------- */
+  .footer-belt {
+    position: relative;
+    overflow: hidden;
+    line-height: 0.84;
+    user-select: none;
+    /* Ends dissolve, so the line is not cut off with a knife. */
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  }
+
+  .footer-belt-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .footer-belt-copy {
+    flex: none;
+    font-weight: 800;
+    font-size: 23vw;
+    letter-spacing: -0.045em;
+    white-space: nowrap;
+    /* Gap between copies in em, so it holds proportionally at any size. */
+    padding-right: 1.05em;
+    color: transparent;
+    background-repeat: repeat-x;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  /* Soft glow under the line; the pass drives its opacity through `--g`. */
+  .footer-belt::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 86%;
+    height: 150%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: -1;
+    filter: blur(56px);
+    opacity: var(--g, 0);
+    background: radial-gradient(closest-side, rgb(43 185 243 / 0.22), transparent 72%);
+  }
+
   .frame {
     --frame-width: 1080px;
     --frame-max: 181.5px;

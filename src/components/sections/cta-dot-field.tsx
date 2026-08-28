@@ -5,19 +5,50 @@ import { LOGO_DOTS as LOGO } from "@/lib/cta-logo-dots";
 import { cn } from "@/lib/utils";
 
 /* ── knobs ───────────────────────────────────────────────────── */
-const FILL = 1.0; /* mark height taken up by the logo */
 const CORE = { x: 0.503, y: 0.5035 }; /* where the ring sits inside the logo */
 const NUDGE = { x: 0, y: 0 }; /* manual offset of the mark, px */
 
 const DOT_GAP = 2.3; /* on-screen dot pitch, px — the grid thins itself to match */
 const RK = 0.5; /* dot radius as a share of the pitch */
-const ALPHA = 0.88; /* overall field brightness */
 
-const WAVE_R = 0.4; /* wavelength as a share of the logo width */
 const SPEED = 0.75;
-const CREST = 0.48; /* extra brightness on the crest */
 const SWELL = 0.07; /* slow breathing of the whole field */
 const REACHR = 1.15; /* how far the wave carries from button to mark */
+
+/**
+ * The two placements.
+ *
+ * `mark` sizes the logo to a `[data-dot-mark]` box and ripples up into it from
+ * the button — the phone card, where the mark stands in for the banner image.
+ * `bleed` is the wide card: the logo is scaled past the card and cropped by its
+ * edges, its ring centred on the button so the light comes out from under
+ * Launch App, with the left side faded so the copy stays readable.
+ */
+const PLACEMENT = {
+  mark: {
+    /** Logo height, as a share of the mark box. */
+    fill: 1,
+    alpha: 0.88,
+    crest: 0.48,
+    /** Wavelength as a share of the logo width. */
+    waveRatio: 0.4,
+    /** No copy to duck under: the mark sits above the text. */
+    textFade: null as null | [number, number],
+    edges: { x0: 26, x1: 26, y0: 20, y1: 20 },
+  },
+  bleed: {
+    /** Logo height, as a share of the card height — deliberately overscaled. */
+    fill: 1.55,
+    alpha: 0.82,
+    crest: 0.45,
+    waveRatio: 0.4,
+    /** Ramp in over this slice of the card, so dots stay off the heading. */
+    textFade: [0.34, 0.56] as null | [number, number],
+    edges: { x0: 30, x1: 46, y0: 24, y1: 24 },
+  },
+};
+
+export type DotFieldVariant = keyof typeof PLACEMENT;
 
 const BUCKETS = 6; /* alpha steps — dots are batched into 6 fills per frame */
 
@@ -30,15 +61,22 @@ const smooth = (e0: number, e1: number, x: number) => {
 };
 
 /**
- * Canvas dot field built from the PERPTools mark: the logo is drawn in the
- * `[data-dot-mark]` box and a wave ripples out of the `[data-dot-act]` button
- * up through it. Both anchors are measured from layout, so text length and
+ * Canvas dot field built from the PERPTools mark, in two placements — see
+ * `PLACEMENT`. Both anchor off `[data-dot-act]` (the button) and, for `mark`,
+ * `[data-dot-mark]`; the anchors are measured from layout, so copy length and
  * card height can change freely.
  */
-export function CtaDotField({ className }: { className?: string }) {
+export function CtaDotField({
+  variant = "mark",
+  className,
+}: {
+  variant?: DotFieldVariant;
+  className?: string;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    const place = PLACEMENT[variant];
     const cvs = canvasRef.current;
     const root = cvs?.parentElement;
     if (!cvs || !root) return;
@@ -46,7 +84,8 @@ export function CtaDotField({ className }: { className?: string }) {
     const mark = root.querySelector<HTMLElement>("[data-dot-mark]");
     const act = root.querySelector<HTMLElement>("[data-dot-act]");
     const ctx = cvs.getContext("2d");
-    if (!mark || !act || !ctx) return;
+    if (!act || !ctx) return;
+    if (variant === "mark" && !mark) return;
 
     /* base64 → "cell index → brightness 0…15" */
     const bin = atob(LOGO.d);
@@ -76,7 +115,13 @@ export function CtaDotField({ className }: { className?: string }) {
     }
 
     function build() {
-      if (!cvs || !ctx || !mark || !act || !root) return;
+      if (!cvs || !ctx || !act || !root) return;
+      /* Both variants are in the markup and one is display:none at any width.
+         The hidden one builds nothing, so its frame loop has no work to do. */
+      if (cvs.offsetParent === null) {
+        dots = [];
+        return;
+      }
       const r = root.getBoundingClientRect();
       if (!r.width || !r.height) return;
 
@@ -89,7 +134,7 @@ export function CtaDotField({ className }: { className?: string }) {
 
       const gridH = LOGO.r * LOGO.step;
       const gridW = LOGO.c * LOGO.step;
-      const logoH = mark.offsetHeight * FILL;
+      const logoH = (variant === "mark" && mark ? mark.offsetHeight : H) * place.fill;
       if (!logoH) return;
       const scale = logoH / gridH;
       const logoW = gridW * scale;
@@ -99,12 +144,13 @@ export function CtaDotField({ className }: { className?: string }) {
       const density = Math.max(1, Math.round(DOT_GAP / step));
       const gap = step * density;
 
-      const mc = layoutCenter(mark); /* where the mark sits */
       const bc = layoutCenter(act); /* where the wave starts */
+      /* `bleed` puts the logo's ring on the button; `mark` puts it in its box. */
+      const mc = variant === "mark" && mark ? layoutCenter(mark) : bc;
       const ox = mc.x + NUDGE.x - logoW * CORE.x;
       const oy = mc.y + NUDGE.y - logoH * CORE.y;
 
-      const wave = logoW * WAVE_R;
+      const wave = logoW * place.waveRatio;
       const span = Math.hypot(mc.x - bc.x, mc.y - bc.y);
       const soft = Math.max(logoW * 0.9, span * REACHR);
 
@@ -120,12 +166,14 @@ export function CtaDotField({ className }: { className?: string }) {
           const x = ox + col * step;
           if (x < -gap || x > W + gap) continue;
 
-          let m = (q / 15) * ALPHA;
+          let m = (q / 15) * place.alpha;
+          /* Keep clear of the copy, then dissolve near the card edges. */
+          if (place.textFade) m *= smooth(W * place.textFade[0], W * place.textFade[1], x);
           m *=
-            smooth(0, 26, x) *
-            smooth(0, 26, W - x) /* dissolve near the card edges */ *
-            smooth(0, 20, y) *
-            smooth(0, 20, H - y);
+            smooth(0, place.edges.x0, x) *
+            smooth(0, place.edges.x1, W - x) *
+            smooth(0, place.edges.y0, y) *
+            smooth(0, place.edges.y1, H - y);
           if (m <= 0.012) continue;
 
           const rr = Math.hypot(x - bc.x, y - bc.y); /* distance to the button */
@@ -152,12 +200,14 @@ export function CtaDotField({ className }: { className?: string }) {
       const t = (now - t0) / 1000;
       const ph = t * SPEED;
 
+      if (!dots.length) return;
+
       ctx.clearRect(0, 0, W, H);
       counts.fill(0);
 
       const swell = 1 - SWELL + SWELL * Math.sin(t * 0.62);
       const kA = 0.74 * swell;
-      const kC = CREST * swell;
+      const kC = place.crest * swell;
 
       for (const p of dots) {
         const wv = Math.sin(p.ph - ph);
@@ -252,7 +302,7 @@ export function CtaDotField({ className }: { className?: string }) {
       window.removeEventListener("resize", onResize);
       io?.disconnect();
     };
-  }, []);
+  }, [variant]);
 
   return (
     <canvas

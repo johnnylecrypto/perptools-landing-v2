@@ -127,7 +127,11 @@ function HeroBackdrop() {
           sizes="(max-width: 768px) 100vw, 64vw"
           // Mobile design pins the art at 797×684 / x=-48 / y=83 — its centre
           // sits right of the viewport centre, so it is anchored, not centred.
-          className="absolute top-[83px] left-[-48px] w-[797px] max-w-none translate-x-0 opacity-60 select-none sm:top-[76px] sm:left-1/2 sm:w-[917px] sm:-translate-x-1/2 lg:left-[279px] lg:translate-x-0"
+          // From sm it is centred on the frame. The design's x=279 is 17.5px
+          // right of centre *in a 1440 frame*; as a fixed left it threw the art
+          // off-centre on anything narrower (a 1024 laptop pushed it 156px
+          // right), so the nudge is expressed against the centre instead.
+          className="absolute top-[83px] left-[-48px] w-[797px] max-w-none translate-x-0 opacity-60 select-none sm:top-[76px] sm:left-1/2 sm:w-[917px] sm:-translate-x-1/2 xl:translate-x-[calc(-50%+17.5px)]"
         />
 
         {/* Vignette so the headline keeps contrast over the logo art. */}
