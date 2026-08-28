@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { NavItem } from "@/content/navigation";
+import { captureLandingEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 /** A primary-nav entry; external items leave the site in a new tab. */
@@ -18,6 +19,11 @@ export function NavLink({
     className,
   );
 
+  const handleClick = () => {
+    if (item.analyticsEvent) void captureLandingEvent(item.analyticsEvent);
+    onClick?.();
+  };
+
   if (item.external) {
     return (
       <a
@@ -25,7 +31,7 @@ export function NavLink({
         target="_blank"
         rel="noopener noreferrer"
         className={classes}
-        onClick={onClick}
+        onClick={handleClick}
       >
         {item.label}
       </a>
@@ -33,7 +39,7 @@ export function NavLink({
   }
 
   return (
-    <Link href={item.href} className={classes} onClick={onClick}>
+    <Link href={item.href} className={classes} onClick={handleClick}>
       {item.label}
     </Link>
   );

@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, JetBrains_Mono, DM_Sans, Inter } from "next/font/google";
-import { site } from "@/lib/site";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { PostHogProvider } from "@/components/analytics/posthog-provider";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { site } from "@/lib/site";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -80,18 +82,24 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${manrope.variable} ${dmSans.variable} ${inter.variable} ${jetbrainsMono.variable} h-full`}
       suppressHydrationWarning
     >
+      <head>
+        <link rel="dns-prefetch" href="https://a.perptools.ai" />
+      </head>
       <body className="bg-bg-0 text-fg flex min-h-full flex-col antialiased">
-        <a
-          href="#main"
-          className="focus:bg-accent focus:text-fg-on-accent sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-lg focus:px-4 focus:py-2 focus:text-sm focus:font-semibold"
-        >
-          Skip to content
-        </a>
-        <Header />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        <PostHogProvider>
+          <a
+            href="#main"
+            className="focus:bg-accent focus:text-fg-on-accent sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-lg focus:px-4 focus:py-2 focus:text-sm focus:font-semibold"
+          >
+            Skip to content
+          </a>
+          <Header />
+          <main id="main" className="flex-1">
+            {children}
+          </main>
+          <Footer />
+        </PostHogProvider>
+        <GoogleAnalytics />
       </body>
     </html>
   );

@@ -48,6 +48,7 @@ export function ClosingCta() {
             <Button
               data-dot-act
               href={closingCta.cta.href}
+              analyticsEvent="landing_bottom_menu_launch_app"
               className="mt-4 h-13 w-full shrink-0 text-base font-bold sm:mt-0 sm:h-14 sm:w-auto sm:min-w-[200px]"
             >
               {closingCta.cta.label}

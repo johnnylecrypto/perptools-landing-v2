@@ -1,3 +1,4 @@
+import { captureLandingEvent } from "@/lib/analytics";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -8,12 +9,17 @@ export function LaunchAppButton({
   className?: string;
   onClick?: () => void;
 }) {
+  const handleClick = () => {
+    void captureLandingEvent("landing_top_bar_launch_app");
+    onClick?.();
+  };
+
   return (
     <a
       href={site.links.app}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={onClick}
+      onClick={handleClick}
       className={cn(
         "rounded-button inline-flex h-10 min-w-[147px] items-center justify-center px-3",
         "font-dm text-fg-on-accent bg-[image:var(--gradient-accent)] text-[15px] font-semibold",

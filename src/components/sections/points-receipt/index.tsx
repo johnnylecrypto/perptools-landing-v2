@@ -175,7 +175,11 @@ export function PointsReceipt({ className }: { className?: string }) {
           ))}
         </div>
 
-        <Button href={site.links.app} className="h-13 w-full text-base font-bold">
+        <Button
+          href={site.links.app}
+          analyticsEvent="landing_points_receipt_launch_app"
+          className="h-13 w-full text-base font-bold"
+        >
           {receipt.cta}
           <ArrowIcon className="size-3.5" />
         </Button>

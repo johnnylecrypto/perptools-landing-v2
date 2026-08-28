@@ -1,5 +1,6 @@
 import { mobileNav } from "@/content/navigation";
 import { site } from "@/lib/site";
+import { captureLandingEvent } from "@/lib/analytics";
 import { DiscordIcon } from "@/components/icons/discord";
 import { XIcon } from "@/components/icons/x";
 import { ArrowIcon } from "@/components/icons/arrow";
@@ -63,7 +64,10 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
         href={site.links.app}
         target="_blank"
         rel="noopener noreferrer"
-        onClick={onClose}
+        onClick={() => {
+          void captureLandingEvent("landing_top_bar_launch_app");
+          onClose();
+        }}
         className={cn(
           "rounded-button flex h-13 w-full items-center justify-center gap-[7px] px-12",
           "font-dm text-bg-2 bg-[image:var(--gradient-accent)] text-base leading-6 font-bold",

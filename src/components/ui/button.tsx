@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import type { LandingEvent } from "@/lib/analytics-events";
+import { captureLandingEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 export type ButtonVariant = "primary" | "ghost";
@@ -28,6 +32,7 @@ type CommonProps = {
   size?: ButtonSize;
   className?: string;
   children: React.ReactNode;
+  analyticsEvent?: LandingEvent;
 };
 
 type ButtonAsButton = CommonProps &
@@ -38,15 +43,33 @@ type ButtonAsLink = CommonProps &
 
 export type ButtonProps = ButtonAsButton | ButtonAsLink;
 
+function withAnalytics(
+  analyticsEvent: LandingEvent | undefined,
+  onClick?: React.MouseEventHandler<HTMLElement>,
+): React.MouseEventHandler<HTMLElement> | undefined {
+  if (!analyticsEvent && !onClick) return undefined;
+
+  return (event) => {
+    if (analyticsEvent) void captureLandingEvent(analyticsEvent);
+    onClick?.(event);
+  };
+}
+
 /**
  * Renders a `<button>`, a `next/link` for internal hrefs, or a plain `<a>` for
  * external ones (with the matching rel hardening).
  */
-export function Button({ variant = "primary", size = "lg", className, ...props }: ButtonProps) {
+export function Button({
+  variant = "primary",
+  size = "lg",
+  className,
+  analyticsEvent,
+  ...props
+}: ButtonProps) {
   const classes = cn(base, variants[variant], sizes[size], className);
 
   if (typeof props.href === "string") {
-    const { href, ...rest } = props as ButtonAsLink;
+    const { href, onClick, ...rest } = props as ButtonAsLink;
     const isExternal = /^https?:\/\//.test(href);
 
     if (isExternal) {
@@ -56,14 +79,29 @@ export function Button({ variant = "primary", size = "lg", className, ...props }
           target="_blank"
           rel="noopener noreferrer"
           className={classes}
+          onClick={withAnalytics(analyticsEvent, onClick)}
           {...(rest as React.ComponentProps<"a">)}
         />
       );
     }
 
-    return <Link href={href} className={classes} {...(rest as React.ComponentProps<"a">)} />;
+    return (
+      <Link
+        href={href}
+        className={classes}
+        onClick={withAnalytics(analyticsEvent, onClick)}
+        {...(rest as React.ComponentProps<"a">)}
+      />
+    );
   }
 
-  const { type = "button", ...rest } = props as ButtonAsButton;
-  return <button type={type} className={classes} {...rest} />;
+  const { type = "button", onClick, ...rest } = props as ButtonAsButton;
+  return (
+    <button
+      type={type}
+      className={classes}
+      onClick={withAnalytics(analyticsEvent, onClick)}
+      {...rest}
+    />
+  );
 }

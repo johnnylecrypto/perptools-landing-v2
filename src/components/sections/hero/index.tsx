@@ -35,6 +35,7 @@ export function Hero() {
         <div className="flex w-full flex-col items-center justify-center gap-4 pt-8 sm:w-auto sm:flex-row sm:gap-3 sm:pt-6">
           <Button
             href={hero.primaryCta.href}
+            analyticsEvent="landing_hero_launch_app"
             className="text-bg-2 h-13 w-full text-base font-bold sm:w-[179px]"
           >
             {hero.primaryCta.label}
@@ -42,6 +43,7 @@ export function Hero() {
           </Button>
           <Button
             href={hero.secondaryCta.href}
+            analyticsEvent="landing_hero_explore_points"
             variant="ghost"
             className="text-fg h-13 w-full border-white/15 bg-white/5 text-base font-bold backdrop-blur-[2.65px] sm:w-[184px]"
           >
