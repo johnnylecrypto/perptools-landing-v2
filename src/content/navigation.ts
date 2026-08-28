@@ -17,6 +17,19 @@ export const primaryNav: readonly NavItem[] = [
   { label: "MCP Doc", href: site.links.mcpDocs, external: true },
 ];
 
+/**
+ * Mobile sheet nav. Its own list rather than `primaryNav`: the design spells
+ * "Points" out as "Points Program" and adds a Security entry, which the
+ * desktop bar has no room for.
+ */
+export const mobileNav: readonly NavItem[] = [
+  { label: "Terminal", href: site.links.terminal, external: true },
+  { label: "Points Program", href: site.links.points, external: true },
+  { label: "Tap Predictions", href: site.links.tapPredictions, external: true },
+  { label: "MCP Doc", href: site.links.mcpDocs, external: true },
+  { label: "Security", href: site.links.security, external: true },
+];
+
 export type NavGroup = {
   title: string;
   items: readonly NavItem[];
@@ -39,6 +52,9 @@ export const footerGroups: readonly NavGroup[] = [
   },
   {
     title: "Build",
-    items: [{ label: "MCP Doc", href: site.links.mcpDocs, external: true }],
+    items: [
+      { label: "MCP Doc", href: site.links.mcpDocs, external: true },
+      { label: "Security", href: site.links.security, external: true },
+    ],
   },
 ];

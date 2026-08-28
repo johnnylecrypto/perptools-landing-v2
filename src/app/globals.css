@@ -45,10 +45,9 @@
   /* Page gutter. Fluid rather than two fixed steps: a hard switch at a
      breakpoint made the content *narrower* as the viewport grew, which is the
      one thing a responsive layout must never do. Reaches the design's 61.5px
-     by ~1025px and never drops below 24px, where a wide gutter would leave a
-     phone almost no room for copy. */
-  --spacing-side: clamp(24px, 6vw, 61.5px);
-  --spacing-section: clamp(60px, 8vh, 120px);
+     by ~1025px and holds the mobile design's 16px at 390px, where a wide
+     gutter would leave a phone almost no room for copy. */
+  --spacing-side: clamp(16px, 4.1vw, 61.5px);
 
   --animate-marquee: marquee 40s linear infinite;
   /* Win feedback on the prediction board, timed from the live TradeCanvas:
@@ -287,6 +286,132 @@
 }
 
 /* ---------------------------------------------------------------------------
+   Terminal "lift" — the phone-in-hand mockup on small screens.
+
+   The desktop "rise" hinges a bare screenshot up out of the page; that reads
+   wrong on a mockup that already has a hand and a device around it. This one
+   simply carries the whole mockup up from below: defocus clears, brightness
+   comes back to normal, a soft shadow gathers under the hand, and only at the
+   end does a faint sheen cross the glass — clipped to the screen so it does
+   not slide over the hand.
+   --------------------------------------------------------------------------- */
+@layer components {
+  .lift-scene {
+    --lift: 1900ms;
+    --lift-ease: cubic-bezier(0.34, 0.1, 0.2, 1);
+    /* How far below its resting place the mockup starts, and the small
+       counter-rotation that keeps it from reading as a lift shaft. */
+    --lift-up: 56px;
+    --lift-turn: 1.4deg;
+
+    /* Screen window inside the mockup, measured off the artwork itself:
+       x 20.9…70.4%, y 3.9…79.2% of its box. */
+    --lift-screen-x: 20.9%;
+    --lift-screen-y: 3.9%;
+    --lift-screen-w: 49.5%;
+    --lift-screen-h: 75.3%;
+  }
+
+  .lift-mock {
+    transform: translateY(var(--lift-up)) scale(0.945) rotate(calc(var(--lift-turn) * -1));
+    filter: blur(8px) brightness(0.48) saturate(0.72);
+    opacity: 0;
+    transition:
+      transform var(--lift) var(--lift-ease) 0.2s,
+      filter calc(var(--lift) * 0.8) cubic-bezier(0.22, 0.7, 0.2, 1) 0.2s,
+      opacity 560ms ease 0.2s;
+    will-change: transform, filter;
+  }
+  .lift-scene.is-in .lift-mock {
+    transform: none;
+    filter: none;
+    opacity: 1;
+  }
+
+  /* The mockup carries no shadow of its own; without this it floats. */
+  .lift-cast {
+    transform: translateX(-50%) scaleX(0.72);
+    opacity: 0;
+    transition:
+      transform var(--lift) var(--lift-ease) 0.2s,
+      opacity 900ms ease 0.2s;
+  }
+  .lift-scene.is-in .lift-cast {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 1;
+  }
+
+  .lift-glow {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  .lift-scene.is-in .lift-glow {
+    animation: lift-lightup 1500ms calc(var(--lift) - 380ms) ease-out forwards;
+  }
+
+  /* Ambient wash behind the whole mockup, distinct from `.lift-glow`, which is
+     the light coming off the screen itself. Fades in as the mockup lands. */
+  .lift-halo {
+    opacity: 0;
+    transition: opacity 1400ms ease calc(var(--lift) - 700ms);
+  }
+  .lift-scene.is-in .lift-halo {
+    opacity: 1;
+  }
+
+  .lift-sheen {
+    left: -60%;
+    opacity: 0;
+    transform: skewX(-13deg);
+  }
+  .lift-scene.is-in .lift-sheen {
+    animation: lift-sweep 1800ms calc(var(--lift) - 220ms) cubic-bezier(0.36, 0, 0.24, 1) forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lift-mock {
+      transform: none;
+      filter: none;
+      opacity: 1;
+      transition: none;
+    }
+    .lift-cast {
+      transform: translateX(-50%);
+      opacity: 1;
+      transition: none;
+    }
+    .lift-glow {
+      opacity: 0.4;
+      animation: none;
+    }
+    .lift-halo {
+      opacity: 1;
+      transition: none;
+    }
+    .lift-glass {
+      display: none;
+    }
+  }
+}
+
+@keyframes lift-lightup {
+  to {
+    opacity: 0.5;
+  }
+}
+
+@keyframes lift-sweep {
+  from {
+    left: -60%;
+    opacity: 1;
+  }
+  to {
+    left: 130%;
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Points "ledger": the section reads as a total being settled. Cards rise in
    reading order, figures wind up, bars fill, the feed lands line by line.
 
@@ -307,12 +432,78 @@
    full-width section — which keeps this correct if a scrollbar ever appears.
    --------------------------------------------------------------------------- */
 @layer components {
+  /* Section headings: white falling off toward the top-right, so the line reads
+     lit from the left. `mix-blend-mode: lighten` keeps it from dulling the
+     glows behind it. The fill has to be transparent for the clip to show
+     through, and WebKit needs its own property to agree. */
+  .heading-sheen {
+    background: linear-gradient(266deg, #fff 29.57%, rgb(236 236 236 / 0.23) 114.98%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    mix-blend-mode: lighten;
+  }
+
+  /* ---------------------------------------------------------------------------
+     Footer wordmark belt (phones).
+
+     The lettering runs as an endless belt with a light passing over it; the
+     transform, the gradient offset and `--g` are written per frame by
+     `WordmarkMarquee`, which owns the timing.
+     --------------------------------------------------------------------------- */
+  .footer-belt {
+    position: relative;
+    overflow: hidden;
+    line-height: 0.84;
+    user-select: none;
+    /* Ends dissolve, so the line is not cut off with a knife. */
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  }
+
+  .footer-belt-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .footer-belt-copy {
+    flex: none;
+    font-weight: 800;
+    font-size: 23vw;
+    letter-spacing: -0.045em;
+    white-space: nowrap;
+    /* Gap between copies in em, so it holds proportionally at any size. */
+    padding-right: 1.05em;
+    color: transparent;
+    background-repeat: repeat-x;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  /* Soft glow under the line; the pass drives its opacity through `--g`. */
+  .footer-belt::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 86%;
+    height: 150%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: -1;
+    filter: blur(56px);
+    opacity: var(--g, 0);
+    background: radial-gradient(closest-side, rgb(43 185 243 / 0.22), transparent 72%);
+  }
+
   .frame {
     --frame-width: 1080px;
     --frame-max: 181.5px;
 
     padding-inline: clamp(
-      clamp(24px, 6%, 85px),
+      clamp(16px, 6%, 85px),
       calc((100% - var(--frame-width)) / 2),
       var(--frame-max)
     );
@@ -320,6 +511,53 @@
 
   .ledger {
     --ledger-ease: cubic-bezier(0.2, 0.82, 0.24, 1);
+  }
+
+  /* ---------------------------------------------------------------------------
+     Points receipt (phones).
+
+     The slip starts inside the printer and feeds out in steps, the way a
+     thermal head advances the paper; each line stays blank until the head
+     reaches it, so the receipt writes itself top to bottom. Per-line delays are
+     set by the component, which owns the print order.
+     --------------------------------------------------------------------------- */
+  .receipt-paper {
+    transform: translateY(-101%);
+  }
+  .receipt.is-printing .receipt-paper {
+    animation: receipt-feed 2.1s steps(14, end) 0.3s forwards;
+  }
+
+  .receipt-line {
+    opacity: 0;
+  }
+  .receipt.is-printing .receipt-line {
+    animation: receipt-print 0.01s linear forwards;
+  }
+
+  @keyframes receipt-feed {
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes receipt-print {
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Printed and still, for anyone who does not want the motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .receipt-paper,
+    .receipt.is-printing .receipt-paper {
+      transform: none;
+      animation: none;
+    }
+    .receipt-line,
+    .receipt.is-printing .receipt-line {
+      opacity: 1;
+      animation: none;
+    }
   }
 
   .ledger .led-head > * {

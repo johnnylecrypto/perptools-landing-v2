@@ -22,28 +22,50 @@ const FADE =
  * positioning: an <svg> is a replaced element and would otherwise fall back to
  * its 300x150 intrinsic size instead of filling a left/right-anchored box.
  */
-export function GridLines({ className }: { className?: string }) {
+const CELL_W = 29.9487;
+const CELL_H = 32.1316;
+
+export function GridLines({
+  className,
+  /** Cell scale. 1 is the desktop cell; the mobile hero uses a tenth of it. */
+  scale = 1,
+  /** Stroke width in px. Not scaled with the cell — a 0.13px hairline vanishes. */
+  stroke = 1.30855,
+  /** Suffix for the SVG def ids, so two grids on one page do not collide. */
+  idSuffix = "",
+}: {
+  className?: string;
+  scale?: number;
+  stroke?: number;
+  idSuffix?: string;
+}) {
+  const width = CELL_W * scale;
+  const height = CELL_H * scale;
+  const patternId = `pt-grid${idSuffix}`;
+  const fadeId = `pt-grid-fade${idSuffix}`;
+  const maskId = `pt-grid-mask${idSuffix}`;
+
   return (
     <div aria-hidden className={className} style={{ maskImage: FADE, WebkitMaskImage: FADE }}>
       <svg className="size-full" preserveAspectRatio="none">
         <defs>
-          <pattern id="pt-grid" width="29.9487" height="32.1316" patternUnits="userSpaceOnUse">
+          <pattern id={patternId} width={width} height={height} patternUnits="userSpaceOnUse">
             <path
-              d="M29.9487 0V32.1316M0 0.6543H29.9487"
+              d={`M${width} 0V${height}M0 ${stroke / 2}H${width}`}
               stroke="white"
-              strokeWidth="1.30855"
+              strokeWidth={stroke}
               fill="none"
             />
           </pattern>
-          <radialGradient id="pt-grid-fade" cx="50%" cy="50%" r="50%">
+          <radialGradient id={fadeId} cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="white" />
             <stop offset="100%" stopColor="white" stopOpacity="0.2" />
           </radialGradient>
-          <mask id="pt-grid-mask">
-            <rect width="100%" height="100%" fill="url(#pt-grid-fade)" />
+          <mask id={maskId}>
+            <rect width="100%" height="100%" fill={`url(#${fadeId})`} />
           </mask>
         </defs>
-        <rect width="100%" height="100%" fill="url(#pt-grid)" mask="url(#pt-grid-mask)" />
+        <rect width="100%" height="100%" fill={`url(#${patternId})`} mask={`url(#${maskId})`} />
       </svg>
     </div>
   );

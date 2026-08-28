@@ -3,6 +3,7 @@ import { platform, pointsSeries } from "@/content/platform";
 import { Sparkline } from "@/components/ui/sparkline";
 import { Reveal } from "@/components/ui/reveal";
 import { CountUp } from "@/components/ui/count-up";
+import { PointsReceipt } from "@/components/sections/points-receipt";
 import { cn } from "@/lib/utils";
 
 /**
@@ -11,27 +12,31 @@ import { cn } from "@/lib/utils";
  */
 export function Platform() {
   return (
-    <section id="platform" aria-labelledby="platform-heading" className="py-section">
+    <section id="platform" aria-labelledby="platform-heading">
       {/* `Reveal` only carries the scroll trigger; everything inside it stays
           server-rendered. The staging is CSS, keyed off the class it adds. */}
       <Reveal className="ledger frame w-full">
-        <div className="flex w-full flex-col items-center gap-16">
-          <header className="led-head flex flex-col items-center gap-[18.89px] text-center">
+        <div className="flex w-full flex-col items-center gap-16 max-sm:gap-8">
+          <header className="led-head flex flex-col items-center gap-[18.89px] text-center max-sm:gap-5">
             <h2
               id="platform-heading"
-              className="max-w-[874.88px] text-[clamp(30px,5vw,48px)] leading-[1.05] font-medium text-balance text-white mix-blend-lighten"
+              className="heading-sheen max-w-[874.88px] text-[32px] leading-[38.4px] font-medium text-balance sm:text-[clamp(30px,5vw,48px)] sm:leading-none lg:max-w-none lg:whitespace-nowrap"
             >
               {platform.heading}
             </h2>
-            <p className="max-w-[636.28px] text-[16px] leading-[23.86px] text-pretty text-[#7A8494]">
+            <p className="max-w-[636.28px] text-[16px] leading-[23.86px] text-pretty text-[#7A8494] max-sm:text-[14px]">
               {platform.lede}
             </p>
           </header>
 
+          {/* Phones get the printed receipt instead: the cards below need
+              columns a phone does not have. */}
+          <PointsReceipt className="sm:hidden" />
+
           {/* Cards share the row by design ratio rather than fixed px: the
               section fills its padded width now, and fixed widths would leave
               the rows short of the right edge past a 1080px frame. */}
-          <div className="flex w-full flex-col gap-4">
+          <div className="flex w-full flex-col gap-4 max-sm:hidden">
             <div className="flex flex-col gap-4 lg:h-[372px] lg:flex-row">
               <PointsCard />
               <RankCard />
@@ -41,7 +46,10 @@ export function Platform() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-4 lg:h-[188px] lg:flex-row">
+            {/* `min-h`, not `h`: the design's 188px is ~2px short of what the
+                four task rows plus the card's padding actually need, and a hard
+                height clipped the last row against `Card`'s overflow. */}
+            <div className="flex flex-col gap-4 lg:min-h-[188px] lg:flex-row">
               <TasksCard />
               <ActivityCard />
             </div>
@@ -380,12 +388,11 @@ function ActivityCard() {
   );
 }
 
-/** Flat-top hexagon pip: solid once the tier is reached, hairline before it. */
 function TierPip({ color, reached, label }: { color: string; reached: boolean; label: string }) {
   return (
-    <svg viewBox="0 0 24 26" role="img" aria-label={label} className="h-[15px] w-[14px]">
+    <svg viewBox="0 0 22 19.32" role="img" aria-label={label} className="h-[13.2px] w-[15px]">
       <polygon
-        points="6,1 18,1 23,13 18,25 6,25 1,13"
+        points="16,1 21,9.66 16,18.32 6,18.32 1,9.66 6,1"
         fill={reached ? color : "none"}
         stroke={color}
         strokeOpacity={reached ? 1 : 0.3}

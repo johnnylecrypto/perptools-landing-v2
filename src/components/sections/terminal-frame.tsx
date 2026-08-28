@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { live } from "@/content/live";
+import { cn } from "@/lib/utils";
 
 /** Milliseconds the tilt takes; must match `--rise` in globals.css. */
 const RISE_MS = 2200;
@@ -21,7 +22,7 @@ const EASING = 0.07;
  * The tilt itself is CSS (see `.rise-*` in globals.css); this only decides
  * *when* it starts and adds the pointer parallax once the screen has settled.
  */
-export function TerminalFrame() {
+export function TerminalFrame({ className }: { className?: string }) {
   const sceneRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -68,7 +69,7 @@ export function TerminalFrame() {
   }, []);
 
   return (
-    <div ref={sceneRef} className="rise-scene relative isolate w-full pb-[90px]">
+    <div ref={sceneRef} className={cn("rise-scene relative isolate w-full", className)}>
       {/* Backlight behind the panel, and a slow breath once it is lit. */}
       <span
         aria-hidden

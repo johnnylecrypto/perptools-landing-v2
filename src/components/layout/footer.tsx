@@ -3,7 +3,9 @@ import Link from "next/link";
 import { footerGroups, type NavItem } from "@/content/navigation";
 import { site } from "@/lib/site";
 import { Wordmark } from "@/components/layout/wordmark";
-import { TelegramIcon, XIcon } from "@/components/layout/social-icons";
+import { WordmarkMarquee } from "@/components/layout/wordmark-marquee";
+import { DiscordIcon, XIcon } from "@/components/layout/social-icons";
+import { CurrentYear } from "@/components/ui/current-year";
 
 export function Footer() {
   return (
@@ -15,8 +17,8 @@ export function Footer() {
       />
 
       <div className="frame relative [--frame-max:100px] [--frame-width:1240px]">
-        <div className="flex flex-col gap-16 py-16">
-          <div className="flex flex-col gap-16 xl:flex-row xl:gap-[156px]">
+        <div className="flex flex-col gap-6 py-6 sm:gap-16 sm:py-16">
+          <div className="flex flex-col gap-6 sm:gap-16 xl:flex-row xl:gap-[156px]">
             <div className="flex w-full max-w-[455px] flex-col gap-6">
               <div className="flex flex-col gap-3">
                 <Link
@@ -35,28 +37,34 @@ export function Footer() {
                     {site.name}
                   </span>
                 </Link>
-                <p className="text-[16px] leading-[22px] font-medium text-white/80">{site.blurb}</p>
+                <p className="text-[14px] leading-[22px] font-medium text-white/80 sm:text-[16px]">
+                  {site.blurb}
+                </p>
               </div>
 
               <div className="flex items-center gap-3">
                 <SocialLink href={site.links.x} label="PERPTools on X">
                   <XIcon className="size-[16.47px]" />
                 </SocialLink>
-                <SocialLink href={site.links.telegram} label="PERPTools on Telegram">
-                  <TelegramIcon className="size-[16.47px]" />
+                <SocialLink href={site.links.discord} label="PERPTools on Discord">
+                  <DiscordIcon className="size-[16.47px]" />
                 </SocialLink>
               </div>
             </div>
 
-            {/* The design spaces these 204px apart, which only fits its exact
-                label widths; distributing the leftover room keeps every label on
-                one line at any width. */}
+            {/* Phones stack the groups with a hairline between them, per the
+                mobile design. From sm the design spaces them 204px apart, which
+                only fits its exact label widths; distributing the leftover room
+                keeps every label on one line at any width. */}
             <nav
               aria-label="Footer"
-              className="flex flex-1 flex-wrap justify-start gap-x-12 gap-y-10 pt-5 sm:justify-between sm:gap-x-16 xl:flex-nowrap"
+              className="flex flex-1 flex-col gap-5 sm:flex-row sm:flex-wrap sm:justify-between sm:gap-x-16 sm:gap-y-10 sm:pt-5 xl:flex-nowrap"
             >
               {footerGroups.map((group) => (
-                <div key={group.title} className="flex flex-col gap-5">
+                <div
+                  key={group.title}
+                  className="flex flex-col gap-5 [&:not(:first-child)]:border-t [&:not(:first-child)]:border-[rgb(217_217_217/0.06)] [&:not(:first-child)]:pt-5 sm:[&:not(:first-child)]:border-t-0 sm:[&:not(:first-child)]:pt-0"
+                >
                   <h2 className="text-[12px] font-bold tracking-[1.8px] whitespace-nowrap text-[rgb(129_134_137/0.9)] uppercase">
                     {group.title}
                   </h2>
@@ -72,12 +80,23 @@ export function Footer() {
             </nav>
           </div>
 
-          <div className="flex flex-col gap-8">
-            <Wordmark className="h-auto w-full" />
+          <div className="flex flex-col gap-[18px] sm:gap-8">
+            {/* On phones the lettering is scaled past the gutter and cropped by
+                the footer's `overflow-hidden`, as in the design; from sm it fits
+                the frame. The design's crop is off-centre, which reads as an
+                export artefact — centring it is the defensible reading. */}
+            <div className="relative w-full">
+              <WordmarkMarquee className="sm:hidden" />
+              <Wordmark className="hidden h-auto w-full sm:block" />
+            </div>
 
-            <div className="flex flex-col justify-between gap-2 text-[14px] leading-[20.8px] font-medium tracking-[0.78px] text-[rgb(237_238_240/0.28)] sm:flex-row sm:items-center sm:gap-6">
-              <p>{site.name} Protocol. All Rights Reserved.</p>
-              <p>© {new Date().getFullYear()}</p>
+            <div className="flex flex-row items-center justify-between gap-2 text-[14px] leading-[20.8px] font-medium tracking-[0.78px] text-[rgb(237_238_240/0.28)] sm:gap-6">
+              <p>
+                <span className="hidden sm:inline">{site.name} Protocol. </span>All Rights Reserved.
+              </p>
+              <p>
+                © <CurrentYear buildYear={new Date().getFullYear()} />
+              </p>
             </div>
           </div>
         </div>

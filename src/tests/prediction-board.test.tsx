@@ -1,5 +1,4 @@
 import { render, screen, within, act, fireEvent } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PredictionBoard } from "@/components/sections/prediction-board";
 import { STAKE_STEPS, SUBTICK_MS, SUBTICKS_PER_COLUMN, geometries } from "@/lib/prediction-engine";
@@ -56,11 +55,27 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-/** The board's balance readout, e.g. "99.5 PTS". Points carry two decimals. */
+/**
+ * The board's balance readout, e.g. "99.5 PTS". Points carry two decimals.
+ *
+ * Scoped to the desktop market bar: the phone layout renders its own balance
+ * pill, and jsdom has no viewport to hide one of them.
+ */
 function balance() {
-  const text = screen.getByText(/PTS$/, { selector: "span.font-bold" }).textContent ?? "";
+  const label = screen.getByText("Prediction Balance:");
+  const text = label.parentElement?.querySelector("span.font-bold")?.textContent ?? "";
   return Number(text.replace(/,/g, "").replace(/[^0-9.]/g, ""));
 }
+
+/*
+ * Interactions go through `fireEvent`, not `userEvent`.
+ *
+ * `userEvent` awaits its own internal timing, and this board re-renders four
+ * hundred-odd cells four times a second. In jsdom a render costs more than the
+ * tick interval, so the event loop stays saturated and those awaits are starved
+ * — which showed up as tests intermittently timing out rather than failing.
+ * `fireEvent` dispatches synchronously and cannot be starved.
+ */
 
 /** Observer callbacks, so a test can scroll the board in and out of view. */
 const observers: IntersectionObserverCallback[] = [];
@@ -136,20 +151,19 @@ describe("PredictionBoard", () => {
     expect(cells).toHaveLength(playableColumns * rows);
   });
 
-  it("debits the stake and marks the cell when one is tapped", async () => {
-    const user = userEvent.setup();
+  it("debits the stake and marks the cell when one is tapped", () => {
     render(<PredictionBoard />);
 
     // Stop the clock first: a column scroll mid-click would retire one playable
     // column and reveal another, hiding the change this test is checking for.
-    await user.click(screen.getByLabelText("Pause"));
+    fireEvent.click(screen.getByLabelText("Pause"));
 
     const before = balance();
     const cellsBefore = playableCells();
     const cell = safeCell();
     const stake = STAKE_STEPS[2]; // the opening preset
 
-    await user.click(cell);
+    fireEvent.click(cell);
 
     expect(balance()).toBe(before - stake);
     // The tapped cell stops being playable and becomes a staked cell showing
@@ -163,10 +177,9 @@ describe("PredictionBoard", () => {
     expect(within(grid).getByText(/^\d+\.\d{2}$/)).toBeInTheDocument();
   });
 
-  it("stacks repeat taps on one cell instead of ignoring them", async () => {
-    const user = userEvent.setup();
+  it("stacks repeat taps on one cell instead of ignoring them", () => {
     render(<PredictionBoard />);
-    await user.click(screen.getByLabelText("Pause"));
+    fireEvent.click(screen.getByLabelText("Pause"));
 
     const before = balance();
     const cell = safeCell();
@@ -191,20 +204,19 @@ describe("PredictionBoard", () => {
     expect(playableCells()).toHaveLength(staked.length);
   });
 
-  it("settles the bet as the playhead reaches it", async () => {
+  it("settles the bet as the playhead reaches it", () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     render(<PredictionBoard />);
 
     const staked = balance();
-    await user.click(safeCell());
+    fireEvent.click(safeCell());
     const afterBet = balance();
     expect(afterBet).toBeLessThan(staked);
 
     // Run past the bet's column. How far that is comes from the geometry — the
     // bet lands `lockAhead` columns out — rather than a hard-coded guess.
     const columns = geometries.desktop.lockAhead + 2;
-    await act(async () => {
+    act(() => {
       vi.advanceTimersByTime(SUBTICK_MS * SUBTICKS_PER_COLUMN * columns);
     });
 
@@ -307,78 +319,72 @@ describe("PredictionBoard", () => {
     void container;
   });
 
-  it("stops the animation loop when paused", async () => {
+  it("stops the animation loop when paused", () => {
     const frames = frameHarness();
-    const user = userEvent.setup();
     render(<PredictionBoard />);
     expect(frames.scheduled).toBeGreaterThan(0);
 
-    await user.click(screen.getByLabelText("Pause"));
+    fireEvent.click(screen.getByLabelText("Pause"));
     // The effect cleanup cancelled the pending frame and queued no replacement.
     expect(frames.scheduled).toBe(0);
 
-    await user.click(screen.getByLabelText("Resume"));
+    fireEvent.click(screen.getByLabelText("Resume"));
     expect(frames.scheduled).toBeGreaterThan(0);
   });
 
-  it("steps the stake up and down", async () => {
-    const user = userEvent.setup();
+  it("steps the stake up and down", () => {
     render(<PredictionBoard />);
 
     const panel = screen.getByLabelText("Increase stake").closest("div")!;
     const readStake = () => within(panel).getByText(/^[0-9,.]+$/).textContent;
 
     const initial = readStake();
-    await user.click(screen.getByLabelText("Increase stake"));
+    fireEvent.click(screen.getByLabelText("Increase stake"));
     expect(readStake()).not.toBe(initial);
 
-    await user.click(screen.getByLabelText("Decrease stake"));
+    fireEvent.click(screen.getByLabelText("Decrease stake"));
     expect(readStake()).toBe(initial);
   });
 
-  it("pauses and resumes the clock", async () => {
-    const user = userEvent.setup();
+  it("pauses and resumes the clock", () => {
     render(<PredictionBoard />);
 
-    await user.click(screen.getByLabelText("Pause"));
+    fireEvent.click(screen.getByLabelText("Pause"));
     expect(screen.getByLabelText("Resume")).toBeInTheDocument();
 
-    await user.click(screen.getByLabelText("Resume"));
+    fireEvent.click(screen.getByLabelText("Resume"));
     expect(screen.getByLabelText("Pause")).toBeInTheDocument();
   });
 
-  it("explains the mechanic behind the help control", async () => {
-    const user = userEvent.setup();
+  it("explains the mechanic behind the help control", () => {
     render(<PredictionBoard />);
 
-    await user.click(screen.getByLabelText("How it works"));
+    fireEvent.click(screen.getByLabelText("How it works"));
     expect(screen.getByText("How Tap Predictions works")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Got it" }));
+    fireEvent.click(screen.getByRole("button", { name: "Got it" }));
     expect(screen.queryByText("How Tap Predictions works")).not.toBeInTheDocument();
   });
 
-  it("switches market and restarts the session", async () => {
-    const user = userEvent.setup();
+  it("switches market and restarts the session", () => {
     render(<PredictionBoard />);
 
-    await user.click(safeCell());
+    fireEvent.click(safeCell());
     const spent = balance();
 
-    await user.click(screen.getByRole("button", { name: /ETH-PERP/ }));
+    fireEvent.click(screen.getByRole("button", { name: /ETH-PERP/ }));
     // A fresh ladder means a fresh session, so the balance is whole again.
     expect(balance()).toBeGreaterThan(spent);
   });
 
-  it("resets the session", async () => {
-    const user = userEvent.setup();
+  it("resets the session", () => {
     render(<PredictionBoard />);
 
     const start = balance();
-    await user.click(safeCell());
+    fireEvent.click(safeCell());
     expect(balance()).toBeLessThan(start);
 
-    await user.click(screen.getByLabelText("Reset demo"));
+    fireEvent.click(screen.getByLabelText("Reset demo"));
     expect(balance()).toBe(start);
   });
 });

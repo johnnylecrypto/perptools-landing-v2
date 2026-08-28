@@ -13,7 +13,7 @@ export function Points() {
     <section
       id="points"
       aria-labelledby="points-heading"
-      className="py-section relative isolate overflow-hidden"
+      className="relative isolate overflow-hidden"
     >
       {/* atmos/screen-glow: 1621x987 radial wash centred on the section. */}
       <Ellipse
@@ -30,7 +30,7 @@ export function Points() {
           <header className="flex flex-col items-center gap-[18.89px] text-center">
             <h2
               id="points-heading"
-              className="max-w-[874.88px] text-[clamp(30px,5vw,48px)] leading-[1.05] font-bold text-balance text-white mix-blend-lighten"
+              className="heading-sheen max-w-[874.88px] text-[32px] leading-[38.4px] font-medium text-balance sm:text-[clamp(30px,5vw,48px)] sm:leading-none"
             >
               {points.heading}
             </h2>

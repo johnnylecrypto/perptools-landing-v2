@@ -12,7 +12,7 @@ export function Logo({ className, onClick }: { className?: string; onClick?: () 
       href="/"
       aria-label="PERPTools — home"
       onClick={onClick}
-      className={cn("flex h-10 items-center gap-1.5", className)}
+      className={cn("flex h-8 items-center gap-1 lg:h-10 lg:gap-1.5", className)}
     >
       <Image
         src="/logo-mark.webp"
@@ -21,9 +21,9 @@ export function Logo({ className, onClick }: { className?: string; onClick?: () 
         height={40}
         priority
         sizes="40px"
-        className="size-10 shrink-0 object-contain"
+        className="size-8 shrink-0 object-contain lg:size-10"
       />
-      <span className="font-dm text-[19px] leading-none font-bold tracking-[-0.01em] text-white">
+      <span className="font-dm text-[17px] leading-none font-bold tracking-[-0.01em] text-white lg:text-[19px]">
         PERPTools
       </span>
     </Link>
