@@ -78,6 +78,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${manrope.variable} ${dmSans.variable} ${inter.variable} ${jetbrainsMono.variable} h-full`}
+      suppressHydrationWarning
     >
       <body className="bg-bg-0 text-fg flex min-h-full flex-col antialiased">
         <a

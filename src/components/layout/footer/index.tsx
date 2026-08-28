@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { footerGroups } from "@/content/navigation";
 import { site } from "@/lib/site";
-import { Wordmark } from "@/components/layout/wordmark";
 import { WordmarkMarquee } from "@/components/layout/wordmark-marquee";
+import { WordmarkRise } from "@/components/layout/wordmark-rise";
 import { DiscordIcon } from "@/components/icons/discord";
 import { XIcon } from "@/components/icons/x";
 import { CurrentYear } from "@/components/ui/current-year";
@@ -90,7 +90,7 @@ export function Footer() {
                 export artefact — centring it is the defensible reading. */}
             <div className="relative w-full">
               <WordmarkMarquee className="sm:hidden" />
-              <Wordmark className="hidden h-auto w-full sm:block" />
+              <WordmarkRise className="hidden w-full sm:block" />
             </div>
 
             <div className="flex flex-row items-center justify-between gap-2 text-[14px] leading-[20.8px] font-medium tracking-[0.78px] text-[rgb(237_238_240/0.28)] sm:gap-6">

@@ -498,6 +498,96 @@
     background: radial-gradient(closest-side, rgb(43 185 243 / 0.22), transparent 72%);
   }
 
+  /* ---------------------------------------------------------------------------
+     Footer wordmark entrance (wide screens).
+
+     The letters rise out of their masks once, then the same travelling light
+     the belt uses runs across them on a loop. `WordmarkRise` owns the timing
+     and writes the gradient offsets, `--g`, and the state classes below.
+
+     Three states, in order: `data-armed` hides the letters ready to rise,
+     `is-in` releases them, `is-landed` opens the masks once nothing is moving
+     through them any more.
+     --------------------------------------------------------------------------- */
+  .footer-rise {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    line-height: 0.86;
+    user-select: none;
+  }
+
+  .footer-rise-text {
+    display: inline-block;
+    font-weight: 800;
+    /* First paint only; the effect measures the frame and fits the word to it. */
+    font-size: 15.6vw;
+    letter-spacing: -0.045em;
+    white-space: nowrap;
+  }
+
+  .footer-rise-mask {
+    display: inline-block;
+    vertical-align: bottom;
+    /* Headroom for the tilt on the way up, or the mask shaves the cap line. */
+    padding-top: 0.1em;
+    margin-top: -0.1em;
+  }
+
+  /* Base colour matches the gradient's, so the word reads the same before the
+     effect paints it — and still reads if it never does. */
+  .footer-rise-letter {
+    display: inline-block;
+    font-style: normal;
+    color: rgb(255 255 255 / 0.1);
+  }
+
+  .footer-rise[data-lit] .footer-rise-letter {
+    color: transparent;
+    background-repeat: repeat-x;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  .footer-rise[data-armed] .footer-rise-mask {
+    overflow: hidden;
+  }
+
+  .footer-rise[data-armed].is-landed .footer-rise-mask {
+    overflow: visible;
+  }
+
+  .footer-rise[data-armed] .footer-rise-letter {
+    transform: translateY(112%) rotate(4deg);
+    transform-origin: 0 100%;
+    opacity: 0;
+    /* 1.15s is `HOLD` in the component; the two have to agree. */
+    transition:
+      transform 1.15s cubic-bezier(0.16, 0.85, 0.24, 1),
+      opacity 0.5s ease;
+  }
+
+  .footer-rise[data-armed].is-in .footer-rise-letter {
+    transform: none;
+    opacity: 1;
+  }
+
+  /* Soft glow behind the word; the pass drives its opacity through `--g`. */
+  .footer-rise::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 72%;
+    height: 134%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: -1;
+    filter: blur(74px);
+    opacity: var(--g, 0);
+    background: radial-gradient(closest-side, rgb(43 185 243 / 0.2), transparent 72%);
+  }
+
   .frame {
     --frame-width: 1080px;
     --frame-max: 181.5px;

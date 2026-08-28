@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { sheenGradient } from "@/components/layout/wordmark-sheen";
 
 /* ── knobs ───────────────────────────────────────────────────── */
 const DIR = 1; /* 1 runs the band to the right, -1 to the left */
@@ -18,31 +19,7 @@ const BAND = 0.55; /* width of the lit band, as a share of the viewport */
  */
 const IMGK = 3.6;
 
-/** Letters at rest, and at the crest of the pass. */
-const DIM: RGBA = [255, 255, 255, 0.1];
-const PEAK: RGBA = [214, 240, 255, 0.62];
-
-type RGBA = [number, number, number, number];
-
-const rgba = (c: RGBA) => `rgba(${c[0]},${c[1]},${c[2]},${c[3]})`;
-const mix = (a: RGBA, b: RGBA, t: number): RGBA => [
-  Math.round(a[0] + (b[0] - a[0]) * t),
-  Math.round(a[1] + (b[1] - a[1]) * t),
-  Math.round(a[2] + (b[2] - a[2]) * t),
-  Number((a[3] + (b[3] - a[3]) * t).toFixed(3)),
-];
-
-/* The band occupies a narrow window in the middle of the image; everything
-   either side is the base colour, so the letters are filled in every phase. */
-const HALF = (BAND / IMGK) * 50;
-const GRADIENT = `linear-gradient(100deg,
-  ${rgba(DIM)} 0%,
-  ${rgba(DIM)} ${(50 - HALF).toFixed(2)}%,
-  ${rgba(mix(DIM, PEAK, 0.38))} ${(50 - HALF * 0.42).toFixed(2)}%,
-  ${rgba(PEAK)} 50%,
-  ${rgba(mix(DIM, PEAK, 0.38))} ${(50 + HALF * 0.42).toFixed(2)}%,
-  ${rgba(DIM)} ${(50 + HALF).toFixed(2)}%,
-  ${rgba(DIM)} 100%)`;
+const GRADIENT = sheenGradient(BAND, IMGK);
 
 /**
  * The footer wordmark as a running belt with a light passing over it.

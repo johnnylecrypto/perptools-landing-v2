@@ -20,7 +20,11 @@ export function BadgesCard() {
 
         <ul className="flex items-center gap-2">
           {badges.items.map((badge, index) => (
-            <li key={index} className="led-tile" style={{ "--i": index } as React.CSSProperties}>
+            <li
+              key={index}
+              className="led-tile shrink-0"
+              style={{ "--i": index } as React.CSSProperties}
+            >
               {badge ? (
                 <Image
                   src={badge}
