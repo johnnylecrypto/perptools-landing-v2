@@ -43,8 +43,8 @@ export function BadgesCard() {
                   className={cn(
                     "block size-12 rounded-xl",
                     index < badges.earned
-                      ? "bg-[#2BB9F3]/12 shadow-[inset_0_0_0_1px_rgb(43_185_243/0.35)]"
-                      : "bg-white/4 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.08)]",
+                      ? "bg-accent/12 shadow-[inset_0_0_0_1px_--alpha(var(--color-accent)/35%)]"
+                      : "bg-white/4 shadow-[inset_0_0_0_1px_--alpha(var(--color-white)/8%)]",
                   )}
                 />
               )}

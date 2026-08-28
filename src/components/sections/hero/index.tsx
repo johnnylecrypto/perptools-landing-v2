@@ -28,14 +28,14 @@ export function Hero() {
           ))}
         </h1>
 
-        <p className="font-inter max-w-[495px] text-[15px] leading-[19.5px] text-pretty text-[#EBEBEB]">
+        <p className="font-inter text-fg max-w-[495px] text-[15px] leading-[19.5px] text-pretty">
           {hero.lede}
         </p>
 
         <div className="flex w-full flex-col items-center justify-center gap-4 pt-8 sm:w-auto sm:flex-row sm:gap-3 sm:pt-6">
           <Button
             href={hero.primaryCta.href}
-            className="h-13 w-full text-base font-bold text-[#080C12] sm:w-[179px]"
+            className="text-bg-2 h-13 w-full text-base font-bold sm:w-[179px]"
           >
             {hero.primaryCta.label}
             <ArrowIcon className="size-3.5" />
@@ -43,7 +43,7 @@ export function Hero() {
           <Button
             href={hero.secondaryCta.href}
             variant="ghost"
-            className="h-13 w-full border-white/15 bg-white/5 text-base font-bold text-[#EDEEF0] backdrop-blur-[2.65px] sm:w-[184px]"
+            className="text-fg h-13 w-full border-white/15 bg-white/5 text-base font-bold backdrop-blur-[2.65px] sm:w-[184px]"
           >
             {hero.secondaryCta.label}
           </Button>

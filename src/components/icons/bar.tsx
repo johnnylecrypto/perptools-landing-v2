@@ -6,7 +6,7 @@ export function BarIcon({ negative, className }: { negative: boolean; className?
     <svg
       aria-hidden
       viewBox="0 0 12 12"
-      fill={negative ? "#FF7578" : "#3FD08B"}
+      fill={negative ? "var(--color-danger)" : "var(--color-success)"}
       className={cn("size-[10.5px]", className)}
     >
       <rect x="1.4" y="6.4" width="2.4" height="4" rx="0.4" />

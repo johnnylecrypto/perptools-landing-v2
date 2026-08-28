@@ -12,7 +12,7 @@ import { timeLabel, type Geometry } from "@/lib/prediction-engine";
 export function TimeAxis({ geometry, font }: { geometry: Geometry; font: number }) {
   const total = geometry.columns + 1;
   return (
-    <div aria-hidden className="flex bg-[#010101]" style={{ height: geometry.strip }}>
+    <div aria-hidden className="bg-board-bg flex" style={{ height: geometry.strip }}>
       {Array.from({ length: total }, (_, column) => {
         const offset = column - (geometry.nowColumn - 1);
         const edge = column === 0 || column >= total - 7;

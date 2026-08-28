@@ -12,11 +12,11 @@ import { SocialLink } from "./social-link";
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-[#050D12]">
+    <footer className="bg-bg-2 relative overflow-hidden border-t border-white/10">
       {/* Wide cyan wash bleeding in from above the top edge. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-[-34px] h-[146px] rounded-full bg-[linear-gradient(180deg,rgb(0_173_239/0.12)_55%,rgb(157_179_198/0.12)_100%)] blur-[96.49px]"
+        className="pointer-events-none absolute inset-x-0 top-[-34px] h-[146px] rounded-full bg-[linear-gradient(180deg,--alpha(var(--color-accent)/12%)_55%,--alpha(var(--color-fg-muted)/12%)_100%)] blur-[96.49px]"
       />
 
       <div className="frame relative [--frame-max:100px] [--frame-width:1240px]">
@@ -66,9 +66,9 @@ export function Footer() {
               {footerGroups.map((group) => (
                 <div
                   key={group.title}
-                  className="flex flex-col gap-5 [&:not(:first-child)]:border-t [&:not(:first-child)]:border-[rgb(217_217_217/0.06)] [&:not(:first-child)]:pt-5 sm:[&:not(:first-child)]:border-t-0 sm:[&:not(:first-child)]:pt-0"
+                  className="[&:not(:first-child)]:border-fg/6 flex flex-col gap-5 [&:not(:first-child)]:border-t [&:not(:first-child)]:pt-5 sm:[&:not(:first-child)]:border-t-0 sm:[&:not(:first-child)]:pt-0"
                 >
-                  <h2 className="text-[12px] font-bold tracking-[1.8px] whitespace-nowrap text-[rgb(129_134_137/0.9)] uppercase">
+                  <h2 className="text-fg-subtle/90 text-[12px] font-bold tracking-[1.8px] whitespace-nowrap uppercase">
                     {group.title}
                   </h2>
                   <ul className="flex flex-col gap-3">
@@ -93,7 +93,7 @@ export function Footer() {
               <WordmarkRise className="hidden w-full sm:block" />
             </div>
 
-            <div className="flex flex-row items-center justify-between gap-2 text-[14px] leading-[20.8px] font-medium tracking-[0.78px] text-[rgb(237_238_240/0.28)] sm:gap-6">
+            <div className="text-fg/28 flex flex-row items-center justify-between gap-2 text-[14px] leading-[20.8px] font-medium tracking-[0.78px] sm:gap-6">
               <p>
                 <span className="hidden sm:inline">{site.name} Protocol. </span>All Rights Reserved.
               </p>

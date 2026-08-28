@@ -42,7 +42,7 @@ export function PointsReceipt({ className }: { className?: string }) {
           type="button"
           aria-label="Print the receipt again"
           onClick={() => setRun((value) => value + 1)}
-          className="relative z-10 block h-[14px] w-full cursor-pointer rounded-full border border-white/16 bg-[linear-gradient(180deg,#2B2E30_0%,#323638_50%,#393E41_100%)] shadow-[inset_0_2px_5px_rgb(0_0_0/0.75)]"
+          className="relative z-10 block h-[14px] w-full cursor-pointer rounded-full border border-white/16 bg-[linear-gradient(180deg,var(--color-slot-0)_0%,var(--color-slot-1)_50%,var(--color-slot-2)_100%)] shadow-[inset_0_2px_5px_--alpha(var(--color-black)/75%)]"
         />
 
         {/* Clips the slip while it is still inside the printer; the padding is
@@ -50,15 +50,15 @@ export function PointsReceipt({ className }: { className?: string }) {
         <div className="relative z-0 -mt-[7px] w-full overflow-hidden pb-2">
           <div
             key={run}
-            className="receipt-paper relative flex flex-col items-center gap-[10px] bg-[#EEF5FA] px-[18px] pt-[18px] pb-6 shadow-[0_24px_60px_rgb(0_0_0/0.55)]"
+            className="receipt-paper bg-paper relative flex flex-col items-center gap-[10px] px-[18px] pt-[18px] pb-6 shadow-[0_24px_60px_--alpha(var(--color-black)/55%)]"
           >
             <Line index={0}>
-              <p className="text-center font-mono text-[11px] font-bold tracking-[2.4px] text-[#0B1826]">
+              <p className="text-paper-ink text-center font-mono text-[11px] font-bold tracking-[2.4px]">
                 {receipt.title}
               </p>
             </Line>
             <Line index={1}>
-              <p className="text-center font-mono text-[8px] tracking-[2.1px] text-[#5A6E80]">
+              <p className="text-paper-ink-muted text-center font-mono text-[8px] tracking-[2.1px]">
                 {receipt.subtitle}
               </p>
             </Line>
@@ -70,11 +70,11 @@ export function PointsReceipt({ className }: { className?: string }) {
             {receipt.lines.map((line, index) => (
               <Line key={line.label} index={3 + index}>
                 <p className="flex w-full items-center gap-2 overflow-hidden">
-                  <span className="font-mono text-[10.5px] tracking-[0.2px] text-[#0B1826]">
+                  <span className="text-paper-ink font-mono text-[10.5px] tracking-[0.2px]">
                     {line.label}
                   </span>
-                  <span aria-hidden className="h-px flex-1 bg-[#A9BCCB]" />
-                  <span className="font-mono text-[10.5px] font-bold text-[#0E8F5F]">
+                  <span aria-hidden className="bg-paper-rule h-px flex-1" />
+                  <span className="text-paper-success font-mono text-[10.5px] font-bold">
                     {line.points}
                   </span>
                 </p>
@@ -87,7 +87,7 @@ export function PointsReceipt({ className }: { className?: string }) {
 
             <Line index={TOTAL_LINE}>
               <p className="flex w-full items-baseline justify-between overflow-hidden">
-                <span className="font-mono text-[10px] font-bold tracking-[2px] text-[#0B1826]">
+                <span className="text-paper-ink font-mono text-[10px] font-bold tracking-[2px]">
                   {receipt.totalLabel}
                 </span>
                 <span className="flex items-baseline gap-1">
@@ -95,9 +95,9 @@ export function PointsReceipt({ className }: { className?: string }) {
                     to={receipt.totalValue}
                     delay={(FIRST_LINE + TOTAL_LINE * LINE_DELAY) * 1000}
                     duration={900}
-                    className="text-[33px] font-extrabold text-[#0B1826] tabular-nums"
+                    className="text-paper-ink text-[33px] font-extrabold tabular-nums"
                   />
-                  <span className="font-mono text-[8.5px] tracking-[1.4px] text-[#5A6E80]">
+                  <span className="text-paper-ink-muted font-mono text-[8.5px] tracking-[1.4px]">
                     {receipt.unit}
                   </span>
                 </span>
@@ -105,11 +105,11 @@ export function PointsReceipt({ className }: { className?: string }) {
             </Line>
 
             <Line index={TOTAL_LINE + 1}>
-              <p className="flex w-full items-center justify-between gap-2 rounded-md bg-[#DCEBF5] px-[11px] py-2">
-                <span className="font-mono text-[9px] tracking-[1.3px] text-[#0B1826]">
+              <p className="bg-paper-fill flex w-full items-center justify-between gap-2 rounded-md px-[11px] py-2">
+                <span className="text-paper-ink font-mono text-[9px] tracking-[1.3px]">
                   {receipt.rankLabel}
                 </span>
-                <span className="font-mono text-[9px] font-bold tracking-[1.3px] text-[#0E76B4]">
+                <span className="text-paper-accent font-mono text-[9px] font-bold tracking-[1.3px]">
                   {receipt.rank}
                 </span>
               </p>
@@ -121,7 +121,7 @@ export function PointsReceipt({ className }: { className?: string }) {
                 {receipt.barcode.map(([left, width]) => (
                   <span
                     key={left}
-                    className="absolute top-0 h-8 bg-[#0B1826]"
+                    className="bg-paper-ink absolute top-0 h-8"
                     style={{ left, width }}
                   />
                 ))}
@@ -129,7 +129,7 @@ export function PointsReceipt({ className }: { className?: string }) {
             </Line>
 
             <Line index={TOTAL_LINE + 3}>
-              <p className="text-center font-mono text-[8px] tracking-[1.2px] text-[#8199AB]">
+              <p className="text-paper-ink-faint text-center font-mono text-[8px] tracking-[1.2px]">
                 {receipt.disclaimer}
               </p>
             </Line>
@@ -144,14 +144,14 @@ export function PointsReceipt({ className }: { className?: string }) {
                 with it so the slip stays whole as it feeds. */}
             <span
               aria-hidden
-              className="absolute inset-x-0 -bottom-px h-2 translate-y-full bg-[#EEF5FA]"
+              className="bg-paper absolute inset-x-0 -bottom-px h-2 translate-y-full"
               style={{
                 maskImage:
-                  "conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg)",
+                  "conic-gradient(from -45deg at bottom, transparent, black 1deg 89deg, transparent 90deg)",
                 maskSize: "12px 100%",
                 maskRepeat: "repeat-x",
                 WebkitMaskImage:
-                  "conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg)",
+                  "conic-gradient(from -45deg at bottom, transparent, black 1deg 89deg, transparent 90deg)",
                 WebkitMaskSize: "12px 100%",
                 WebkitMaskRepeat: "repeat-x",
               }}

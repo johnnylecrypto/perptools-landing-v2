@@ -21,9 +21,9 @@ export function ControlButton({
       onClick={onClick}
       className={cn(
         "absolute z-[2] flex size-6 cursor-pointer items-center justify-center rounded-[5.25px] p-[3px]",
-        "shadow-[0_1.5px_4.5px_rgb(0_0_0/0.35),inset_0_0_0_0.75px_rgb(255_255_255/0.15)] backdrop-blur-[11.25px]",
+        "shadow-[0_1.5px_4.5px_--alpha(var(--color-black)/35%),inset_0_0_0_0.75px_--alpha(var(--color-white)/15%)] backdrop-blur-[11.25px]",
         "transition-colors",
-        pressed ? "bg-[#2BB9F3]/30" : "bg-white/10 hover:bg-white/20",
+        pressed ? "bg-accent/30" : "bg-white/10 hover:bg-white/20",
         className,
       )}
     >

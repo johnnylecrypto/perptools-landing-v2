@@ -12,7 +12,7 @@ import { CELL_EDGE } from "./cell-edges";
  * Three variants beyond the plain one, all from the live board:
  *  - stacked (`betCount >= 2`) burns brighter and flips to dark text;
  *  - golden pays the capped bonus and goes gold;
- *  - a win turns `#041a08`/`#00ff88`, punches once, and throws a score badge.
+ *  - a win turns `var(--color-success-deep)`/`var(--color-success-bright)`, punches once, and throws a score badge.
  */
 export function BetCell({
   bet,
@@ -49,25 +49,25 @@ export function BetCell({
         className={cn(
           "absolute inset-[1px] flex flex-col items-center justify-center overflow-hidden rounded-[7.5px] border-2",
           won &&
-            "animate-cell-punch border-[#00ff88] bg-[#041a08] shadow-[0_0_24px_rgb(0_255_136/0.45)]",
+            "animate-cell-punch border-success-bright bg-success-deep shadow-[0_0_24px_--alpha(var(--color-success-bright)/45%)]",
           lost &&
-            "border-[#FF7578]/50 bg-[linear-gradient(180deg,#3A1015_0%,#120608_100%)] opacity-0 transition-opacity duration-[1600ms]",
+            "border-danger/50 bg-[image:var(--gradient-bet-lost)] opacity-0 transition-opacity duration-[1600ms]",
           !won &&
             !lost &&
             bet.golden &&
-            "border-[#F6C14B] bg-[#DEC05F] shadow-[0_0_13.5px_rgb(246_193_75/0.6)]",
+            "border-warning bg-warning-fill shadow-[0_0_13.5px_--alpha(var(--color-warning)/60%)]",
           !won &&
             !lost &&
             !bet.golden &&
             (doubled
-              ? "border-[#2BB9F3] bg-[linear-gradient(180deg,#2BB9F3_31%,#8AD9FF_81%)] shadow-[0_0_14px_#2BB9F3]"
-              : "border-[#2BB9F3] bg-[linear-gradient(180deg,#0070A9_0%,#061928_100%)] shadow-[0_0_13.5px_#2BB9F3D9]"),
+              ? "border-accent bg-[image:var(--gradient-accent-bright)] shadow-[0_0_14px_var(--color-accent)]"
+              : "border-accent bg-[image:var(--gradient-bet)] shadow-[0_0_13.5px_--alpha(var(--color-accent)/85%)]"),
         )}
       >
         {won ? (
           <span
             aria-hidden
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,rgb(0_200_80/0.25)_0%,transparent_70%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle,--alpha(var(--color-success-bright)/25%)_0%,transparent_70%)]"
           />
         ) : null}
 
@@ -76,7 +76,7 @@ export function BetCell({
           style={{ fontSize: font - 1.5 }}
           className={cn(
             "relative leading-none font-medium",
-            dark ? "text-[#050505]" : "text-white",
+            dark ? "text-fg-on-accent" : "text-white",
           )}
         >
           {formatMultiplier(bet.multiplier)}
@@ -85,7 +85,7 @@ export function BetCell({
           style={{ fontSize: font }}
           className={cn(
             "relative leading-none font-semibold tabular-nums",
-            won ? "text-[#8CF0C0]" : dark ? "text-[#050505]" : "text-[#2BB9F3]",
+            won ? "text-success-light" : dark ? "text-fg-on-accent" : "text-accent",
           )}
         >
           {won ? formatPoints(bet.payout) : (bet.stake * bet.multiplier).toFixed(2)}
@@ -96,7 +96,7 @@ export function BetCell({
       {won ? (
         <span
           aria-hidden
-          className="animate-score-rise pointer-events-none absolute -top-2 left-1/2 z-[3] -translate-x-1/2 text-[15px] leading-none font-extrabold whitespace-nowrap text-[#8CF0C0] [text-shadow:0_0_10px_rgb(0_255_136/0.6)]"
+          className="animate-score-rise text-success-light pointer-events-none absolute -top-2 left-1/2 z-[3] -translate-x-1/2 text-[15px] leading-none font-extrabold whitespace-nowrap [text-shadow:0_0_10px_--alpha(var(--color-success-bright)/60%)]"
         >
           + {formatPoints(bet.payout)}
         </span>

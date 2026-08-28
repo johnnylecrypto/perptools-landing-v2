@@ -7,7 +7,7 @@ export function TapIcon({ className }: { className?: string }) {
       aria-hidden
       viewBox="0 0 12 12"
       fill="none"
-      stroke="#999999"
+      stroke="var(--color-fg-subtle)"
       strokeWidth="1"
       className={cn("size-[10.5px]", className)}
     >

@@ -39,13 +39,16 @@ export function TasksCard() {
             </span>
 
             <span className="w-[90px] sm:w-[140.43px]">
-              <Progress value={task.progress} color={task.done ? "#3FD08B" : "#2BB9F3"} />
+              <Progress
+                value={task.progress}
+                color={task.done ? "var(--color-success)" : "var(--color-accent)"}
+              />
             </span>
 
             <span
               className={cn(
                 "led-task-text w-[61px] text-right text-[12px] font-bold",
-                task.done ? "text-[rgb(63_208_139/0.95)]" : "text-[rgb(43_185_243/0.95)]",
+                task.done ? "text-success/95" : "text-accent/95",
               )}
             >
               {task.reward}

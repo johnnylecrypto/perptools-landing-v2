@@ -22,7 +22,7 @@ export function Live() {
             >
               {live.heading}
             </h2>
-            <p className="max-w-[636.28px] text-[14px] leading-[23.86px] font-medium text-pretty text-[#7A8494] sm:text-[16px] sm:font-normal">
+            <p className="text-fg-subtle max-w-[636.28px] text-[14px] leading-[23.86px] font-medium text-pretty sm:text-[16px] sm:font-normal">
               {live.lede}
             </p>
           </header>

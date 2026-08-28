@@ -50,13 +50,13 @@ export const platform = {
      */
     current: 2,
     tiers: [
-      { name: "Shrimp", color: "#FE9700" },
-      { name: "Wolf", color: "#3FD08B" },
-      { name: "Shark", color: "#2BB9F3" },
-      { name: "Whale", color: "#8B5CF6" },
-      { name: "Titan", color: "#EBBD4E" },
-      { name: "Oracle", color: "#FF7578" },
-      { name: "Legend", color: "#F4F5F6" },
+      { name: "Shrimp", color: "var(--color-tier-shrimp)" },
+      { name: "Wolf", color: "var(--color-success)" },
+      { name: "Shark", color: "var(--color-accent)" },
+      { name: "Whale", color: "var(--color-tier-whale)" },
+      { name: "Titan", color: "var(--color-warning)" },
+      { name: "Oracle", color: "var(--color-danger)" },
+      { name: "Legend", color: "var(--color-fg)" },
     ],
   },
 
@@ -119,9 +119,9 @@ export const platform = {
     rank: "WOLF · TIER 3/7 ▲",
     disclaimer: "EXAMPLE VALUES · NOT A GUARANTEE OF FUTURE VALUE",
     stats: [
-      { value: "1M", label: "REWARD POOL", color: "#83D4FB" },
-      { value: "7", label: "RANK TIERS", color: "#FFFFFF" },
-      { value: "×9.6", label: "MAX MULTIPLIER", color: "#E9C87A" },
+      { value: "1M", label: "REWARD POOL", color: "var(--color-accent-light)" },
+      { value: "7", label: "RANK TIERS", color: "var(--color-fg)" },
+      { value: "×9.6", label: "MAX MULTIPLIER", color: "var(--color-warning)" },
     ],
     cta: "Start Earning",
     /**

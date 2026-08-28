@@ -13,7 +13,7 @@ function LaunchAppButton({ className, onClick }: { className?: string; onClick?:
       onClick={onClick}
       className={cn(
         "rounded-button inline-flex h-10 min-w-[147px] items-center justify-center px-3",
-        "font-dm bg-[image:var(--gradient-accent)] text-[15px] font-semibold text-[#000510]",
+        "font-dm text-fg-on-accent bg-[image:var(--gradient-accent)] text-[15px] font-semibold",
         "transition-[background-image,box-shadow,transform] duration-250",
         "ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[image:var(--gradient-accent-hover)]",
         "hover:shadow-[var(--shadow-accent)]",

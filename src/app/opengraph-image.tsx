@@ -15,23 +15,32 @@ export default function OpengraphImage() {
         flexDirection: "column",
         justifyContent: "space-between",
         padding: 80,
-        background: "linear-gradient(160deg, #030507 40%, #0b1015 100%)",
-        color: "#edeff2",
+        background: "linear-gradient(160deg, var(--color-bg-0) 40%, var(--color-bg-3) 100%)",
+        color: "var(--color-fg)",
         fontFamily: "sans-serif",
       }}
     >
-      <div style={{ display: "flex", fontSize: 26, letterSpacing: 6, color: "#83d4fb" }}>
+      <div
+        style={{
+          display: "flex",
+          fontSize: 26,
+          letterSpacing: 6,
+          color: "var(--color-accent-light)",
+        }}
+      >
         PERPTOOLS
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
         <div style={{ fontSize: 84, fontWeight: 700, letterSpacing: -3, lineHeight: 1.05 }}>
           The Market
         </div>
-        <div style={{ fontSize: 84, fontWeight: 700, letterSpacing: -3, color: "#2bb9f3" }}>
+        <div
+          style={{ fontSize: 84, fontWeight: 700, letterSpacing: -3, color: "var(--color-accent)" }}
+        >
           Never Sleeps.
         </div>
       </div>
-      <div style={{ display: "flex", fontSize: 26, color: "#b6bec9", maxWidth: 900 }}>
+      <div style={{ display: "flex", fontSize: 26, color: "var(--color-fg-muted)", maxWidth: 900 }}>
         Autonomous agents. On-chain transparency. CEX-grade performance.
       </div>
     </div>,

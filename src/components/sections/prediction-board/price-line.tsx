@@ -29,8 +29,8 @@ export function PriceLine({
     >
       <defs>
         <linearGradient id="pt-price-fill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#2BB9F3" stopOpacity="0.18" />
-          <stop offset="100%" stopColor="#2BB9F3" stopOpacity="0" />
+          <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="0" />
         </linearGradient>
       </defs>
       <path ref={areaRef} d={area} fill="url(#pt-price-fill)" />
@@ -38,7 +38,7 @@ export function PriceLine({
         ref={lineRef}
         d={line}
         fill="none"
-        stroke="#2BB9F3"
+        stroke="var(--color-accent)"
         strokeOpacity="0.65"
         strokeWidth="2"
         strokeLinejoin="round"

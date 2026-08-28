@@ -18,8 +18,8 @@ function PlatformCard({
     <div
       style={{ "--d": `${delay}ms` } as React.CSSProperties}
       className={cn(
-        "led-card relative overflow-hidden rounded-2xl bg-[rgb(1_1_1/0.3)] p-5",
-        "shadow-[inset_0_0_0_1px_rgb(255_255_255/0.15)]",
+        "led-card bg-board-bg/30 relative overflow-hidden rounded-2xl p-5",
+        "shadow-[inset_0_0_0_1px_--alpha(var(--color-white)/15%)]",
         className,
       )}
     >

@@ -11,7 +11,7 @@ const base =
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    "bg-[image:var(--gradient-accent)] text-[#000510] shadow-[var(--shadow-accent)] " +
+    "bg-[image:var(--gradient-accent)] text-fg-on-accent shadow-[var(--shadow-accent)] " +
     "hover:bg-[image:var(--gradient-accent-hover)] hover:-translate-y-px " +
     "hover:shadow-[var(--shadow-accent-hover)]",
   ghost:

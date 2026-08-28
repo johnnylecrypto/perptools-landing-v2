@@ -25,7 +25,7 @@ export function PriceLadder({
         <span
           key={row}
           style={{ top: `${(row / geometry.rows) * 100}%`, fontSize: font - 1 }}
-          className="absolute left-4 -translate-y-[2px] leading-none text-[rgb(226_232_240/0.8)] tabular-nums"
+          className="text-fg/80 absolute left-4 -translate-y-[2px] leading-none tabular-nums"
         >
           {formatPrice(bandFor(row, ladder, geometry.rows).high, decimals)}
         </span>

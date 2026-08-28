@@ -95,7 +95,7 @@ export function PredictionBoard() {
   return (
     <div
       ref={boardRef}
-      className="relative w-full overflow-hidden rounded-2xl bg-[#010101] p-3 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.15)] max-sm:px-0"
+      className="bg-board-bg relative w-full overflow-hidden rounded-2xl p-3 shadow-[inset_0_0_0_1px_--alpha(var(--color-white)/15%)] max-sm:px-0"
     >
       <MarketBar
         marketIndex={marketIndex}
@@ -106,7 +106,7 @@ export function PredictionBoard() {
 
       {/* Phones run this panel edge to edge: no radius, no side rule, just the
           top border the design draws above the time strip. */}
-      <div className="relative mt-[9px] overflow-hidden rounded-xl bg-[#010101] shadow-[inset_0_0_0_0.75px_#122B3A] max-sm:rounded-none max-sm:border-t max-sm:border-[#122B3A] max-sm:shadow-none">
+      <div className="bg-board-bg max-sm:border-board-line relative mt-[9px] overflow-hidden rounded-xl shadow-[inset_0_0_0_0.75px_var(--color-board-line)] max-sm:rounded-none max-sm:border-t max-sm:shadow-none">
         {/* The world: time axis and grid share one transform so they scroll as
             a single sheet, laid out one column wider than the panel so there is
             never a gap at the right edge. `useWorldScroll` drives the transform

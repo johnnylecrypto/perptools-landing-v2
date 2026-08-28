@@ -87,6 +87,18 @@ export function CtaDotField({
     if (!act || !ctx) return;
     if (variant === "mark" && !mark) return;
 
+    /* A canvas fill takes no `var()`, so the field's two colours are read off
+       the document once here and interpolated as numbers below. Resolved
+       rather than inlined, so the dots follow the palette like everything
+       else. */
+    const rootStyle = getComputedStyle(document.documentElement);
+    const channels = (token: string) => {
+      const hex = rootStyle.getPropertyValue(token).trim();
+      return [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    };
+    const DOT = channels("--color-dot");
+    const DOT_CREST = channels("--color-dot-crest");
+
     /* base64 → "cell index → brightness 0…15" */
     const bin = atob(LOGO.d);
     const cellAt = (i: number) => {
@@ -241,7 +253,8 @@ export function CtaDotField({
         }
         const a = (b + 0.5) / BUCKETS;
         const k = a < 0.45 ? 0 : (a - 0.45) / 0.55; /* brighter step → cooler, whiter dot */
-        ctx.fillStyle = `rgba(${(150 + k * 46) | 0},${(205 + k * 33) | 0},${(238 + k * 17) | 0},${(a * 0.86).toFixed(3)})`;
+        const mixCh = (i: number) => (DOT[i] + (DOT_CREST[i] - DOT[i]) * k) | 0;
+        ctx.fillStyle = `rgba(${mixCh(0)},${mixCh(1)},${mixCh(2)},${(a * 0.86).toFixed(3)})`;
         ctx.fill();
       }
     }
@@ -254,7 +267,7 @@ export function CtaDotField({
         ctx.moveTo(p.x + p.rad, p.y);
         ctx.arc(p.x, p.y, p.rad, 0, 6.2832);
       }
-      ctx.fillStyle = "rgba(150,205,238,.58)";
+      ctx.fillStyle = `rgba(${DOT[0]},${DOT[1]},${DOT[2]},0.58)`;
       ctx.fill();
     }
 

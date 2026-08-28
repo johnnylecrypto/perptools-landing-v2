@@ -7,7 +7,7 @@ import { CellLabel } from "./cell-label";
 
 /**
  * Grid hairlines, 0.75px in the design file. Settled cells carry the darker
- * `#061928`; live ones step up to `#122B3A`.
+ * `var(--color-board-cell)`; live ones step up to `var(--color-board-line)`.
  */
 type CellProps = {
   row: number;
@@ -60,11 +60,11 @@ export const CellView = memo(function CellView({
       <div
         className={cn(
           "relative aspect-square opacity-50",
-          golden ? "bg-[rgb(254_185_65/0.2)]" : "bg-[#061928]",
+          golden ? "bg-warning/20" : "bg-board-cell",
           CELL_EDGE,
         )}
       >
-        <CellLabel font={font} className="text-[rgb(43_185_243/0.5)]">
+        <CellLabel font={font} className="text-accent/50">
           {label}
         </CellLabel>
       </div>
@@ -81,14 +81,14 @@ export const CellView = memo(function CellView({
       className={cn(
         "group relative aspect-square",
         // An idle golden cube sits under a warm wash instead of the usual ink.
-        golden ? "bg-[rgb(254_185_65/0.2)]" : "bg-[#061928]",
+        golden ? "bg-warning/20" : "bg-board-cell",
         CELL_EDGE,
         disabled ? "cursor-not-allowed" : "cursor-pointer",
         // The product's hover: a 2px cyan ring and a flat white 12% wash.
         !disabled &&
           (golden
-            ? "hover:shadow-[inset_0_0_0_2px_#F6C14B] focus-visible:shadow-[inset_0_0_0_2px_#F6C14B]"
-            : "hover:shadow-[inset_0_0_0_2px_#2BB9F3] focus-visible:shadow-[inset_0_0_0_2px_#2BB9F3]"),
+            ? "hover:shadow-[inset_0_0_0_2px_var(--color-warning)] focus-visible:shadow-[inset_0_0_0_2px_var(--color-warning)]"
+            : "hover:shadow-[inset_0_0_0_2px_var(--color-accent)] focus-visible:shadow-[inset_0_0_0_2px_var(--color-accent)]"),
       )}
     >
       {!disabled ? (
@@ -102,8 +102,8 @@ export const CellView = memo(function CellView({
         className={cn(
           "transition-colors",
           golden
-            ? "text-[#F6C14B]"
-            : "text-[rgb(43_185_243/0.5)] group-hover:text-[#2BB9F3] group-focus-visible:text-[#2BB9F3]",
+            ? "text-warning"
+            : "text-accent/50 group-hover:text-accent group-focus-visible:text-accent",
         )}
       >
         {label}

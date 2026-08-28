@@ -23,7 +23,7 @@ export type SparklineProps = {
  */
 export function Sparkline({
   points,
-  color = "#2BB9F3",
+  color = "var(--color-accent)",
   marker = false,
   markerIcon,
   className,
@@ -74,7 +74,7 @@ export function Sparkline({
         >
           {markerIcon ?? (
             <span
-              className="block size-[13px] rounded-full border-[2px] bg-[#051E32]"
+              className="bg-board-cell block size-[13px] rounded-full border-[2px]"
               style={{ borderColor: color }}
             />
           )}

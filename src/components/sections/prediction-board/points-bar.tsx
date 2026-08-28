@@ -27,7 +27,7 @@ export function PointsBar({
 
   return (
     <div className="mt-3 flex items-center justify-between px-3 sm:hidden">
-      <p className="flex h-[29px] items-center gap-[7px] rounded-[7px] bg-[rgb(43_185_243/0.15)] px-[7px] shadow-[inset_0_0_0_0.75px_rgb(43_185_243/0.15)] backdrop-blur-[13.77px]">
+      <p className="bg-accent/15 flex h-[29px] items-center gap-[7px] rounded-[7px] px-[7px] shadow-[inset_0_0_0_0.75px_--alpha(var(--color-accent)/15%)] backdrop-blur-[13.77px]">
         <span className="flex items-center gap-[4px]">
           <WalletIcon />
           <span className="text-[13px] leading-[18px] font-bold text-white tabular-nums">
@@ -51,7 +51,7 @@ export function PointsBar({
           aria-haspopup="listbox"
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
-          className="flex h-[29px] cursor-pointer items-center gap-[14px] rounded-[7px] bg-white/15 px-[7px] shadow-[inset_0_0_0_0.75px_rgb(255_255_255/0.15)] backdrop-blur-[13.77px]"
+          className="flex h-[29px] cursor-pointer items-center gap-[14px] rounded-[7px] bg-white/15 px-[7px] shadow-[inset_0_0_0_0.75px_--alpha(var(--color-white)/15%)] backdrop-blur-[13.77px]"
         >
           <span className="flex items-center gap-[4px]">
             <Image
@@ -72,7 +72,7 @@ export function PointsBar({
         {open ? (
           <ul
             role="listbox"
-            className="absolute right-0 bottom-[calc(100%+4px)] z-20 min-w-[96px] rounded-md bg-[#061928] p-1 shadow-[inset_0_0_0_0.75px_#122B3A,0_8px_24px_rgb(0_0_0/0.6)]"
+            className="bg-board-cell absolute right-0 bottom-[calc(100%+4px)] z-20 min-w-[96px] rounded-md p-1 shadow-[inset_0_0_0_0.75px_var(--color-board-line),0_8px_24px_--alpha(var(--color-black)/60%)]"
           >
             {STAKE_STEPS.map((step, stepIndex) => (
               <li key={step}>
@@ -89,7 +89,7 @@ export function PointsBar({
                   }}
                   className={cn(
                     "flex w-full cursor-pointer items-center justify-between gap-3 rounded-[4px] px-1.5 py-1 text-left transition-colors",
-                    step === stake ? "bg-[rgb(43_185_243/0.15)]" : "hover:bg-white/5",
+                    step === stake ? "bg-accent/15" : "hover:bg-white/5",
                   )}
                 >
                   <span className="text-[10.5px] leading-[15px] font-semibold text-white tabular-nums">

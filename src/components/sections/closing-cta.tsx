@@ -8,9 +8,9 @@ export function ClosingCta() {
   return (
     <section id="get-started" aria-labelledby="get-started-heading" className="frame">
       <div className="mx-auto w-full">
-        <div className="relative isolate overflow-hidden rounded-[20px] border border-white/8 bg-[linear-gradient(105deg,#05090C_0%,#071119_55%,#0A1A26_100%)]">
+        <div className="relative isolate overflow-hidden rounded-[20px] border border-white/8 bg-[image:var(--gradient-cta-card)]">
           <Ellipse
-            color="linear-gradient(180deg, rgb(0 173 239 / 0.12) 55%, rgb(157 179 198 / 0.12) 100%)"
+            color="linear-gradient(180deg, color-mix(in oklab, var(--color-accent) 12%, transparent) 55%, color-mix(in oklab, var(--color-fg-muted) 12%, transparent) 100%)"
             width={536.73}
             height={488.49}
             left={-257}
@@ -40,7 +40,7 @@ export function ClosingCta() {
               >
                 {closingCta.heading}
               </h2>
-              <p className="mt-[12.5px] max-w-[440px] text-[14px] leading-[22px] text-pretty text-[#7A8494] sm:mt-4 sm:text-[16px]">
+              <p className="text-fg-subtle mt-[12.5px] max-w-[440px] text-[14px] leading-[22px] text-pretty sm:mt-4 sm:text-[16px]">
                 {closingCta.lede}
               </p>
             </div>

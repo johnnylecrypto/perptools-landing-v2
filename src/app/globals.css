@@ -5,24 +5,98 @@
    Raw values live here; Tailwind utilities are generated from @theme below.
    --------------------------------------------------------------------------- */
 @theme {
-  /* Surfaces, darkest → lightest */
+  /* ==========================================================================
+     Colour.
+
+     Three surfaces, not one. The page is dark; the prediction board sits on a
+     near-black of its own so it reads as a screen inside the page; the mobile
+     points receipt is printed on light paper. Each carries its own text ramp,
+     which is why there is no single fg/bg pair to rule them all.
+
+     Opacity is a modifier, never a token: `bg-accent/15`, not an
+     `--color-accent-15`. Adding tokens per alpha is how this file grew
+     twenty-five different transparencies of the same cyan.
+     ========================================================================== */
+
+  /* --- page surface, darkest → lightest ---------------------------------- */
   --color-bg-0: #030507;
   --color-bg-1: #060a0e;
   --color-bg-2: #080c11;
   --color-bg-3: #0b1015;
 
-  /* Text, strongest → faintest */
+  /* --- page text, strongest → faintest ----------------------------------- */
   --color-fg: #edeff2;
   --color-fg-muted: #b6bec9;
   --color-fg-subtle: #6b7785;
   --color-fg-faint: #4a5462;
+  /* Text printed on an accent or gold fill, where the page ramp is unreadable. */
+  --color-fg-on-accent: #050505;
 
-  /* Accent (cyan) */
+  /* --- accent (cyan) ------------------------------------------------------ */
   --color-accent-light: #83d4fb;
   --color-accent: #2bb9f3;
   --color-accent-dark: #1b8fcc;
+  /* Deep, desaturated cyan behind glows and blur blobs — never for text. */
+  --color-accent-deep: #094e6a;
+  /* The brighter of the two glow blobs behind the hero. */
+  --color-accent-soft: #5dcbf8;
+  /* The two stops of the button gradient's hover state. */
+  --color-accent-hover: #4dc4f5;
+  --color-accent-hover-light: #a6e1fc;
 
-  /* Hairlines */
+  /* --- state -------------------------------------------------------------- */
+  --color-success: #3fd08b;
+  --color-success-light: #8cf0c0;
+  /* Only the winning cell's flash; brighter than the page's green on purpose. */
+  --color-success-bright: #00ff88;
+  --color-success-deep: #041a08;
+  --color-danger: #ff7578;
+  --color-danger-light: #ffc3c4;
+  --color-warning: #f6c14b;
+  /* Body of a golden cell; the border above is the one that reads as gold. */
+  --color-warning-fill: #dec05f;
+
+  /* --- CTA dot field -------------------------------------------------------
+     Painted to a canvas, which cannot read `var()`, so `CtaDotField` resolves
+     these off the document and interpolates the channels itself. Keep them as
+     plain six-digit hex: that reader parses them by offset. */
+  --color-dot: #96cdee;
+  --color-dot-crest: #c4eeff;
+
+  /* --- prediction board surface ------------------------------------------- */
+  --color-board-bg: #010101;
+  --color-board-cell: #061928;
+  --color-board-line: #122b3a;
+  --color-board-line-hover: #0b2e45;
+  --color-board-panel: #030d14;
+
+  /* --- points receipt (printed on paper, so this ramp runs light → dark) --- */
+  --color-paper: #eef5fa;
+  --color-paper-fill: #dcebf5;
+  --color-paper-ink: #0b1826;
+  --color-paper-ink-muted: #5a6e80;
+  --color-paper-ink-faint: #8199ab;
+  --color-paper-rule: #a9bccb;
+  --color-paper-accent: #0e76b4;
+  --color-paper-success: #0e8f5f;
+  /* The printer's housing, which the paper feeds out of. */
+  --color-slot-0: #2b2e30;
+  --color-slot-1: #323638;
+  --color-slot-2: #393e41;
+
+  /* --- rank tiers ---------------------------------------------------------
+     A categorical ramp, in rank order. Four of the seven are the palette's own
+     colours doing double duty; aliasing rather than repeating the hex keeps
+     them in step if the palette moves. */
+  --color-tier-shrimp: #fe9700;
+  --color-tier-wolf: var(--color-success);
+  --color-tier-shark: var(--color-accent);
+  --color-tier-whale: #8b5cf6;
+  --color-tier-titan: var(--color-warning);
+  --color-tier-oracle: var(--color-danger);
+  --color-tier-legend: var(--color-fg);
+
+  /* --- hairlines ----------------------------------------------------------- */
   --color-line: rgb(255 255 255 / 0.05);
   --color-line-strong: rgb(255 255 255 / 0.08);
   --color-line-accent: rgb(131 212 251 / 0.15);
@@ -103,8 +177,36 @@
 }
 
 :root {
-  --gradient-accent: linear-gradient(180deg, #2bb9f3 7%, #83d4fb 87%);
-  --gradient-accent-hover: linear-gradient(180deg, #4dc4f5 7%, #a6e1fc 87%);
+  /* Multi-stop gradients are one design decision, not three colours, so they
+     are named whole. Their stops are deliberately not in the colour scale —
+     minting `--color-*` for each would put values into the palette that mean
+     nothing on their own. */
+  --gradient-accent: linear-gradient(180deg, var(--color-accent) 7%, var(--color-accent-light) 87%);
+  --gradient-accent-hover: linear-gradient(
+    180deg,
+    var(--color-accent-hover) 7%,
+    var(--color-accent-hover-light) 87%
+  );
+
+  /* The closing CTA's card: near-black warming into blue across the diagonal. */
+  --gradient-cta-card: linear-gradient(105deg, #05090c 0%, #071119 55%, #0a1a26 100%);
+
+  /* The board runs a brighter, tighter accent gradient than the page buttons:
+     it sits on near-black, where the page gradient reads flat. Used by the
+     board's own buttons and by a stacked bet cell. */
+  --gradient-accent-bright: linear-gradient(180deg, var(--color-accent) 31%, #8ad9ff 81%);
+
+  /* Prediction board cells, by state. */
+  --gradient-bet: linear-gradient(180deg, #0070a9 0%, var(--color-board-cell) 100%);
+  --gradient-bet-lost: linear-gradient(180deg, #3a1015 0%, #120608 100%);
+
+  /* The beam sweeping the terminal frame. `color-mix` rather than Tailwind's
+     `--alpha()`, which is only resolved inside utilities, not plain CSS. */
+  --gradient-terminal-beam: linear-gradient(
+    178deg,
+    #3dbce7 0%,
+    color-mix(in oklab, var(--color-accent-dark) 53%, transparent) 100%
+  );
   --shadow-accent: 0 8px 32px -8px rgb(43 185 243 / 0.45), 0 0 0 1px rgb(131 212 251 / 0.25);
   --shadow-accent-hover: 0 12px 36px -8px rgb(43 185 243 / 0.55), 0 0 0 1px rgb(131 212 251 / 0.4);
   --shadow-card: 0 24px 48px -24px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.05);
@@ -137,7 +239,7 @@
   }
 
   ::selection {
-    background-color: rgb(43 185 243 / 0.3);
+    background-color: color-mix(in oklab, var(--color-accent) 30%, transparent);
     color: var(--color-fg);
   }
 
@@ -437,7 +539,11 @@
      glows behind it. The fill has to be transparent for the clip to show
      through, and WebKit needs its own property to agree. */
   .heading-sheen {
-    background: linear-gradient(266deg, #fff 29.57%, rgb(236 236 236 / 0.23) 114.98%);
+    background: linear-gradient(
+      266deg,
+      var(--color-white) 29.57%,
+      color-mix(in oklab, var(--color-fg) 23%, transparent) 114.98%
+    );
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
@@ -458,8 +564,8 @@
     line-height: 0.84;
     user-select: none;
     /* Ends dissolve, so the line is not cut off with a knife. */
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 9%, black 91%, transparent);
+    mask-image: linear-gradient(90deg, transparent, black 9%, black 91%, transparent);
   }
 
   .footer-belt-track {
@@ -495,7 +601,11 @@
     z-index: -1;
     filter: blur(56px);
     opacity: var(--g, 0);
-    background: radial-gradient(closest-side, rgb(43 185 243 / 0.22), transparent 72%);
+    background: radial-gradient(
+      closest-side,
+      color-mix(in oklab, var(--color-accent) 22%, transparent),
+      transparent 72%
+    );
   }
 
   /* ---------------------------------------------------------------------------
@@ -539,7 +649,7 @@
   .footer-rise-letter {
     display: inline-block;
     font-style: normal;
-    color: rgb(255 255 255 / 0.1);
+    color: color-mix(in oklab, var(--color-white) 10%, transparent);
   }
 
   .footer-rise[data-lit] .footer-rise-letter {
@@ -585,7 +695,11 @@
     z-index: -1;
     filter: blur(74px);
     opacity: var(--g, 0);
-    background: radial-gradient(closest-side, rgb(43 185 243 / 0.2), transparent 72%);
+    background: radial-gradient(
+      closest-side,
+      color-mix(in oklab, var(--color-accent) 20%, transparent),
+      transparent 72%
+    );
   }
 
   .frame {
@@ -833,8 +947,8 @@
 
 @keyframes led-flash {
   from {
-    color: #fff;
-    text-shadow: 0 0 14px rgb(63 208 139 / 0.85);
+    color: var(--color-white);
+    text-shadow: 0 0 14px color-mix(in oklab, var(--color-success) 85%, transparent);
   }
   to {
     text-shadow: none;

@@ -8,7 +8,7 @@ export type EllipseBlend = "screen" | "soft-light" | "overlay" | "lighten" | "no
 
 export type EllipseProps = {
   /**
-   * Fill: any CSS background value — a solid colour (`#094E6A`) or a gradient
+   * Fill: any CSS background value — a solid colour (`var(--color-accent-deep)`) or a gradient
    * (`linear-gradient(180deg, …)`).
    */
   color: string;

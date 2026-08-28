@@ -23,7 +23,7 @@ export function MarketBar({
   return (
     // On phones the bar is a bare row, per the design — the framed card only
     // starts once the feed badge and balance join it.
-    <div className="flex items-center justify-between gap-3 rounded-xl max-sm:px-3 max-sm:py-0 sm:bg-[#010101] sm:p-[9px] sm:shadow-[inset_0_0_0_0.75px_#122B3A]">
+    <div className="sm:bg-board-bg flex items-center justify-between gap-3 rounded-xl max-sm:px-3 max-sm:py-0 sm:p-[9px] sm:shadow-[inset_0_0_0_0.75px_var(--color-board-line)]">
       {/* Phones get the design's dropdown; the pills need room the mobile card
           does not have. */}
       <MarketMenu marketIndex={marketIndex} onSelect={onSelect} />
@@ -38,8 +38,8 @@ export function MarketBar({
             className={cn(
               "flex h-6 cursor-pointer items-center gap-[3px] rounded-md px-1.5 py-[4.5px] transition-colors",
               index === marketIndex
-                ? "bg-[rgb(43_185_243/0.15)] shadow-[inset_0_0_0_0.75px_#2BB9F3]"
-                : "bg-[#061928] shadow-[inset_0_0_0_0.75px_#122B3A] hover:bg-[#0B2E45]",
+                ? "bg-accent/15 shadow-[inset_0_0_0_0.75px_var(--color-accent)]"
+                : "bg-board-cell hover:bg-board-line-hover shadow-[inset_0_0_0_0.75px_var(--color-board-line)]",
             )}
           >
             <Image src={entry.logo} alt="" width={12} height={12} className="size-3" />
@@ -51,7 +51,7 @@ export function MarketBar({
             >
               {entry.symbol}
             </span>
-            <span className="hidden text-[9px] leading-3 font-medium text-[#3FD08B] sm:inline">
+            <span className="text-success hidden text-[9px] leading-3 font-medium sm:inline">
               {entry.change}
             </span>
           </button>
@@ -62,13 +62,13 @@ export function MarketBar({
           carries the feed badge and balance. Decorative, so they are not
           buttons and are hidden from assistive tech. */}
       <div aria-hidden className="flex items-center gap-3 sm:hidden">
-        <span className="flex size-[29px] items-center justify-center rounded-[7px] bg-[rgb(246_193_75/0.15)] shadow-[inset_0_0_0_0.75px_rgb(246_193_75/0.15)] backdrop-blur-[13.77px]">
+        <span className="bg-warning/15 flex size-[29px] items-center justify-center rounded-[7px] shadow-[inset_0_0_0_0.75px_--alpha(var(--color-warning)/15%)] backdrop-blur-[13.77px]">
           <TrophyIcon />
         </span>
-        <span className="flex size-[29px] items-center justify-center rounded-[7px] bg-[rgb(43_185_243/0.15)] shadow-[inset_0_0_0_0.75px_rgb(43_185_243/0.1)] backdrop-blur-[13.77px]">
+        <span className="bg-accent/15 flex size-[29px] items-center justify-center rounded-[7px] shadow-[inset_0_0_0_0.75px_--alpha(var(--color-accent)/10%)] backdrop-blur-[13.77px]">
           <GearIcon />
         </span>
-        <span className="flex size-[29px] items-center justify-center rounded-[7px] bg-[rgb(43_185_243/0.15)] shadow-[inset_0_0_0_0.75px_rgb(43_185_243/0.1)] backdrop-blur-[13.77px]">
+        <span className="bg-accent/15 flex size-[29px] items-center justify-center rounded-[7px] shadow-[inset_0_0_0_0.75px_--alpha(var(--color-accent)/10%)] backdrop-blur-[13.77px]">
           <HistoryIcon />
         </span>
       </div>
@@ -76,16 +76,16 @@ export function MarketBar({
       <div className="hidden items-center gap-3 sm:flex">
         <FeedBadge status={feedStatus} />
         <p className="flex items-center gap-[3px] text-[10.5px] leading-[15px] whitespace-nowrap">
-          <span className="hidden text-[#818689] sm:inline">Prediction Balance:</span>
+          <span className="text-fg-subtle hidden sm:inline">Prediction Balance:</span>
           <span className="font-bold text-white tabular-nums">{formatPoints(balance)} PTS</span>
         </p>
         {/* Wallet actions are out of scope for a demo, so they only appear
             where there is room for them and stay decorative. */}
         <div aria-hidden className="hidden w-[231px] items-center gap-1.5 xl:flex">
-          <span className="flex h-6 flex-1 items-center justify-center rounded-[4.5px] text-[10.5px] leading-[15px] font-bold text-[#2BB9F3] opacity-40 shadow-[inset_0_0_0_0.75px_#2BB9F3]">
+          <span className="text-accent flex h-6 flex-1 items-center justify-center rounded-[4.5px] text-[10.5px] leading-[15px] font-bold opacity-40 shadow-[inset_0_0_0_0.75px_var(--color-accent)]">
             Withdraw
           </span>
-          <span className="flex h-6 flex-1 items-center justify-center rounded-[4.5px] bg-[linear-gradient(180deg,#2BB9F3_31%,#8AD9FF_81%)] text-[10.5px] leading-[15px] font-bold text-[#050505] opacity-40">
+          <span className="text-fg-on-accent flex h-6 flex-1 items-center justify-center rounded-[4.5px] bg-[image:var(--gradient-accent-bright)] text-[10.5px] leading-[15px] font-bold opacity-40">
             Top Up
           </span>
         </div>

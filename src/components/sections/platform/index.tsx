@@ -26,7 +26,7 @@ export function Platform() {
             >
               {platform.heading}
             </h2>
-            <p className="max-w-[636.28px] text-[16px] leading-[23.86px] text-pretty text-[#7A8494] max-sm:text-[14px]">
+            <p className="text-fg-subtle max-w-[636.28px] text-[16px] leading-[23.86px] text-pretty max-sm:text-[14px]">
               {platform.lede}
             </p>
           </header>

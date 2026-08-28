@@ -19,15 +19,15 @@ export function RewardPoolCard() {
             duration={1700}
             className="text-[26px] leading-none font-semibold text-white tabular-nums"
           />
-          <span className="text-[10px] font-bold tracking-[1.05px] text-[rgb(43_185_243/0.9)]">
+          <span className="text-accent/90 text-[10px] font-bold tracking-[1.05px]">
             {rewardPool.unit}
           </span>
         </p>
 
         <div className="flex flex-col gap-[8.2px]">
-          <Progress value={rewardPool.progress} color="#2BB9F3" />
+          <Progress value={rewardPool.progress} color="var(--color-accent)" />
           <div className="flex items-center justify-between text-[12px] font-medium">
-            <span className="text-[rgb(129_134_137/0.9)]">{rewardPool.countdownLabel}</span>
+            <span className="text-fg-subtle/90">{rewardPool.countdownLabel}</span>
             <span className="text-white/85">{rewardPool.countdown}</span>
           </div>
         </div>

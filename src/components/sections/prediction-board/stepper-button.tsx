@@ -12,7 +12,7 @@ export function StepperButton({
       type="button"
       aria-label={label}
       onClick={onClick}
-      className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md bg-white/5 shadow-[inset_0_0_0_0.75px_rgb(255_255_255/0.05)] transition-colors hover:bg-white/12"
+      className="flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-md bg-white/5 shadow-[inset_0_0_0_0.75px_--alpha(var(--color-white)/5%)] transition-colors hover:bg-white/12"
     >
       {children}
     </button>

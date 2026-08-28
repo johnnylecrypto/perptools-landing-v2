@@ -35,20 +35,18 @@ export function MarketMenu({
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
-        className="flex h-[29px] cursor-pointer items-center gap-[4px] rounded-[7px] bg-[rgb(43_185_243/0.15)] px-[7px] shadow-[inset_0_0_0_0.75px_#2BB9F3]"
+        className="bg-accent/15 flex h-[29px] cursor-pointer items-center gap-[4px] rounded-[7px] px-[7px] shadow-[inset_0_0_0_0.75px_var(--color-accent)]"
       >
         <Image src={current.logo} alt="" width={15} height={15} className="size-[15px]" />
         <span className="sr-only">{current.symbol}</span>
-        <span className="text-[13px] leading-[18px] font-bold text-[#3FD08B]">
-          {current.change}
-        </span>
+        <span className="text-success text-[13px] leading-[18px] font-bold">{current.change}</span>
         <CaretIcon open={open} />
       </button>
 
       {open ? (
         <ul
           role="listbox"
-          className="absolute top-[calc(100%+4px)] left-0 z-20 min-w-[104px] rounded-md bg-[#061928] p-1 shadow-[inset_0_0_0_0.75px_#122B3A,0_8px_24px_rgb(0_0_0/0.6)]"
+          className="bg-board-cell absolute top-[calc(100%+4px)] left-0 z-20 min-w-[104px] rounded-md p-1 shadow-[inset_0_0_0_0.75px_var(--color-board-line),0_8px_24px_--alpha(var(--color-black)/60%)]"
         >
           {points.markets.map((entry, index) => (
             <li key={entry.symbol}>
@@ -62,7 +60,7 @@ export function MarketMenu({
                 }}
                 className={cn(
                   "flex w-full cursor-pointer items-center gap-[5px] rounded-[4px] px-1.5 py-1 text-left transition-colors",
-                  index === marketIndex ? "bg-[rgb(43_185_243/0.15)]" : "hover:bg-white/5",
+                  index === marketIndex ? "bg-accent/15" : "hover:bg-white/5",
                 )}
               >
                 <Image src={entry.logo} alt="" width={12} height={12} className="size-3" />
@@ -74,7 +72,7 @@ export function MarketMenu({
                 >
                   {entry.symbol}
                 </span>
-                <span className="ml-auto text-[9px] leading-3 font-medium text-[#3FD08B]">
+                <span className="text-success ml-auto text-[9px] leading-3 font-medium">
                   {entry.change}
                 </span>
               </button>

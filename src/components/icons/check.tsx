@@ -12,7 +12,7 @@ export function CheckIcon({ className }: { className?: string }) {
       aria-hidden
       viewBox="0 0 16 16"
       fill="none"
-      stroke="#3FD08B"
+      stroke="var(--color-success)"
       strokeWidth="1.76"
       strokeLinecap="round"
       strokeLinejoin="round"

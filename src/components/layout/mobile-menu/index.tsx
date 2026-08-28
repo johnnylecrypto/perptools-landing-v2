@@ -28,7 +28,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
       className={cn(
         "fixed inset-x-0 top-16 bottom-0 z-40 flex flex-col justify-between gap-6 p-4 lg:hidden",
         "border-b border-white/10 backdrop-blur-[20px]",
-        "bg-[linear-gradient(180deg,rgb(255_255_255/0.01)_0%,rgb(3_4_5/0.01)_36%)]",
+        "bg-[linear-gradient(180deg,--alpha(var(--color-white)/1%)_0%,--alpha(var(--color-bg-0)/1%)_36%)]",
       )}
     >
       <ul className="flex flex-col gap-3 overflow-y-auto">
@@ -66,7 +66,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
         onClick={onClose}
         className={cn(
           "rounded-button flex h-13 w-full items-center justify-center gap-[7px] px-12",
-          "font-dm bg-[image:var(--gradient-accent)] text-base leading-6 font-bold text-[#080C12]",
+          "font-dm text-bg-2 bg-[image:var(--gradient-accent)] text-base leading-6 font-bold",
           "transition-[background-image,box-shadow] duration-250",
           "ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-[image:var(--gradient-accent-hover)]",
         )}

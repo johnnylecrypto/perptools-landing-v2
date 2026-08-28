@@ -26,17 +26,15 @@ export function PointsCard() {
               duration={1500}
               className="text-[54px] leading-none font-semibold text-white tabular-nums"
             />
-            <span className="text-[16px] font-bold tracking-[1.05px] text-[rgb(43_185_243/0.9)]">
+            <span className="text-accent/90 text-[16px] font-bold tracking-[1.05px]">
               {points.unit}
             </span>
           </p>
         </div>
 
-        <span className="led-late flex h-[22.85px] items-center gap-[5.27px] rounded-full bg-[rgb(63_208_139/0.12)] pr-[10.54px] pl-[8.79px] shadow-[inset_0_0_0_0.88px_rgb(63_208_139/0.3)]">
-          <span className="text-[7.91px] font-bold text-[#3FD08B]">▲</span>
-          <span className="text-[12px] font-medium text-[rgb(63_208_139/0.95)]">
-            {points.delta}
-          </span>
+        <span className="led-late bg-success/12 flex h-[22.85px] items-center gap-[5.27px] rounded-full pr-[10.54px] pl-[8.79px] shadow-[inset_0_0_0_0.88px_--alpha(var(--color-success)/30%)]">
+          <span className="text-success text-[7.91px] font-bold">▲</span>
+          <span className="text-success/95 text-[12px] font-medium">{points.delta}</span>
         </span>
       </div>
 
@@ -44,7 +42,7 @@ export function PointsCard() {
         <span className="h-px w-full bg-white/8" />
         <div className="flex justify-between text-[12px] font-bold tracking-[1.14px] uppercase">
           <span className="text-white/75">{points.rank}</span>
-          <span className="text-[rgb(129_134_137/0.9)]">{points.allTime}</span>
+          <span className="text-fg-subtle/90">{points.allTime}</span>
         </div>
       </div>
     </PlatformCard>

@@ -34,7 +34,7 @@ function HeroBackdrop() {
         {/* The mobile file replaces the single wide glow with two narrow
             columns — a screened teal and a soft-light cyan. */}
         <Ellipse
-          color="#094E6A"
+          color="var(--color-accent-deep)"
           width={212.74}
           height={764.78}
           left={101.38}
@@ -43,7 +43,7 @@ function HeroBackdrop() {
           className="sm:hidden"
         />
         <Ellipse
-          color="#5DCBF8"
+          color="var(--color-accent-soft)"
           width={203.13}
           height={777.48}
           left={249.64}
@@ -54,7 +54,7 @@ function HeroBackdrop() {
         />
 
         <Ellipse
-          color="#094E6A"
+          color="var(--color-accent-deep)"
           width={785.5034}
           height={700.7598}
           left={374.3438}
@@ -80,10 +80,10 @@ function HeroBackdrop() {
         />
 
         {/* Vignette so the headline keeps contrast over the logo art. */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_46%_38%_at_50%_46%,rgb(3_5_7/0.82)_0%,rgb(3_5_7/0.45)_55%,transparent_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_46%_38%_at_50%_46%,--alpha(var(--color-bg-0)/82%)_0%,--alpha(var(--color-bg-0)/45%)_55%,transparent_100%)]" />
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 h-[62px] bg-[linear-gradient(0deg,#05070A_0%,rgb(5_7_10/0)_100%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-[62px] bg-[linear-gradient(0deg,var(--color-bg-1)_0%,--alpha(var(--color-bg-1)/0%)_100%)]" />
 
       {/* Noise grains everything below it in one pass. The design file has it as
           the container background (bottom of the stack), but there it only

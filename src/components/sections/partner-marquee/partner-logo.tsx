@@ -11,7 +11,7 @@ export function PartnerLogo({ partner }: { partner: Partner }) {
         // drop-shadow hugs the mark and lettering; the design file's box-shadow
         // would draw a rectangular halo around the whole row.
         partner.featured
-          ? "opacity-100 [filter:drop-shadow(0_0_34px_rgb(50_186_244/0.55))]"
+          ? "opacity-100 [filter:drop-shadow(0_0_34px_--alpha(var(--color-accent)/55%))]"
           : "opacity-50",
       )}
     >

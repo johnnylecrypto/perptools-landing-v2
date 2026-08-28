@@ -23,9 +23,9 @@ export function NowLine({
       className="pointer-events-none absolute z-[1]"
       style={{ left: `${nowFraction(geometry) * 100}%`, top: geometry.strip, bottom: 0 }}
     >
-      <span className="absolute inset-y-0 left-0 w-2 -translate-x-1/2 bg-[rgb(43_185_243/0.25)] blur-[6px]" />
-      <span className="absolute inset-y-0 left-0 w-[2px] -translate-x-1/2 bg-[#2BB9F3]/65 shadow-[0_0_10px_#2BB9F3BF]" />
-      <span className="absolute top-[30px] left-1 flex h-6 w-[58px] items-center justify-center rounded-lg bg-[#2BB9F3] text-[13px] leading-none font-semibold text-black shadow-[0_0_8px_#2BB9F3BF]">
+      <span className="bg-accent/25 absolute inset-y-0 left-0 w-2 -translate-x-1/2 blur-[6px]" />
+      <span className="bg-accent/65 absolute inset-y-0 left-0 w-[2px] -translate-x-1/2 shadow-[0_0_10px_--alpha(var(--color-accent)/75%)]" />
+      <span className="bg-accent absolute top-[30px] left-1 flex h-6 w-[58px] items-center justify-center rounded-lg text-[13px] leading-none font-semibold text-black shadow-[0_0_8px_--alpha(var(--color-accent)/75%)]">
         Now
       </span>
       {/* `top` is owned by the animation loop, not by React — see below. */}

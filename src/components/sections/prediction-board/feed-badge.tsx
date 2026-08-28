@@ -12,9 +12,9 @@ export function FeedBadge({ status }: { status: FeedStatus }) {
   const label = status === "live" ? "Live" : status === "connecting" ? "Connecting" : "Simulated";
   const tone =
     status === "live"
-      ? "bg-[rgb(63_208_139/0.15)] text-[#3FD08B]"
+      ? "bg-success/15 text-success"
       : status === "connecting"
-        ? "bg-[rgb(235_189_78/0.15)] text-[#EBBD4E]"
+        ? "bg-warning/15 text-warning"
         : "bg-white/8 text-white/50";
 
   return (

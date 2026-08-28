@@ -18,12 +18,12 @@ export function RankCard() {
             alt=""
             width={138}
             height={127}
-            className="led-badge h-[127px] w-[138px] object-contain drop-shadow-[0_0_34px_rgb(63_208_139/0.4)]"
+            className="led-badge h-[127px] w-[138px] object-contain drop-shadow-[0_0_34px_--alpha(var(--color-success)/40%)]"
           />
         ) : (
           <span
             aria-hidden
-            className="led-badge flex h-[127px] w-[138px] items-center justify-center rounded-2xl bg-[#3FD08B]/8 text-[13px] font-semibold tracking-[0.16em] text-[#3FD08B]/70 shadow-[0_0_34px_rgb(63_208_139/0.25),inset_0_0_0_1px_rgb(63_208_139/0.25)]"
+            className="led-badge bg-success/8 text-success/70 flex h-[127px] w-[138px] items-center justify-center rounded-2xl text-[13px] font-semibold tracking-[0.16em] shadow-[0_0_34px_--alpha(var(--color-success)/25%),inset_0_0_0_1px_--alpha(var(--color-success)/25%)]"
           >
             {rank.tier}
           </span>
@@ -33,16 +33,16 @@ export function RankCard() {
       <div className="flex flex-col gap-[16.4px]">
         <div className="flex flex-col gap-[4.1px] text-center">
           <p className="text-[26px] leading-none font-semibold text-white">{rank.tier}</p>
-          <p className="text-[10px] font-medium tracking-[1.41px] text-[rgb(129_134_137/0.95)] uppercase">
+          <p className="text-fg-subtle/95 text-[10px] font-medium tracking-[1.41px] uppercase">
             {rank.tierPosition}
           </p>
         </div>
 
         <div className="flex flex-col gap-[8.2px]">
-          <Progress value={rank.progress} color="#3FD08B" />
+          <Progress value={rank.progress} color="var(--color-success)" />
           <div className="flex justify-between text-[12px] font-medium tracking-[1.05px]">
-            <span className="text-[rgb(63_208_139/0.95)]">{rank.tier}</span>
-            <span className="text-[rgb(43_185_243/0.8)]">{rank.nextTier}</span>
+            <span className="text-success/95">{rank.tier}</span>
+            <span className="text-accent/80">{rank.nextTier}</span>
           </div>
         </div>
       </div>

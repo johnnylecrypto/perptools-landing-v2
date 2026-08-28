@@ -16,7 +16,7 @@ function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="flex h-10 flex-1 items-center justify-center rounded-[9.41px] text-[#757A7D] shadow-[inset_0_0_0_1.18px_rgb(255_255_255/0.06)] transition-colors hover:bg-white/5 hover:text-white"
+      className="text-fg-subtle flex h-10 flex-1 items-center justify-center rounded-[9.41px] shadow-[inset_0_0_0_1.18px_--alpha(var(--color-white)/6%)] transition-colors hover:bg-white/5 hover:text-white"
     >
       {children}
     </a>
