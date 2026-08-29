@@ -1,10 +1,10 @@
 export const live = {
   heading: "This is what's running right now.",
   lede: "Perpetuals routed across venues against a single margin balance. Left of the line it already happened — right of it, every outcome still carries a price.",
-  /** Terminal screenshot; native size 3420×2066. */
-  screenshot: "/media/trade-banner.webp",
-  screenshotWidth: 3420,
-  screenshotHeight: 2066,
+  /** Terminal screenshot; native size 3056×1764. */
+  screenshot: "/banner.webp",
+  screenshotWidth: 3056,
+  screenshotHeight: 1764,
   /** Phone-in-hand mockup used below `sm`; native size 358×515. */
   screenshotMobile: "/media/trade-mobile-banner.webp",
 } as const;
