@@ -51,9 +51,9 @@ export function BetCell({
         : {})}
       data-bet="true"
       className={cn(
-        "relative aspect-square",
+        "relative aspect-square bg-board-cell",
         CELL_EDGE,
-        stackable && "cursor-pointer",
+        stackable && "group cursor-pointer",
         // Raised while it celebrates: the burst rings reach three cells wide,
         // and cells painted later in the grid would otherwise cover them.
         won && "animate-win-vanish z-10",
@@ -61,23 +61,27 @@ export function BetCell({
     >
       <div
         className={cn(
-          "absolute inset-[1px] flex flex-col items-center justify-center overflow-hidden rounded-[7.5px] border-2",
+          "absolute inset-[1px] flex flex-col items-center justify-center overflow-hidden rounded-[8px] border-[1.5px]",
           // No colour transition on the win: the design flips the badge on the
           // frame the bet resolves, and easing into green reads as lag.
           won &&
-            "animate-cell-punch border-success-bright bg-success-deep shadow-[0_0_24px_--alpha(var(--color-success-bright)/45%)]",
-          lost &&
-            "animate-cell-flinch border-danger/50 bg-[image:var(--gradient-bet-lost)] opacity-0 saturate-50 transition-opacity duration-[800ms]",
+            "animate-cell-punch border-success bg-success-deep shadow-[0_0_16.2px_2.7px_--alpha(var(--color-success-glow)/90%),inset_0_0.675px_6.75px_--alpha(var(--color-success-glow)/35%)]",
+          // A loss keeps its own fill and simply dims away — the design has no
+          // separate red state, only the same cube at half opacity.
+          lost && "animate-cell-flinch opacity-0 transition-opacity duration-[800ms]",
           !won &&
-            !lost &&
             bet.golden &&
-            "border-warning bg-warning-fill shadow-[0_0_13.5px_--alpha(var(--color-warning)/60%)]",
+            "border-warning bg-warning-fill bg-[image:var(--gradient-bet-golden)] shadow-[0_0_16px_2.025px_--alpha(var(--color-warning-fill)/90%),inset_0_1px_5px_--alpha(var(--color-warning-lift)/30%)]",
           !won &&
-            !lost &&
             !bet.golden &&
             (doubled
-              ? "border-accent bg-[image:var(--gradient-accent-bright)] shadow-[0_0_14px_var(--color-accent)]"
-              : "border-accent bg-[image:var(--gradient-bet)] shadow-[0_0_13.5px_--alpha(var(--color-accent)/85%)]"),
+              ? cn(
+                  "border-2 border-accent bg-[image:var(--gradient-accent-bright)] shadow-[0_0_14px_2px_var(--color-accent),inset_0_0.7px_5px_--alpha(var(--color-accent)/30%)]",
+                  // Only a stacked cell you can still add to lifts on hover.
+                  stackable &&
+                    "group-hover:bg-[image:var(--gradient-accent-bright-hover)] group-focus-visible:bg-[image:var(--gradient-accent-bright-hover)]",
+                )
+              : "border-accent bg-[image:var(--gradient-bet)] shadow-[0_0_13.5px_2.025px_--alpha(var(--color-accent)/85%),inset_0_0.675px_5.4px_--alpha(var(--color-accent)/30%)]"),
         )}
       >
         {won ? (
@@ -92,7 +96,7 @@ export function BetCell({
           style={{ fontSize: font - 1.5 }}
           className={cn(
             "relative leading-none font-medium",
-            won ? "font-bold text-white" : dark ? "text-fg-on-accent" : "text-white",
+            won ? "text-success" : dark ? "text-fg-on-accent" : "text-white",
           )}
         >
           {won ? "Win" : formatMultiplier(bet.multiplier)}
@@ -101,10 +105,10 @@ export function BetCell({
           style={{ fontSize: font }}
           className={cn(
             "relative leading-none font-semibold tabular-nums",
-            won ? "text-success-light" : dark ? "text-fg-on-accent" : "text-accent",
+            won ? "text-accent-orange" : dark ? "text-fg-on-accent" : "text-accent",
           )}
         >
-          {won ? `+${formatPoints(bet.payout)}` : (bet.stake * bet.multiplier).toFixed(2)}
+          {won ? `+${formatPoints(bet.payout)}` : formatPoints(bet.stake * bet.multiplier)}
         </span>
       </div>
 

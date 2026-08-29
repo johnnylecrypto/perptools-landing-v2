@@ -18,11 +18,11 @@ export function BadgesCard() {
           </p>
         </div>
 
-        <ul className="flex w-full items-center justify-between">
+        <ul className="flex w-full items-center justify-between gap-2">
           {badges.items.map((badge, index) => (
             <li
               key={index}
-              className="led-tile shrink-0"
+              className="led-tile min-w-0 shrink"
               style={{ "--i": index } as React.CSSProperties}
             >
               {badge ? (
@@ -33,8 +33,7 @@ export function BadgesCard() {
                   height={48}
                   sizes="48px"
                   className={cn(
-                    "size-12 object-cover",
-                    // Locked badges stay visible but muted, matching "2 / 12".
+                    "aspect-square h-auto w-12 max-w-full object-cover",
                     index >= badges.earned && "opacity-35 grayscale",
                   )}
                 />
@@ -42,7 +41,7 @@ export function BadgesCard() {
                 <span
                   aria-hidden
                   className={cn(
-                    "block size-12 rounded-xl",
+                    "block aspect-square w-12 max-w-full rounded-xl",
                     index < badges.earned
                       ? "bg-accent/12 shadow-[inset_0_0_0_1px_--alpha(var(--color-accent)/35%)]"
                       : "bg-white/4 shadow-[inset_0_0_0_1px_--alpha(var(--color-white)/8%)]",

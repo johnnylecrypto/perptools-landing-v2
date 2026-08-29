@@ -51,6 +51,7 @@ jobs:
             echo "NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL || 'https://perptools.ai' }}" >> .env
           else
             echo "NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL_STAGE || vars.NEXT_PUBLIC_SITE_URL || 'https://perptools.ai' }}" >> .env
+            echo "NEXT_PUBLIC_NOINDEX=true" >> .env
           fi
           if [ -n "${{ vars.NEXT_PUBLIC_POSTHOG_KEY }}" ]; then
             echo "NEXT_PUBLIC_POSTHOG_KEY=${{ vars.NEXT_PUBLIC_POSTHOG_KEY }}" >> .env
@@ -97,6 +98,13 @@ jobs:
           aws s3 sync "${{ env.BUILD_DIR }}/_next" "$BUCKET/_next" \
             --delete \
             --cache-control "public, max-age=31536000, immutable"
+          # `opengraph-image` has no extension, so S3 guesses octet-stream and
+          # social crawlers drop the card. Re-upload it with the real type.
+          if [ -f "${{ env.BUILD_DIR }}/opengraph-image" ]; then
+            aws s3 cp "${{ env.BUILD_DIR }}/opengraph-image" "$BUCKET/opengraph-image" \
+              --content-type "image/png" \
+              --cache-control "public, max-age=0, must-revalidate"
+          fi
           # Public static assets: cache 30 days
           for dir in $STATIC_DIRS; do
             if [ -d "${{ env.BUILD_DIR }}/${dir}" ]; then

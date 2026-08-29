@@ -11,6 +11,9 @@ export const site = {
   blurb:
     "PERPTools is shaping a free and open ecosystem for all users to grow their wealth in a safe and trusted environment.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://perptools.ai",
+  themeColor: "#030507",
+  noindex: process.env.NEXT_PUBLIC_NOINDEX === "true",
+  logo: "/brand/logo-mark.webp",
   locale: "en_US",
   twitter: "@perptools",
   links: {

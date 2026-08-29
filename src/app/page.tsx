@@ -8,10 +8,8 @@ import { site } from "@/lib/site";
 export default function HomePage() {
   return (
     <>
-      {/* Sections are spaced from here rather than from their own padding, so
-          the number in the design is the number between two sections — two
-          paddings would stack to twice it. 64px on phones, 128px from `sm`. */}
-      <div className="flex flex-col gap-16 pb-16 sm:gap-32 sm:pb-32">
+
+      <div className="flex flex-col gap-16 pb-16 sm:gap-24 sm:pb-24 lg:gap-32 lg:pb-32">
         <Hero />
         <Live />
         <Platform />
@@ -28,7 +26,8 @@ export default function HomePage() {
             name: site.name,
             url: site.url,
             description: site.description,
-            sameAs: [site.links.x],
+            logo: new URL(site.logo, site.url).toString(),
+            sameAs: [site.links.x, site.links.telegram, site.links.discord],
           }),
         }}
       />

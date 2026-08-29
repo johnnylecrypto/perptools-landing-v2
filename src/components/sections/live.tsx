@@ -5,13 +5,10 @@ import { TerminalLift } from "@/components/sections/terminal-lift";
 
 export function Live() {
   return (
-    // The page spaces sections with a gap; this one carries its own top padding
-    // instead, so the section's own box — and the light it casts — starts right
-    // where the hero ends. The negative margin cancels the page gap above it.
     <Section
       id="live"
       contained={false}
-      className="-mt-16 overflow-hidden pt-16 sm:-mt-32 sm:pt-32"
+      className="-mt-16 overflow-hidden pt-16 sm:-mt-24 sm:pt-24 lg:-mt-32 lg:pt-32"
     >
       <div className="frame w-full">
         <div className="flex w-full flex-col items-center gap-8 sm:gap-16">

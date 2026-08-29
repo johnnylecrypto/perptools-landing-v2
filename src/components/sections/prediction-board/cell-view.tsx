@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { cn } from "@/lib/utils";
 import { formatPoints, timeLabel, type Bet } from "@/lib/prediction-engine";
-import { CELL_EDGE, EMPTY_EDGE } from "./cell-edges";
+import { CELL_EDGE, EMPTY_EDGE, GOLD_EDGE } from "./cell-edges";
 import { BetCell } from "./bet-cell";
 import { CellLabel } from "./cell-label";
 
@@ -60,8 +60,10 @@ export const CellView = memo(function CellView({
       <div
         className={cn(
           "relative aspect-square opacity-50",
-          golden ? "bg-warning/20" : "bg-board-cell",
           CELL_EDGE,
+          golden
+            ? "border-transparent bg-warning-wash/20 shadow-[inset_0_0_0_1.5px_--alpha(var(--color-warning-wash)/20%)]"
+            : "bg-board-cell",
         )}
       >
         <CellLabel font={font} className="text-accent/50">
@@ -80,21 +82,41 @@ export const CellView = memo(function CellView({
       aria-label={`Stake ${formatPoints(stake)} points on ${label} band, ${timeLabel(timeOffset)}`}
       className={cn(
         "group relative aspect-square",
-        // An idle golden cube sits under a warm wash instead of the usual ink.
-        golden ? "bg-warning/20" : "bg-board-cell",
-        CELL_EDGE,
+        // An idle golden cube sits under a warm wash instead of the usual ink,
+        // painted by the breathing layer below. On hover that wash clears and
+        // the board ink returns, so the plate's 30% gold is exactly 30%.
+        golden
+          ? "bg-transparent hover:bg-board-cell focus-visible:bg-board-cell"
+          : "bg-board-cell",
+        golden ? GOLD_EDGE : CELL_EDGE,
         disabled ? "cursor-not-allowed" : "cursor-pointer",
-        // The product's hover: a 2px cyan ring and a flat white 12% wash.
-        !disabled &&
-          (golden
-            ? "hover:shadow-[inset_0_0_0_2px_var(--color-warning)] focus-visible:shadow-[inset_0_0_0_2px_var(--color-warning)]"
-            : "hover:shadow-[inset_0_0_0_2px_var(--color-accent)] focus-visible:shadow-[inset_0_0_0_2px_var(--color-accent)]"),
       )}
     >
+      {/* An idle golden cube breathes so it is findable in a grid of cyan. */}
+      {golden ? (
+        <span
+          aria-hidden
+          className={cn(
+            "pointer-events-none absolute inset-0 bg-warning-wash/20 transition-opacity duration-100",
+            "shadow-[inset_0_0_0_1.5px_--alpha(var(--color-warning-wash)/20%)]",
+            !disabled &&
+              "animate-gold-pulse group-hover:animate-none group-hover:opacity-0 group-focus-visible:animate-none group-focus-visible:opacity-0",
+          )}
+        />
+      ) : null}
+
+      {/* The hover plate: an inset, 8px-rounded box that lights up over the
+          square grid cell, which itself stays sharp-cornered. */}
       {!disabled ? (
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-0 transition-colors duration-100 group-hover:bg-white/12 group-focus-visible:bg-white/12"
+          className={cn(
+            "pointer-events-none absolute inset-[1px] rounded-[8px] opacity-0 transition-opacity duration-100",
+            "group-hover:opacity-100 group-focus-visible:opacity-100",
+            golden
+              ? "bg-warning-wash/30 shadow-[0_0_10px_--alpha(var(--color-warning)/60%),inset_0_0_0_1.5px_--alpha(var(--color-warning)/60%)]"
+              : "bg-board-line shadow-[0_0_10px_0.675px_--alpha(var(--color-accent)/40%),inset_0_0_0_1.5px_--alpha(var(--color-accent)/50%)]",
+          )}
         />
       ) : null}
       <CellLabel
@@ -103,7 +125,7 @@ export const CellView = memo(function CellView({
           "transition-colors",
           golden
             ? "text-warning"
-            : "text-accent/50 group-hover:text-accent group-focus-visible:text-accent",
+            : "text-accent/50 group-hover:text-accent-hover group-focus-visible:text-accent-hover",
         )}
       >
         {label}
