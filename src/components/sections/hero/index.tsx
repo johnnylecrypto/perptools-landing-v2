@@ -9,14 +9,12 @@ export function Hero() {
     <section
       id="hero"
       aria-labelledby="hero-heading"
-      className="bg-bg-0 relative isolate flex h-dvh flex-col overflow-hidden pb-[env(safe-area-inset-bottom)]"
+      className="bg-bg-0 relative isolate flex h-dvh flex-col overflow-hidden pb-[env(safe-area-inset-bottom)] max-sm:h-auto max-sm:min-h-dvh"
     >
       <HeroBackdrop />
 
-      {/* Mobile (Figma Main @ 390×884): content from y=184, 32px h1→lede, 64px lede→CTAs;
-          marquee pinned to the foot. Desktop: centred block, marquee in-flow. */}
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col sm:justify-between">
-        <div className="px-side flex flex-col gap-16 pt-[clamp(5rem,47.2vw,11.5rem)] text-left max-sm:pb-[calc(5rem+2rem)] sm:min-h-0 sm:flex-1 sm:items-center sm:justify-center sm:gap-[15px] sm:pt-20 sm:pb-0 sm:text-center lg:pt-20">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col justify-between">
+        <div className="px-side flex flex-col gap-[clamp(1.5rem,7.2dvh,4rem)] pt-[clamp(3rem,min(47.2vw,20.8dvh),11.5rem)] text-left max-sm:pb-8 sm:min-h-0 sm:flex-1 sm:items-center sm:justify-center sm:gap-[15px] sm:pt-20 sm:pb-0 sm:text-center lg:pt-20">
           <div className="flex flex-col items-start gap-8 sm:items-center sm:gap-[15px]">
             <h1
               id="hero-heading"
@@ -54,7 +52,7 @@ export function Hero() {
           </div>
         </div>
 
-        <PartnerMarquee className="max-sm:absolute max-sm:inset-x-0 max-sm:bottom-0 shrink-0" />
+        <PartnerMarquee className="shrink-0" />
       </div>
     </section>
   );

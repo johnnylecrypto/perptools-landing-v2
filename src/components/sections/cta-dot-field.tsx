@@ -106,6 +106,21 @@ export function CtaDotField({
       return i & 1 ? b & 15 : b >> 4;
     };
 
+    const blockAt = (row: number, col: number, density: number) => {
+      if (density === 1) return cellAt(row * LOGO.c + col);
+      let sum = 0;
+      let n = 0;
+      const rowEnd = Math.min(row + density, LOGO.r);
+      const colEnd = Math.min(col + density, LOGO.c);
+      for (let r = row; r < rowEnd; r++) {
+        for (let c = col; c < colEnd; c++) {
+          sum += cellAt(r * LOGO.c + c);
+          n++;
+        }
+      }
+      return n ? sum / n : 0;
+    };
+
     let W = 0;
     let H = 0;
     let dots: Dot[] = [];
@@ -172,8 +187,8 @@ export function CtaDotField({
         if (y < -gap || y > H + gap) continue;
 
         for (let col = 0; col < LOGO.c; col += density) {
-          const q = cellAt(row * LOGO.c + col);
-          if (!q) continue;
+          const q = blockAt(row, col, density);
+          if (q < 0.35) continue;
 
           const x = ox + col * step;
           if (x < -gap || x > W + gap) continue;

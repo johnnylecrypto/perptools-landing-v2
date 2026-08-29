@@ -23,9 +23,12 @@ export function NowLine({
       className="pointer-events-none absolute z-[1]"
       style={{ left: `${nowFraction(geometry) * 100}%`, top: geometry.strip, bottom: 0 }}
     >
-      <span className="bg-accent/25 absolute inset-y-0 left-0 w-2 -translate-x-1/2 blur-[6px]" />
-      <span className="bg-accent/65 absolute inset-y-0 left-0 w-[2px] -translate-x-1/2 shadow-[0_0_10px_--alpha(var(--color-accent)/75%)]" />
-      <span className="bg-accent absolute top-[30px] left-1 flex h-6 w-[58px] items-center justify-center rounded-lg text-[13px] leading-none font-semibold text-black shadow-[0_0_8px_--alpha(var(--color-accent)/75%)]">
+      {/* Desktop only, all three. The phone frame in the design file marks the
+          live edge with the price marker alone: on a board a third as wide, the
+          line's bloom covers most of a cell and the pill covers two of them. */}
+      <span className="bg-accent/25 absolute inset-y-0 left-0 hidden w-2 -translate-x-1/2 blur-[6px] sm:block" />
+      <span className="bg-accent/65 absolute inset-y-0 left-0 hidden w-[2px] -translate-x-1/2 shadow-[0_0_10px_--alpha(var(--color-accent)/75%)] sm:block" />
+      <span className="bg-accent absolute top-[30px] left-1 hidden h-6 w-[58px] items-center justify-center rounded-lg text-[13px] leading-none font-semibold text-black shadow-[0_0_8px_--alpha(var(--color-accent)/75%)] sm:flex">
         Now
       </span>
       {/* `top` is owned by the animation loop, not by React — see below. */}

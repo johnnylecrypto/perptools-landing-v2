@@ -8,7 +8,6 @@ import { applyGolden, isGoldenCell } from "./golden";
 import {
   LOST_VISIBLE_SUBTICKS,
   WIN_VISIBLE_SUBTICKS,
-  clearWinPunchPlayed,
   didTouch,
   rowOf,
   type Bet,
@@ -78,7 +77,6 @@ export function createGame(
   seed = 0x5eed,
   anchor = market.price,
 ): GameState {
-  clearWinPunchPlayed();
   return {
     prices: [anchor],
     subtick: 0,
