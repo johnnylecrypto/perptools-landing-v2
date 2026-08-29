@@ -124,35 +124,132 @@
   --spacing-side: clamp(16px, 4.1vw, 61.5px);
 
   --animate-marquee: marquee 40s linear infinite;
-  /* Win reaction on the prediction board: green state is instant (class swap);
-     this is only the short punch + score pop, ~280ms total. */
+  /* Win reaction on the prediction board.
+     The badge's green state is not animated at all — it is a class swap, so it
+     lands on the frame the bet resolves. The punch is the whole reaction and is
+     over in 280ms; the ring, particles and score are decoration that trails it,
+     and the cell is gone ~1.4s in (`WIN_VISIBLE_SUBTICKS`). Read the numbers as
+     one sequence: nothing here may outlast that window or the cell is torn out
+     of the DOM mid-flight. */
   --animate-cell-punch: cell-punch 280ms cubic-bezier(0.22, 1, 0.36, 1) 1;
-  --animate-score-rise: score-rise 280ms ease-out 1 forwards;
+  --animate-score-rise: score-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) 1 forwards;
+  --animate-win-vanish: win-vanish 300ms ease-in 900ms 1 forwards;
+  --animate-burst-ring: burst-ring 380ms cubic-bezier(0.16, 1, 0.3, 1) 1 forwards;
+  --animate-burst-particle: burst-particle 520ms cubic-bezier(0.22, 1, 0.36, 1) 1 forwards;
+  --animate-burst-spark: burst-spark 420ms ease-out 1 forwards;
+  --animate-burst-chip: burst-chip 620ms ease-out 1 forwards;
+  /* Loss: no burst. A single flinch, then a clean fade. */
+  --animate-cell-flinch: cell-flinch 220ms ease-in-out 1;
 
   @keyframes cell-punch {
     0% {
       transform: scale(1);
     }
-    40% {
-      transform: scale(1.12);
+    45% {
+      transform: scale(1.3);
     }
     100% {
       transform: scale(1);
     }
   }
 
+  /* Payout text: up 40px over 800ms, in fast and out slow. */
   @keyframes score-rise {
     0% {
       opacity: 0;
-      transform: translate(-50%, 0) scale(0.85);
+      transform: translate(-50%, 0) scale(0.8);
     }
-    35% {
+    18% {
       opacity: 1;
-      transform: translate(-50%, -8px) scale(1);
+      transform: translate(-50%, -10px) scale(1);
+    }
+    60% {
+      opacity: 1;
+      transform: translate(-50%, -28px) scale(1);
     }
     100% {
       opacity: 0;
-      transform: translate(-50%, -16px) scale(1);
+      transform: translate(-50%, -40px) scale(1);
+    }
+  }
+
+  @keyframes win-vanish {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+  }
+
+  /* Ring radius grows past the cell, weight thins as it goes. */
+  @keyframes burst-ring {
+    0% {
+      opacity: 0.9;
+      transform: scale(0.2);
+      border-width: 2px;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1);
+      border-width: 1px;
+    }
+  }
+
+  /* `--tx`/`--ty` are the per-particle landing offset, set inline. */
+  @keyframes burst-particle {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) translate(0, 0) scale(1);
+    }
+    70% {
+      opacity: 0.85;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) scale(0.4);
+    }
+  }
+
+  @keyframes burst-spark {
+    0% {
+      opacity: 0.85;
+      transform: translate(-50%, -50%) rotate(var(--spin)) translateY(0) scaleY(0.4);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) rotate(var(--spin)) translateY(var(--throw)) scaleY(1);
+    }
+  }
+
+  /* Ghost chips trailing the payout badge, as the Figma burst stacks them. */
+  @keyframes burst-chip {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, 0) scale(0.9);
+    }
+    30% {
+      opacity: var(--chip-peak);
+      transform: translate(-50%, -14px) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -34px) scale(1);
+    }
+  }
+
+  @keyframes cell-flinch {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-2px);
+    }
+    75% {
+      transform: translateX(2px);
     }
   }
 
@@ -595,17 +692,6 @@
     );
   }
 
-  /* ---------------------------------------------------------------------------
-     Footer wordmark entrance (wide screens).
-
-     The letters rise out of their masks once, then the same travelling light
-     the belt uses runs across them on a loop. `WordmarkRise` owns the timing
-     and writes the gradient offsets, `--g`, and the state classes below.
-
-     Three states, in order: `data-armed` hides the letters ready to rise,
-     `is-in` releases them, `is-landed` opens the masks once nothing is moving
-     through them any more.
-     --------------------------------------------------------------------------- */
   .footer-rise {
     position: relative;
     display: flex;
@@ -698,20 +784,16 @@
       calc((100% - var(--frame-width)) / 2),
       var(--frame-max)
     );
+
+    @media (width < 40rem) {
+      padding-inline: 16px;
+    }
   }
 
   .ledger {
     --ledger-ease: cubic-bezier(0.2, 0.82, 0.24, 1);
   }
 
-  /* ---------------------------------------------------------------------------
-     Points receipt (phones).
-
-     The slip starts inside the printer and feeds out in steps, the way a
-     thermal head advances the paper; each line stays blank until the head
-     reaches it, so the receipt writes itself top to bottom. Per-line delays are
-     set by the component, which owns the print order.
-     --------------------------------------------------------------------------- */
   .receipt-paper {
     transform: translateY(-101%);
   }
@@ -726,9 +808,6 @@
     animation: receipt-print 0.01s linear forwards;
   }
 
-  /* Both entrances start from a hidden state that only JavaScript clears, so
-     with scripting off the content would never appear. `useInView` cannot
-     cover this — it does not run — so the finished state is held here. */
   @media (scripting: none) {
     .lift-mock,
     .lift-cast,

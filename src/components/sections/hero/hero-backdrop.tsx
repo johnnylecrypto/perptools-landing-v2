@@ -44,7 +44,7 @@ export function HeroBackdrop() {
           height={786}
           priority
           sizes="(max-width: 768px) 100vw, 64vw"
-          className="absolute top-[75px] left-[-17px] w-[797px] max-w-none opacity-35 select-none sm:top-[76px] sm:left-1/2 sm:w-[917px] sm:-translate-x-1/2 sm:opacity-60 xl:translate-x-[calc(-50%+17.5px)]"
+          className="absolute top-[75px] left-[-17px] w-[797px] max-w-none opacity-35 select-none sm:top-[76px] sm:left-1/2 sm:w-[917px] sm:-translate-x-1/2 sm:opacity-60"
         />
 
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_46%_38%_at_50%_46%,--alpha(var(--color-bg-0)/82%)_0%,--alpha(var(--color-bg-0)/45%)_55%,transparent_100%)]" />

@@ -6,6 +6,7 @@ import {
   STAKE_STEPS,
   STARTING_BALANCE,
   WIN_VISIBLE_SUBTICKS,
+  type Bet,
   type GameState,
   type Market,
   bandFor,
@@ -385,15 +386,26 @@ describe("game lifecycle", () => {
     const staked = state.bets.reduce((total, bet) => total + bet.stake, 0);
     expect(state.balance).toBe(roundPoints(STARTING_BALANCE - staked));
 
-    const settled = runUntilSettled(state, column);
-    const done = settled.bets.filter((bet) => bet.status !== "pending");
+    // Collected tick by tick, not read off the end state: a settled bet lives
+    // only as long as its animation, so a winner from the top of the column is
+    // already gone by the bottom of it.
+    const done = new Map<number, Bet>();
+    let running = state;
+    const target = (column + 1) * SUBTICKS_PER_COLUMN;
+    while (running.subtick < target) {
+      running = run(running, 1);
+      for (const bet of running.bets) {
+        if (bet.status !== "pending") done.set(bet.id, bet);
+      }
+    }
 
-    expect(done.length).toBe(rows);
-    const won = done.filter((bet) => bet.status === "won");
+    expect(done.size).toBe(rows);
+    const settledBets = [...done.values()];
+    const won = settledBets.filter((bet) => bet.status === "won");
     // The price is always somewhere on the ladder, so at least one band pays.
     expect(won.length).toBeGreaterThanOrEqual(1);
     for (const bet of won) expect(bet.payout).toBe(roundPoints(bet.stake * bet.multiplier));
-    for (const bet of done.filter((entry) => entry.status === "lost")) {
+    for (const bet of settledBets.filter((entry) => entry.status === "lost")) {
       expect(bet.payout).toBe(0);
     }
   });

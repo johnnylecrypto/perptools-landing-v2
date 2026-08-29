@@ -31,8 +31,14 @@ export type Bet = {
   resolvedRow: number | null;
 };
 
-/** Sub-ticks a settled bet stays on the board, mirroring the product's timings. */
-export const WIN_VISIBLE_SUBTICKS = Math.round(7000 / SUBTICK_MS);
+/**
+ * Sub-ticks a settled bet stays on the board — the budget the win/loss
+ * animations run inside, so these track `--animate-win-vanish` (900ms hold +
+ * 300ms shrink). The loss fade finishes in 800ms but the row is held the
+ * product's full 1600ms, which the settlement tests lean on. Shorten either
+ * one below its animation and the cell is torn out of the DOM mid-flight.
+ */
+export const WIN_VISIBLE_SUBTICKS = Math.round(1400 / SUBTICK_MS);
 export const LOST_VISIBLE_SUBTICKS = Math.round(1600 / SUBTICK_MS);
 
 /** Row a bet draws on against the ladder of the moment. */
@@ -47,21 +53,6 @@ export function displayRow(
   rows: number,
 ) {
   return bet.resolvedRow ?? rowOf(bet, ladder, rows);
-}
-
-/** Win punch/score animations already fired for these bet ids (survives grid remounts). */
-const winPunchPlayed = new Set<number>();
-
-export function shouldPlayWinPunch(betId: number) {
-  return !winPunchPlayed.has(betId);
-}
-
-export function markWinPunchPlayed(betId: number) {
-  winPunchPlayed.add(betId);
-}
-
-export function clearWinPunchPlayed() {
-  winPunchPlayed.clear();
 }
 
 /**
