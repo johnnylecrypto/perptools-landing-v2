@@ -26,7 +26,8 @@ export default function HomePage() {
             name: site.name,
             url: site.url,
             description: site.description,
-            sameAs: [site.links.x],
+            logo: new URL(site.logo, site.url).toString(),
+            sameAs: [site.links.x, site.links.telegram, site.links.discord],
           }),
         }}
       />

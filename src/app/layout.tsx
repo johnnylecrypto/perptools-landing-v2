@@ -64,14 +64,14 @@ export const metadata: Metadata = {
     description: site.description,
   },
   robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+    index: !site.noindex,
+    follow: !site.noindex,
+    googleBot: { index: !site.noindex, follow: !site.noindex, "max-image-preview": "large" },
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "var(--color-bg-0)",
+  themeColor: site.themeColor,
   colorScheme: "dark",
   viewportFit: "cover",
 };
