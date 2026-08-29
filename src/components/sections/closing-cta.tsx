@@ -19,11 +19,8 @@ export function ClosingCta() {
             blend="normal"
             className="-z-10"
           />
-          {/* Same field either way: on phones it draws the mark in the banner's
-              old box, and from `sm` it bleeds across the card with the light
-              coming out from under Launch App. */}
           <CtaDotField className="sm:hidden" />
-          <CtaDotField variant="bleed" className="hidden sm:block" />
+          <CtaDotField variant="bleed" className="hidden lg:block" />
 
           <div className="flex flex-col gap-4 p-4 sm:gap-10 sm:px-8 sm:py-14 lg:flex-row lg:items-center lg:justify-between lg:px-[clamp(32px,5vw,70px)]">
             {/* box the dot-field logo is drawn into — resize it to resize the mark */}

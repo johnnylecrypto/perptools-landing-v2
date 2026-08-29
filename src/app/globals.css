@@ -47,14 +47,16 @@
   /* --- state -------------------------------------------------------------- */
   --color-success: #3fd08b;
   --color-success-light: #8cf0c0;
-  /* Only the winning cell's flash; brighter than the page's green on purpose. */
   --color-success-bright: #00ff88;
-  --color-success-deep: #041a08;
+  --color-success-glow: #27dc78;
+  --color-success-deep: #083c23;
   --color-danger: #ff7578;
   --color-danger-light: #ffc3c4;
   --color-warning: #f6c14b;
-  /* Body of a golden cell; the border above is the one that reads as gold. */
+  --color-accent-orange: #ff9800;
+  --color-warning-wash: #feb941;
   --color-warning-fill: #dec05f;
+  --color-warning-lift: #e7c057;
 
   /* --- CTA dot field -------------------------------------------------------
      Painted to a canvas, which cannot read `var()`, so `CtaDotField` resolves
@@ -140,6 +142,18 @@
   --animate-burst-chip: burst-chip 620ms ease-out 1 forwards;
   /* Loss: no burst. A single flinch, then a clean fade. */
   --animate-cell-flinch: cell-flinch 220ms ease-in-out 1;
+  /* The unplayed golden cell breathes so it is findable in a grid of cyan. */
+  --animate-gold-pulse: gold-pulse 2.4s ease-in-out infinite;
+
+  @keyframes gold-pulse {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
 
   @keyframes cell-punch {
     0% {
@@ -282,10 +296,12 @@
      it sits on near-black, where the page gradient reads flat. Used by the
      board's own buttons and by a stacked bet cell. */
   --gradient-accent-bright: linear-gradient(180deg, var(--color-accent) 31%, #8ad9ff 81%);
+  /* Hover of a stacked bet: the same cube lifted a stop brighter. */
+  --gradient-accent-bright-hover: linear-gradient(180deg, #4ec8fb 0%, #90dbff 75%);
 
   /* Prediction board cells, by state. */
   --gradient-bet: linear-gradient(180deg, #0070a9 0%, var(--color-board-cell) 100%);
-  --gradient-bet-lost: linear-gradient(180deg, #3a1015 0%, #120608 100%);
+  --gradient-bet-golden: linear-gradient(90deg, rgb(254 185 65 / 0.04) 0%, rgb(1 1 1 / 0.5) 100%);
 
   /* The beam sweeping the terminal frame. `color-mix` rather than Tailwind's
      `--alpha()`, which is only resolved inside utilities, not plain CSS. */

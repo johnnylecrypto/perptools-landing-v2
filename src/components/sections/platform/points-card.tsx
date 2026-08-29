@@ -8,7 +8,13 @@ export function PointsCard() {
   const { points } = platform;
 
   return (
-    <PlatformCard delay={0} className="flex w-full flex-col justify-between lg:flex-[534_1_0%]">
+    <PlatformCard
+      delay={0}
+      // The row only sets a height at `lg`; on tablet the card would otherwise
+      // shrink to its content and leave the sparkline — inset a fixed 72px/51px
+      // — a ~45px strip with the balance sitting on top of it.
+      className="flex min-h-[372px] w-full flex-col justify-between lg:flex-[534_1_0%]"
+    >
       {/* Price series behind the figures. */}
       <Sparkline
         points={pointsSeries}
