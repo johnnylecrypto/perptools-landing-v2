@@ -24,15 +24,13 @@ export const site = {
     app: `${APP_ORIGIN}/?${LANDING_UTM}`,
     /** Mobile drawer launch CTA — prod omits UTM on this entry point. */
     appPlain: `${APP_ORIGIN}/`,
-    terminal: `${APP_ORIGIN}/terminal`,
+    terminal: `${APP_ORIGIN}/perp`,
     spot: `${APP_ORIGIN}/spot`,
     points: `${APP_ORIGIN}/rewards/points`,
     tapPredictions: `${APP_ORIGIN}/prediction`,
     arena: `${APP_ORIGIN}/ai-arena`,
     mcpDocs: "https://mcp.perptools.ai/",
-    // TODO: confirm — the mobile menu design lists these two, but neither had a
-    // URL anywhere in the project; these follow the existing docs/handle pattern.
-    security: "https://docs.perptools.ai/security",
+    security: "https://docs.perptools.ai/docs",
     discord: "https://discord.gg/perptools",
     x: "https://x.com/perptools",
     telegram: "https://t.me/perptools",
