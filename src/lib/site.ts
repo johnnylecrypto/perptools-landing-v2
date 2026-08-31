@@ -2,6 +2,9 @@
  * Single source of truth for site-wide identity: URLs, copy defaults and
  * external destinations. Anything rendered in more than one place lives here.
  */
+const APP_ORIGIN = "https://app.perptools.ai";
+const LANDING_UTM = "utm_source=newlanding&utm_medium=newlandingpage&utm_campaign=none";
+
 export const site = {
   name: "PERPTools",
   title: "PERPTools — The Market Never Sleeps",
@@ -17,13 +20,16 @@ export const site = {
   locale: "en_US",
   twitter: "@perptools",
   links: {
-    app: "https://app.perptools.ai",
-    terminal: "https://app.perptools.ai/terminal",
-    spot: "https://app.perptools.ai/spot",
-    points: "https://app.perptools.ai/rewards/points",
-    tapPredictions: "https://app.perptools.ai/prediction",
-    arena: "/ai-arena",
-    mcpDocs: "https://docs.perptools.ai/mcp",
+    /** Header, hero, and footer launch CTAs — matches prod landing attribution. */
+    app: `${APP_ORIGIN}/?${LANDING_UTM}`,
+    /** Mobile drawer launch CTA — prod omits UTM on this entry point. */
+    appPlain: `${APP_ORIGIN}/`,
+    terminal: `${APP_ORIGIN}/terminal`,
+    spot: `${APP_ORIGIN}/spot`,
+    points: `${APP_ORIGIN}/rewards/points`,
+    tapPredictions: `${APP_ORIGIN}/prediction`,
+    arena: `${APP_ORIGIN}/ai-arena`,
+    mcpDocs: "https://mcp.perptools.ai/",
     // TODO: confirm — the mobile menu design lists these two, but neither had a
     // URL anywhere in the project; these follow the existing docs/handle pattern.
     security: "https://docs.perptools.ai/security",

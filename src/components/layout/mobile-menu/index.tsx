@@ -101,7 +101,7 @@ export function MobileMenu({ open, onClose }: { open: boolean; onClose: () => vo
       </ul>
 
       <a
-        href={site.links.app}
+        href={site.links.appPlain}
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => {
