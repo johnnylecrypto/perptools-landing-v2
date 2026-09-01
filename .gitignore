@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local reports & docs (not for version control)
+/docs/
+PERFORMANCE_OPTIMIZATION_REPORT.md
+
+# lighthouse local runs & artifacts
+.lighthouseci/
+.lh*.json
+.lighthouse-*.json
+.lh-*.json

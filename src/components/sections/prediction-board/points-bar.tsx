@@ -95,7 +95,7 @@ export function PointsBar({
                   <span className="text-[10.5px] leading-[15px] font-semibold text-white tabular-nums">
                     {formatPoints(step)}
                   </span>
-                  <span className="text-[9px] leading-3 font-medium text-white/60">PTS</span>
+                  <span className="text-[9px] leading-3 font-medium text-white/75">PTS</span>
                 </button>
               </li>
             ))}

@@ -1,12 +1,17 @@
+import dynamic from "next/dynamic";
 import { platform } from "@/content/platform";
 import { Reveal } from "@/components/ui/reveal";
-import { PointsReceipt } from "@/components/sections/points-receipt";
 import { ActivityCard } from "./activity-card";
 import { BadgesCard } from "./badges-card";
 import { PointsCard } from "./points-card";
 import { RankCard } from "./rank-card";
 import { RewardPoolCard } from "./reward-pool-card";
 import { TasksCard } from "./tasks-card";
+
+const PointsReceipt = dynamic(
+  () => import("@/components/sections/points-receipt").then((module) => module.PointsReceipt),
+  { loading: () => <div className="h-[420px] w-full max-w-[358px] sm:hidden" aria-hidden /> },
+);
 
 /**
  * Points dashboard: balance, rank, badges, reward pool, weekly tasks and the

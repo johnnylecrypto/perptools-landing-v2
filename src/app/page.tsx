@@ -8,13 +8,20 @@ import { site } from "@/lib/site";
 export default function HomePage() {
   return (
     <>
-
       <div className="flex flex-col gap-16 pb-16 sm:gap-24 sm:pb-24 lg:gap-32 lg:pb-32">
         <Hero />
-        <Live />
-        <Platform />
-        <Points />
-        <ClosingCta />
+        <div className="below-fold-paint">
+          <Live />
+        </div>
+        <div className="below-fold-paint">
+          <Platform />
+        </div>
+        <div className="below-fold-paint">
+          <Points />
+        </div>
+        <div className="below-fold-paint">
+          <ClosingCta />
+        </div>
       </div>
       <script
         type="application/ld+json"

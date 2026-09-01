@@ -15,7 +15,7 @@ export function FeedBadge({ status }: { status: FeedStatus }) {
       ? "bg-success/15 text-success"
       : status === "connecting"
         ? "bg-warning/15 text-warning"
-        : "bg-white/8 text-white/50";
+        : "bg-white/8 text-white/70";
 
   return (
     <span

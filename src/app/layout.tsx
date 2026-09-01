@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, JetBrains_Mono, DM_Sans, Inter } from "next/font/google";
-import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { Manrope, JetBrains_Mono, DM_Sans } from "next/font/google";
+import { DeferredGoogleAnalytics } from "@/components/analytics/deferred-google-analytics";
 import { PostHogProvider } from "@/components/analytics/posthog-provider";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -10,25 +10,24 @@ import "./globals.css";
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
+  weight: ["400", "600", "700"],
   display: "swap",
 });
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
+  weight: ["600", "700"],
   display: "swap",
-});
-
-const inter = Inter({
-  variable: "--font-inter-sans",
-  subsets: ["latin"],
-  display: "swap",
+  preload: false,
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
-  display: "swap",
+  weight: ["400", "500"],
+  display: "optional",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -80,11 +79,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${dmSans.variable} ${inter.variable} ${jetbrainsMono.variable} h-full`}
+      className={`${manrope.variable} ${dmSans.variable} ${jetbrainsMono.variable} h-full`}
       suppressHydrationWarning
     >
       <head>
         <link rel="dns-prefetch" href="https://a.perptools.ai" />
+        <link
+          rel="preload"
+          as="image"
+          href="/media/bg-removal.webp"
+          media="(min-width: 768px)"
+          fetchPriority="high"
+        />
       </head>
       <body className="bg-bg-0 text-fg flex min-h-full flex-col antialiased">
         <PostHogProvider>
@@ -100,7 +106,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </main>
           <Footer />
         </PostHogProvider>
-        <GoogleAnalytics />
+        <DeferredGoogleAnalytics />
       </body>
     </html>
   );

@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { Ellipse } from "@/components/ui/ellipse";
+import { HeroGodRaysVideo } from "./hero-god-rays-video";
 
 export function HeroBackdrop() {
   return (
@@ -37,42 +37,29 @@ export function HeroBackdrop() {
           className="hidden sm:block"
         />
 
-        <Image
-          src="/media/bg-removal.webp"
-          alt=""
-          width={917}
-          height={786}
-          priority
-          sizes="(max-width: 768px) 100vw, 64vw"
-          className="absolute top-[75px] left-[-17px] w-[797px] max-w-none opacity-35 select-none sm:top-[76px] sm:left-1/2 sm:w-[917px] sm:-translate-x-1/2 sm:opacity-60"
-        />
+        <picture>
+          <source media="(min-width: 640px)" srcSet="/media/bg-removal.webp" />
+          <img
+            src="/media/bg-removal-mobile.webp"
+            alt=""
+            width={640}
+            height={548}
+            loading="lazy"
+            fetchPriority="low"
+            decoding="async"
+            className="absolute top-[75px] left-[-17px] w-[797px] max-w-none opacity-35 select-none sm:top-[76px] sm:left-1/2 sm:w-[917px] sm:-translate-x-1/2 sm:opacity-60"
+          />
+        </picture>
 
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_46%_38%_at_50%_46%,--alpha(var(--color-bg-0)/82%)_0%,--alpha(var(--color-bg-0)/45%)_55%,transparent_100%)]" />
       </div>
 
-      <div className="absolute inset-0 bg-[url('/media/noise.webp')] bg-cover bg-center bg-no-repeat opacity-40" />
+      <div className="absolute inset-0 bg-[url('/media/noise.webp')] bg-size-[128px_128px] bg-repeat opacity-40" />
 
-      {/* Sources via innerHTML, not children: media extensions inject controls
-          into a <video> before React hydrates, and React only skips diffing an
-          element's children when they came from dangerouslySetInnerHTML. */}
-      <video
-        suppressHydrationWarning
-        poster="/media/god-rays-still.webp"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        aria-hidden
-        className="absolute inset-0 size-full object-cover object-top opacity-[0.54] mix-blend-soft-light motion-reduce:hidden sm:opacity-35 sm:mix-blend-screen"
-        dangerouslySetInnerHTML={{
-          __html:
-            '<source src="/media/god-rays.webm" type="video/webm">' +
-            '<source src="/media/god-rays.mp4" type="video/mp4">',
-        }}
-      />
+      {/* Still underlay on mobile while the video mounts; full fallback for reduced motion. */}
+      <div className="absolute inset-0 block bg-[url('/media/god-rays-still.webp')] bg-cover bg-top opacity-[0.54] mix-blend-soft-light sm:hidden motion-reduce:sm:block sm:opacity-35 sm:mix-blend-screen" />
 
-      <div className="absolute inset-0 hidden bg-[url('/media/god-rays-still.webp')] bg-cover bg-top opacity-[0.54] mix-blend-soft-light motion-reduce:block sm:opacity-35 sm:mix-blend-screen" />
+      <HeroGodRaysVideo />
 
       {/* Last in the stack so it feathers noise/video into the page surface. */}
       <div className="absolute inset-x-0 bottom-0 h-[105px] bg-[linear-gradient(0deg,var(--color-bg-0)_0%,--alpha(var(--color-bg-0)/85%)_55%,transparent_100%)]" />

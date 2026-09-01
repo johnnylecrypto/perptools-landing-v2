@@ -51,7 +51,7 @@ export function BetCell({
         : {})}
       data-bet="true"
       className={cn(
-        "relative aspect-square bg-board-cell",
+        "bg-board-cell relative aspect-square",
         CELL_EDGE,
         stackable && "group cursor-pointer",
         // Raised while it celebrates: the burst rings reach three cells wide,
@@ -76,7 +76,7 @@ export function BetCell({
             !bet.golden &&
             (doubled
               ? cn(
-                  "border-2 border-accent bg-[image:var(--gradient-accent-bright)] shadow-[0_0_14px_2px_var(--color-accent),inset_0_0.7px_5px_--alpha(var(--color-accent)/30%)]",
+                  "border-accent border-2 bg-[image:var(--gradient-accent-bright)] shadow-[0_0_14px_2px_var(--color-accent),inset_0_0.7px_5px_--alpha(var(--color-accent)/30%)]",
                   // Only a stacked cell you can still add to lifts on hover.
                   stackable &&
                     "group-hover:bg-[image:var(--gradient-accent-bright-hover)] group-focus-visible:bg-[image:var(--gradient-accent-bright-hover)]",
@@ -105,7 +105,7 @@ export function BetCell({
           style={{ fontSize: font }}
           className={cn(
             "relative leading-none font-semibold tabular-nums",
-            won ? "text-accent-orange" : dark ? "text-fg-on-accent" : "text-accent",
+            won ? "text-accent-orange" : dark ? "text-fg-on-accent" : "text-white",
           )}
         >
           {won ? `+${formatPoints(bet.payout)}` : formatPoints(bet.stake * bet.multiplier)}

@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ComponentType, type ReactNode } from "react";
+import { deferUntilInteraction } from "@/lib/defer-until-interaction";
 import { getPostHog } from "@/lib/posthog-init";
 
 type PHProviderProps = {
@@ -32,7 +33,7 @@ export function PostHogProvider({ children }: { children: ReactNode }) {
   const [client, setClient] = useState<unknown>(null);
 
   useEffect(() => {
-    const load = () => {
+    deferUntilInteraction(() => {
       void (async () => {
         const [{ PostHogProvider: PHProvider }, posthog] = await Promise.all([
           import("posthog-js/react"),
@@ -41,15 +42,7 @@ export function PostHogProvider({ children }: { children: ReactNode }) {
         setProvider(() => PHProvider as ComponentType<PHProviderProps>);
         setClient(posthog);
       })();
-    };
-
-    if (typeof window.requestIdleCallback === "function") {
-      const id = window.requestIdleCallback(load, { timeout: 4000 });
-      return () => window.cancelIdleCallback(id);
-    }
-
-    const timer = window.setTimeout(load, 4000);
-    return () => window.clearTimeout(timer);
+    });
   }, []);
 
   if (!Provider || !client) {

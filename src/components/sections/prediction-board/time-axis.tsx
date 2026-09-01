@@ -22,7 +22,7 @@ export function TimeAxis({ geometry, font }: { geometry: Geometry; font: number 
             style={{ fontSize: font - 1.5, lineHeight: edge ? "13.5px" : "12px" }}
             className={cn(
               "flex flex-1 items-center justify-center tabular-nums",
-              edge ? "font-semibold text-white/36" : "font-normal text-white/40",
+              edge ? "font-semibold text-white/70" : "font-normal text-white/75",
             )}
           >
             {offset === 0 ? "" : timeLabel(offset)}

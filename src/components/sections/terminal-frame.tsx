@@ -82,15 +82,14 @@ export function TerminalFrame({ className }: { className?: string }) {
           className="rise-edge pointer-events-none absolute inset-0 z-[7] rounded-[18px] shadow-[inset_0_1px_0_--alpha(var(--color-accent-light)/22%)]"
         />
 
-        <div className="rise-screen relative w-full overflow-hidden rounded-[10.12px] [transform:translateZ(0)]">
+        <div className="rise-screen relative w-full [transform:translateZ(0)] overflow-hidden rounded-[10.12px]">
           <Image
             src={live.screenshot}
             alt="PERPTools trading terminal showing routed perpetual positions against a single margin balance"
             width={live.screenshotWidth}
             height={live.screenshotHeight}
-            quality={100}
             unoptimized
-            priority
+            loading="lazy"
             sizes="(max-width: 1080px) 100vw, 1062px"
             className="h-auto w-full"
           />

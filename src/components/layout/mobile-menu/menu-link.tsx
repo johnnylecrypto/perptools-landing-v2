@@ -6,7 +6,7 @@ import { captureLandingEvent } from "@/lib/analytics";
 
 export function MenuLink({ item, onClose }: { item: NavItem; onClose: () => void }) {
   const classes =
-    "font-dm block rounded p-2 text-base font-semibold text-white/60 transition-colors hover:text-white";
+    "font-dm block rounded p-2 text-base font-semibold text-white/75 transition-colors hover:text-white";
 
   const handleClick = () => {
     if (item.analyticsEvent) void captureLandingEvent(item.analyticsEvent);

@@ -1,6 +1,13 @@
+import dynamic from "next/dynamic";
 import { points } from "@/content/points";
-import { PredictionBoard } from "@/components/sections/prediction-board";
 import { Ellipse } from "@/components/ui/ellipse";
+
+const PredictionBoard = dynamic(
+  () => import("@/components/sections/prediction-board").then((module) => module.PredictionBoard),
+  {
+    loading: () => <div className="min-h-[420px] w-full max-w-[1080px]" aria-hidden />,
+  },
+);
 
 /**
  * Tap Predictions pitch: centred heading over the live board.
@@ -43,7 +50,7 @@ export function Points() {
               fits the viewport instead of scrolling sideways. */}
           <div className="flex w-full flex-col items-center gap-4">
             <PredictionBoard />
-            <p className="text-fg-faint text-center text-[12px] leading-4">{points.disclaimer}</p>
+            <p className="text-fg-subtle text-center text-[12px] leading-4">{points.disclaimer}</p>
           </div>
         </div>
       </div>

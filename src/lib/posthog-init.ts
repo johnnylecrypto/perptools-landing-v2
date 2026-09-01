@@ -39,6 +39,10 @@ export async function initPostHog() {
     capture_pageview: false,
     person_profiles: "always",
     cross_subdomain_cookie: true,
+    autocapture: false,
+    disable_session_recording: true,
+    disable_surveys: true,
+    capture_performance: true,
   });
   posthog.register({ site_type: "landing" });
   captureFirstTouchSource(posthog);

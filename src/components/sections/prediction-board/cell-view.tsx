@@ -66,7 +66,7 @@ export const CellView = memo(function CellView({
             : "bg-board-cell",
         )}
       >
-        <CellLabel font={font} className="text-accent/50">
+        <CellLabel font={font} className="text-white/70">
           {label}
         </CellLabel>
       </div>
@@ -125,7 +125,7 @@ export const CellView = memo(function CellView({
           "transition-colors",
           golden
             ? "text-warning"
-            : "text-accent/50 group-hover:text-accent-hover group-focus-visible:text-accent-hover",
+            : "text-white/75 group-hover:text-accent-hover group-focus-visible:text-accent-hover",
         )}
       >
         {label}

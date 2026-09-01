@@ -1,8 +1,8 @@
 import { hero } from "@/content/hero";
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/icons/arrow";
-import { PartnerMarquee } from "@/components/sections/partner-marquee";
 import { HeroBackdrop } from "./hero-backdrop";
+import { PartnerMarqueeLazy } from "./partner-marquee-lazy";
 
 export function Hero() {
   return (
@@ -18,7 +18,7 @@ export function Hero() {
           <div className="flex flex-col items-start gap-8 sm:items-center sm:gap-[15px]">
             <h1
               id="hero-heading"
-              className="max-w-[792px] text-[clamp(44px,17vw,66px)] leading-none font-semibold text-balance text-white mix-blend-lighten sm:text-[clamp(38px,4.6vw,66px)]"
+              className="max-w-[792px] text-[clamp(44px,17vw,66px)] leading-none font-semibold text-balance text-white mix-blend-lighten max-sm:mix-blend-normal sm:text-[clamp(38px,4.6vw,66px)]"
             >
               {hero.heading.map((line) => (
                 <span key={line} className="block">
@@ -27,7 +27,7 @@ export function Hero() {
               ))}
             </h1>
 
-            <p className="font-inter text-fg max-w-[495px] text-[15px] leading-[19.5px] text-pretty">
+            <p className="text-fg max-w-[495px] text-[15px] leading-[19.5px] text-pretty">
               {hero.lede}
             </p>
           </div>
@@ -52,7 +52,7 @@ export function Hero() {
           </div>
         </div>
 
-        <PartnerMarquee className="shrink-0" />
+        <PartnerMarqueeLazy className="shrink-0" />
       </div>
     </section>
   );

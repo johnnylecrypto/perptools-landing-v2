@@ -1,8 +1,12 @@
+import dynamic from "next/dynamic";
 import { closingCta } from "@/content/hero";
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/icons/arrow";
 import { Ellipse } from "@/components/ui/ellipse";
-import { CtaDotField } from "./cta-dot-field";
+
+const CtaDotField = dynamic(() => import("./cta-dot-field").then((module) => module.CtaDotField), {
+  loading: () => null,
+});
 
 export function ClosingCta() {
   return (

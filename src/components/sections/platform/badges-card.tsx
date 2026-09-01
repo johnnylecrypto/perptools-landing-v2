@@ -14,7 +14,7 @@ export function BadgesCard() {
           <CardLabel className="flex-1">{badges.label}</CardLabel>
           <p className="text-[12px] font-bold tracking-[0.35px]">
             <span className="text-white">{badges.earned}</span>
-            <span className="text-white/60"> / {badges.total}</span>
+            <span className="text-white/75"> / {badges.total}</span>
           </p>
         </div>
 
@@ -53,7 +53,7 @@ export function BadgesCard() {
         </ul>
       </div>
 
-      <p className="text-[10px] font-medium text-white/40">{badges.latest}</p>
+      <p className="text-[10px] font-medium text-white/65">{badges.latest}</p>
     </PlatformCard>
   );
 }

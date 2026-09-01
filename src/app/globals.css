@@ -27,7 +27,7 @@
   /* --- page text, strongest → faintest ----------------------------------- */
   --color-fg: #edeff2;
   --color-fg-muted: #b6bec9;
-  --color-fg-subtle: #6b7785;
+  --color-fg-subtle: #8a939e;
   --color-fg-faint: #4a5462;
   /* Text printed on an accent or gold fill, where the page ramp is unreadable. */
   --color-fg-on-accent: #050505;
@@ -116,7 +116,6 @@
   --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", Menlo, monospace;
   /* Header/UI face from the v2 design file. */
   --font-dm: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-inter: var(--font-inter-sans), ui-sans-serif, system-ui, sans-serif;
 
   /* Page gutter. Fluid rather than two fixed steps: a hard switch at a
      breakpoint made the content *narrower* as the viewport grew, which is the
@@ -1090,4 +1089,9 @@
   background-image: var(--gradient-accent);
   background-clip: text;
   color: transparent;
+}
+
+@utility below-fold-paint {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
 }
